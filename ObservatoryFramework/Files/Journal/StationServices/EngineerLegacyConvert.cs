@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class EngineerLegacyConvert : EngineerCraft
 {
-    public class EngineerLegacyConvert : EngineerCraft
-    {
-        public bool IsPreview { get; init; }
-    }
+    public bool IsPreview { get; init; }
 }

@@ -1,10 +1,9 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Other;
+
+public class CargoTransfer : JournalBase
 {
-    public class CargoTransfer : JournalBase
-    {
-        public ImmutableList<CargoTransferDetail> Transfers { get; init; }
-    }
+    public ImmutableList<CargoTransferDetail> Transfers { get; init; }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Other;
+
+public class RebootRepair : JournalBase
 {
-    public class RebootRepair : JournalBase
-    {
-        public ImmutableList<string> Modules { get; init; }
-    }
+    public ImmutableList<string> Modules { get; init; }
 }

@@ -1,16 +1,16 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files
+namespace Observatory.Framework.Files;
+
+/// <summary>
+/// Information about current player ship equipped modules.
+/// </summary>
+public class ModuleInfoFile : JournalBase
 {
     /// <summary>
-    /// Information about current player ship equipped modules.
+    /// List of all equipped modules.
     /// </summary>
-    public class ModuleInfoFile : Journal.JournalBase
-    {
-        /// <summary>
-        /// List of all equipped modules.
-        /// </summary>
-        public ImmutableList<Module> Modules { get; init; }
-    }
+    public ImmutableList<Module> Modules { get; init; }
 }

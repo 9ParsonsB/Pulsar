@@ -1,9 +1,8 @@
-﻿namespace Observatory.Framework.Files.ParameterTypes
-{
-    public class Faction
-    {
-        public string Name { get; init; }
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-        public string FactionState { get; init; }
-    }
+public class Faction
+{
+    public string Name { get; init; }
+
+    public string FactionState { get; init; }
 }

@@ -1,9 +1,8 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Travel;
+
+public class SupercruiseExit : SupercruiseEntry
 {
-    public class SupercruiseExit : SupercruiseEntry
-    {
-        public string Body { get; init; }
-        public int BodyID { get; init; }
-        public string BodyType { get; init; }
-    }
+    public string Body { get; init; }
+    public int BodyID { get; init; }
+    public string BodyType { get; init; }
 }

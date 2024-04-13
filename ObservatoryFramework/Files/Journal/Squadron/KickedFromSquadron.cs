@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Squadron;
+
+public class KickedFromSquadron : SquadronCreated
 {
-    public class KickedFromSquadron : SquadronCreated
-    {
-    }
 }

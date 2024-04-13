@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+public class JetConeBoost : JournalBase
 {
-    public class JetConeBoost : JournalBase
-    {
-        public float BoostValue { get; init; }
-    }
+    public float BoostValue { get; init; }
 }

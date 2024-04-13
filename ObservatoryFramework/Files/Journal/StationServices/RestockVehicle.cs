@@ -1,10 +1,9 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class RestockVehicle : JournalBase
 {
-    public class RestockVehicle : JournalBase
-    {
-        public string Type { get; init; }
-        public string Loadout { get; init; }
-        public int Cost { get; init; }
-        public int Count { get; init; }
-    }
+    public string Type { get; init; }
+    public string Loadout { get; init; }
+    public int Cost { get; init; }
+    public int Count { get; init; }
 }

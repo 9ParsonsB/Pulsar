@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
-{
-    public class RefuelPartial : RefuelAll
-    {
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
-    }
+public class RefuelPartial : RefuelAll
+{
+
 }

@@ -1,28 +1,26 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Converters
+namespace Observatory.Framework.Files.Converters;
+
+public class StationServiceConverter : JsonConverter<StationService>
 {
-    public class StationServiceConverter : JsonConverter<StationService>
+    public override StationService Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override StationService Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        var services = StationService.None;
+
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
         {
-            StationService services = StationService.None;
-
-            while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
-            {
-                services |= (StationService)Enum.Parse(typeof(StationService), reader.GetString(), true);
-            }
-
-            return services;
-
+            services |= (StationService)Enum.Parse(typeof(StationService), reader.GetString(), true);
         }
 
-        public override void Write(Utf8JsonWriter writer, StationService value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
+        return services;
+
+    }
+
+    public override void Write(Utf8JsonWriter writer, StationService value, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,16 +1,16 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files
+namespace Observatory.Framework.Files;
+
+/// <summary>
+/// Elite Dangerous fcmaterials.json file. Contains data about current fleet carrier bartender stock.
+/// </summary>
+public class FCMaterialsFile : JournalBase
 {
     /// <summary>
-    /// Elite Dangerous fcmaterials.json file. Contains data about current fleet carrier bartender stock.
+    /// List of items in stock and in demand from the carrier bartender.
     /// </summary>
-    public class FCMaterialsFile : Journal.JournalBase
-    {
-        /// <summary>
-        /// List of items in stock and in demand from the carrier bartender.
-        /// </summary>
-        public ImmutableList<FCMaterial> Items { get; init; }
-    }
+    public ImmutableList<FCMaterial> Items { get; init; }
 }

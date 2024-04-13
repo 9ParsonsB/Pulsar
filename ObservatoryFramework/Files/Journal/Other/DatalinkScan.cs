@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+public class DatalinkScan : JournalBase
 {
-    public class DatalinkScan : JournalBase
-    {
-        public string Message { get; init; }
-        public string Message_Localised { get; init; }
-    }
+    public string Message { get; init; }
+    public string Message_Localised { get; init; }
 }

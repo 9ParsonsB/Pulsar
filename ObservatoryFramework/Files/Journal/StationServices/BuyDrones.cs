@@ -1,11 +1,10 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class BuyDrones : JournalBase
 {
-    public class BuyDrones : JournalBase
-    {
-        public string Type { get; init; }
-        public int Count { get; init; }
-        public uint BuyPrice { get; init; }
-        public uint SellPrice { get; init; }
-        public int TotalCost { get; init; }
-    }
+    public string Type { get; init; }
+    public int Count { get; init; }
+    public uint BuyPrice { get; init; }
+    public uint SellPrice { get; init; }
+    public int TotalCost { get; init; }
 }

@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.ParameterTypes
+﻿namespace Observatory.Framework.Files.ParameterTypes;
+
+public class MaterialComposition
 {
-    public class MaterialComposition
-    {
-        public string Name { get; init; }
-        public float Percent { get; init; }
-    }
+    public string Name { get; init; }
+    public float Percent { get; init; }
 }

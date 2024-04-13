@@ -1,12 +1,11 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Startup;
+
+public class Missions : JournalBase
 {
-    public class Missions : JournalBase
-    {
-        public ImmutableList<Mission> Active { get; init; }
-        public ImmutableList<Mission> Failed { get; init; }
-        public ImmutableList<Mission> Complete { get; init; }
-    }
+    public ImmutableList<Mission> Active { get; init; }
+    public ImmutableList<Mission> Failed { get; init; }
+    public ImmutableList<Mission> Complete { get; init; }
 }

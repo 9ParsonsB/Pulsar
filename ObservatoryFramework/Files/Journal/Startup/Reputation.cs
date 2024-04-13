@@ -1,38 +1,38 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Startup;
+
+public class Reputation : JournalBase
 {
-    public class Reputation : JournalBase
+    public float Empire { get; init; }
+
+    public float Federation { get; init; }
+
+    public float Independent { get; init; }
+
+    public float Alliance { get; init; }
+
+    public string EmpireText()
     {
-        public float Empire { get; init; }
-
-        public float Federation { get; init; }
-
-        public float Independent { get; init; }
-
-        public float Alliance { get; init; }
-
-        public string EmpireText()
-        {
             return GetReputationText(Empire);
         }
 
-        public string FederationText()
-        {
+    public string FederationText()
+    {
             return GetReputationText(Federation);
         }
 
-        public string IndependentText()
-        {
+    public string IndependentText()
+    {
             return GetReputationText(Independent);
         }
 
-        public string AllianceText()
-        {
+    public string AllianceText()
+    {
             return GetReputationText(Alliance);
         }
 
-        private string GetReputationText(float rep)
-        {
-            string text = rep switch
+    private string GetReputationText(float rep)
+    {
+            var text = rep switch
             {
                 float r when r > 90 => "allied",
                 float r when r > 35 => "friendly",
@@ -43,5 +43,4 @@
             };
             return text; 
         }
-    }
 }

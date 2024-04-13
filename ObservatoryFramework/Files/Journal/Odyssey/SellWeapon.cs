@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class SellWeapon : BuyWeapon
 {
-    public class SellWeapon : BuyWeapon
-    {
-    }
 }

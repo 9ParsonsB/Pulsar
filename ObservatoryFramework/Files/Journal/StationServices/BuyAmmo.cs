@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class BuyAmmo : JournalBase
 {
-    public class BuyAmmo : JournalBase
-    {
-        public int Cost { get; init; }
-    }
+    public int Cost { get; init; }
 }

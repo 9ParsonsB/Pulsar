@@ -1,8 +1,6 @@
-﻿using System;
-namespace Observatory.Framework.Files.ParameterTypes
+﻿namespace Observatory.Framework.Files.ParameterTypes;
+
+public class FactionStateTrend : FactionState
 {
-    public class FactionStateTrend : FactionState
-    {
-        public int Trend { get; init; }
-    }
+    public int Trend { get; init; }
 }

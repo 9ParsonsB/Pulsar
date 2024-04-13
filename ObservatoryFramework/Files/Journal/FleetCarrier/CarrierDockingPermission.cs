@@ -1,13 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.FleetCarrier;
+
+public class CarrierDockingPermission : JournalBase
 {
-    public class CarrierDockingPermission : JournalBase
-    {
-        public ulong CarrierID { get; init; }
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public CarrierDockingAccess DockingAccess { get; init; }
-        public bool AllowNotorious { get; init; }
-    }
+    public ulong CarrierID { get; init; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CarrierDockingAccess DockingAccess { get; init; }
+    public bool AllowNotorious { get; init; }
 }

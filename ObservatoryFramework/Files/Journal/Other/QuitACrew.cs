@@ -1,5 +1,4 @@
-﻿namespace Observatory.Framework.Files.Journal
-{
-    public class QuitACrew : JoinACrew
-    { }
-}
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+public class QuitACrew : JoinACrew
+{ }

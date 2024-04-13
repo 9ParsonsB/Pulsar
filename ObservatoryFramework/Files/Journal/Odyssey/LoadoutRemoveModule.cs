@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class LoadoutRemoveModule : LoadoutEquipModule
 {
-    public class LoadoutRemoveModule : LoadoutEquipModule
-    {
-    }
 }

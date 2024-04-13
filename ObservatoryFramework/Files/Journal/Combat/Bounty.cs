@@ -1,21 +1,20 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Combat;
+
+public class Bounty : JournalBase
 {
-    public class Bounty : JournalBase
-    {
-        public ImmutableList<Rewards> Rewards { get; init; }
-        public string PilotName { get; set; }
-        public string PilotName_Localised { get; set; }
-        public string Target { get; init; }
-        public string Target_Localised { get; init; }
-        public string Faction { get; init; }
-        public string Faction_Localised { get; init; }
-        public long Reward { get; init; }
-        public long TotalReward { get; init; }
-        public string VictimFaction { get; init; }
-        public string VictimFaction_Localised { get; init; }
-        public int SharedWithOthers { get; init; }
-    }
+    public ImmutableList<Rewards> Rewards { get; init; }
+    public string PilotName { get; set; }
+    public string PilotName_Localised { get; set; }
+    public string Target { get; init; }
+    public string Target_Localised { get; init; }
+    public string Faction { get; init; }
+    public string Faction_Localised { get; init; }
+    public long Reward { get; init; }
+    public long TotalReward { get; init; }
+    public string VictimFaction { get; init; }
+    public string VictimFaction_Localised { get; init; }
+    public int SharedWithOthers { get; init; }
 }

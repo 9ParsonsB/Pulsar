@@ -1,5 +1,4 @@
-﻿namespace Observatory.Framework.Files.Journal
-{
-    public class ClearSavedGame : Commander
-    { }
-}
+﻿namespace Observatory.Framework.Files.Journal.Startup;
+
+public class ClearSavedGame : Commander
+{ }

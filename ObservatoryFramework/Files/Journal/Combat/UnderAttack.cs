@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Combat;
+
+public class UnderAttack : JournalBase
 {
-    public class UnderAttack : JournalBase
-    {
-        public string Target { get; init; }
-    }
+    public string Target { get; init; }
 }

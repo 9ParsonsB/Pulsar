@@ -1,21 +1,20 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Exploration;
+
+/// <summary>
+/// Event generated when all bodies within a system have been scanned.
+/// </summary>
+public class FSSAllBodiesFound : JournalBase
 {
     /// <summary>
-    /// Event generated when all bodies within a system have been scanned.
+    /// Name of the system.
     /// </summary>
-    public class FSSAllBodiesFound : JournalBase
-    {
-        /// <summary>
-        /// Name of the system.
-        /// </summary>
-        public string SystemName { get; init; }
-        /// <summary>
-        /// Unique ID of the system.
-        /// </summary>
-        public ulong SystemAddress { get; init; }
-        /// <summary>
-        /// Count of all scanned bodies in system.
-        /// </summary>
-        public int Count { get; init; }
-    }
+    public string SystemName { get; init; }
+    /// <summary>
+    /// Unique ID of the system.
+    /// </summary>
+    public ulong SystemAddress { get; init; }
+    /// <summary>
+    /// Count of all scanned bodies in system.
+    /// </summary>
+    public int Count { get; init; }
 }

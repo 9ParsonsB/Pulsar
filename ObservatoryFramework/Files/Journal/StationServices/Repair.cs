@@ -1,11 +1,10 @@
 ﻿using System.Collections.Immutable;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class Repair : JournalBase
 {
-    public class Repair : JournalBase
-    {
-        public string Item { get; init; }
-        public int Cost { get; init; }
-        public ImmutableList<string> Items { get; init; }
-    }
+    public string Item { get; init; }
+    public int Cost { get; init; }
+    public ImmutableList<string> Items { get; init; }
 }

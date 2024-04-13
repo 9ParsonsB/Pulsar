@@ -1,10 +1,9 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Travel;
+
+public class FSDTarget : JournalBase
 {
-    public class FSDTarget : JournalBase
-    {
-        public string Name { get; init; }
-        public ulong SystemAddress { get; init; }
-        public string StarClass { get; init; }
-        public int RemainingJumpsInRoute { get; init; }
-    }
+    public string Name { get; init; }
+    public ulong SystemAddress { get; init; }
+    public string StarClass { get; init; }
+    public int RemainingJumpsInRoute { get; init; }
 }

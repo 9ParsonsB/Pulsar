@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>net8.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Explorer</RootNamespace>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="NLua" Version="1.7.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ObservatoryFramework\ObservatoryFramework.csproj" />
+  </ItemGroup>
+
+</Project>

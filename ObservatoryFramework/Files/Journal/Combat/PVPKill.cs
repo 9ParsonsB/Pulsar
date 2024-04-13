@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Combat;
+
+public class PVPKill : JournalBase
 {
-    public class PVPKill : JournalBase
-    {
-        public string Victim { get; init; }
-        public int CombatRank { get; init; }
-    }
+    public string Victim { get; init; }
+    public int CombatRank { get; init; }
 }

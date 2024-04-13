@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class RefuelAll : JournalBase
 {
-    public class RefuelAll : JournalBase
-    {
-        public int Cost { get; init; }
-        public float Amount { get; init; }
-    }
+    public int Cost { get; init; }
+    public float Amount { get; init; }
 }

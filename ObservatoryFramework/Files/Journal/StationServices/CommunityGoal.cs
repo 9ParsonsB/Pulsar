@@ -1,10 +1,9 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class CommunityGoal : JournalBase
 {
-    public class CommunityGoal : JournalBase
-    {
-        public ImmutableList<CurrentGoal> CurrentGoals { get; init; }
-    }
+    public ImmutableList<CurrentGoal> CurrentGoals { get; init; }
 }

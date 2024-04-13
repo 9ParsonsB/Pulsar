@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Squadron;
+
+public class SharedBookmarkToSquadron : SquadronCreated
 {
-    public class SharedBookmarkToSquadron : SquadronCreated
-    {
-    }
 }

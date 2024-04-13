@@ -1,35 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Reflection.Metadata.Ecma335;
 
-namespace Observatory.Framework.Files.Converters
+namespace Observatory.Framework.Files.Converters;
+
+class ThargoidWarRemainingTimeConverter : JsonConverter<int>
 {
-    class ThargoidWarRemainingTimeConverter : JsonConverter<int>
+    public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
             if (reader.TokenType == JsonTokenType.String)
             {
-                string value = reader.GetString();
+                var value = reader.GetString();
                 
-                int dayCount = Int32.TryParse(value.Split(' ')[0], out int days)
+                var dayCount = int.TryParse(value.Split(' ')[0], out var days)
                     ? days
                     : 0;
 
                 return dayCount;
-            }                
-            else
-                return reader.GetInt32();
+            }
+
+            return reader.GetInt32();
         }
 
-        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.ToString() + " Days");
+    public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+    {
+            writer.WriteStringValue(value + " Days");
         }
-    }
 }

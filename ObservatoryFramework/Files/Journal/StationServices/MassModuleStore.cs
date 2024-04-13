@@ -1,13 +1,12 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class MassModuleStore : JournalBase
 {
-    public class MassModuleStore : JournalBase
-    {
-        public ulong MarketID { get; init; }
-        public string Ship { get; init; }
-        public ulong ShipID { get; init; }
-        public ImmutableList<Item> Items { get; init; }
-    }
+    public ulong MarketID { get; init; }
+    public string Ship { get; init; }
+    public ulong ShipID { get; init; }
+    public ImmutableList<Item> Items { get; init; }
 }

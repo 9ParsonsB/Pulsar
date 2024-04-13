@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class CrewFire : JournalBase
 {
-    public class CrewFire : JournalBase
-    {
-        public string Name { get; init; }
-        public ulong CrewID { get; init; }
-    }
+    public string Name { get; init; }
+    public ulong CrewID { get; init; }
 }

@@ -1,16 +1,15 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.FleetCarrier;
+
+public class CarrierDecommission : JournalBase
 {
-    public class CarrierDecommission : JournalBase
+    public ulong CarrierID { get; init; }
+    public long ScrapRefund { get; init; }
+    public long ScrapTime { get; init; }
+    public DateTime ScrapTimeUTC
     {
-        public ulong CarrierID { get; init; }
-        public long ScrapRefund { get; init; }
-        public long ScrapTime { get; init; }
-        public System.DateTime ScrapTimeUTC
+        get 
         {
-            get 
-            {
-                return System.DateTimeOffset.FromUnixTimeSeconds(ScrapTime).UtcDateTime; 
-            }
+            return DateTimeOffset.FromUnixTimeSeconds(ScrapTime).UtcDateTime; 
         }
     }
 }

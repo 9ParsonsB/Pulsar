@@ -1,5 +1,4 @@
-﻿namespace Observatory.Framework.Files.Journal
-{
-    public class CrewMemberQuits : CrewMemberJoins
-    { }
-}
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+public class CrewMemberQuits : CrewMemberJoins
+{ }

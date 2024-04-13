@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
-{
-    public class ModuleInfo : JournalBase
-    {
+﻿namespace Observatory.Framework.Files.Journal.Other;
 
-    }
+public class ModuleInfo : JournalBase
+{
+
 }

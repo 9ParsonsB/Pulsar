@@ -1,10 +1,9 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Travel;
+
+public class LeaveBody : JournalBase
 {
-    public class LeaveBody : JournalBase
-    {
-        public string StarSystem { get; init; }
-        public ulong SystemAddress { get; init; }
-        public string Body { get; init; }
-        public int BodyID { get; init; }
-    }
+    public string StarSystem { get; init; }
+    public ulong SystemAddress { get; init; }
+    public string Body { get; init; }
+    public int BodyID { get; init; }
 }

@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Squadron;
+
+public class LeftSquadron : SquadronCreated
 {
-    public class LeftSquadron : SquadronCreated
-    {
-    }
 }

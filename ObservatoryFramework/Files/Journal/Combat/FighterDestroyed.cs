@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Combat;
+
+public class FighterDestroyed : JournalBase
 {
-    public class FighterDestroyed : JournalBase
-    {
-        public ulong ID { get; init; }
-    }
+    public ulong ID { get; init; }
 }

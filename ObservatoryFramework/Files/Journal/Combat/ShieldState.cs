@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Combat;
+
+public class ShieldState : JournalBase
 {
-    public class ShieldState : JournalBase
-    {
-        public bool ShieldsUp { get; init; }
-    }
+    public bool ShieldsUp { get; init; }
 }

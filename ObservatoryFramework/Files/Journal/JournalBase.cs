@@ -1,32 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Globalization;
 using System.Text.Json.Serialization;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal;
+
+public class JournalBase
 {
-    public class JournalBase
+    [JsonPropertyName("timestamp")]
+    public string Timestamp { get; init; }
+
+    [JsonIgnore]
+    public DateTimeOffset TimestampDateTime
     {
-        [JsonPropertyName("timestamp")]
-        public string Timestamp { get; init; }
+        get => ParseDateTime(Timestamp);
+    }
 
-        [JsonIgnore]
-        public DateTime TimestampDateTime
+    [JsonPropertyName("event")]
+    public string Event { get;  init; }
+
+    [JsonExtensionData]
+    public Dictionary<string, object> AdditionalProperties { get; init; }
+
+    [JsonIgnore]
+    public string Json 
+    {
+        get => json; 
+        set
         {
-            get => ParseDateTime(Timestamp);
-        }
-
-        [JsonPropertyName("event")]
-        public string Event { get;  init; }
-
-        [JsonExtensionData]
-        public Dictionary<string, object> AdditionalProperties { get; init; }
-
-        [JsonIgnore]
-        public string Json 
-        {
-            get => json; 
-            set
-            {
                 if (json == null || string.IsNullOrWhiteSpace(json))
                 {
                     json = value;
@@ -36,21 +35,18 @@ namespace Observatory.Framework.Files.Journal
                     throw new Exception("Journal property \"Json\" can only be set while empty.");
                 }
             }
-        }
+    }
 
-        private string json;
+    private string json;
 
-        // For use by Journal object classes for .*DateTime properties, like TimestampeDateTime, above.
-        internal static DateTime ParseDateTime(string value)
-        {
-            if (DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ssZ", null, System.Globalization.DateTimeStyles.AssumeUniversal, out DateTime dateTimeValue))
+    // For use by Journal object classes for .*DateTime properties, like TimestampeDateTime, above.
+    internal static DateTimeOffset ParseDateTime(string value)
+    {
+            if (DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ssZ", null, DateTimeStyles.AssumeUniversal, out var dateTimeValue))
             {
                 return dateTimeValue;
             }
-            else
-            {
-                return new DateTime();
-            }
+
+            return new DateTime();
         }
-    }
 }

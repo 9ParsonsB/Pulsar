@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.ParameterTypes
+﻿namespace Observatory.Framework.Files.ParameterTypes;
+
+public class FuelType
 {
-    public class FuelType
-    {
-        public double FuelMain { get; init; }
-        public double FuelReservoir { get; init; }
-    }
+    public double FuelMain { get; init; }
+    public double FuelReservoir { get; init; }
 }

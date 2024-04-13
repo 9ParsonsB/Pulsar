@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class CancelTaxi : JournalBase
 {
-    public class CancelTaxi : JournalBase
-    {
-        public int Refund { get; init; }
-    }
+    public int Refund { get; init; }
 }

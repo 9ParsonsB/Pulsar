@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+public class WingInvite : WingAdd
 {
-    public class WingInvite : WingAdd
-    {
-    }
 }

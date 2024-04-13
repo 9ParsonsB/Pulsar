@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class CommunityGoalJoin : CommunityGoalDiscard
 {
-    public class CommunityGoalJoin : CommunityGoalDiscard
-    {
-    }
 }

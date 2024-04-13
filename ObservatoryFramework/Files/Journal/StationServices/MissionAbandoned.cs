@@ -1,9 +1,8 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class MissionAbandoned : JournalBase
 {
-    public class MissionAbandoned : JournalBase
-    {
-        public string Name { get; init; }
-        public ulong MissionID { get; init; }
-        public long Fine { get; init; }
-    }
+    public string Name { get; init; }
+    public ulong MissionID { get; init; }
+    public long Fine { get; init; }
 }

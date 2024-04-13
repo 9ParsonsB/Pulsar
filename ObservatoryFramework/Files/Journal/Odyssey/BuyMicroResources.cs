@@ -1,19 +1,18 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Text.Json.Serialization;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class BuyMicroResources : JournalBase
 {
-    public class BuyMicroResources : JournalBase
-    {
-        public string Name { get; init; }
-        public string Name_Localised { get; init; }
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public MicroCategory Category { get; init; }
-        public int Count { get; init; }
-        public int Price { get; init; }
-        public ulong MarketID { get; init; }
-        public int TotalCount { get; init; }
-        public ImmutableList<MicroResource> MicroResources { get; init; }
-    }
+    public string Name { get; init; }
+    public string Name_Localised { get; init; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public MicroCategory Category { get; init; }
+    public int Count { get; init; }
+    public int Price { get; init; }
+    public ulong MarketID { get; init; }
+    public int TotalCount { get; init; }
+    public ImmutableList<MicroResource> MicroResources { get; init; }
 }

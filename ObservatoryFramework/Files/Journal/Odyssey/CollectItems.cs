@@ -1,12 +1,11 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class CollectItems : JournalBase
 {
-    public class CollectItems : JournalBase
-    {
-        public string Name { get; init; }
-        public string Name_Localised { get; init; }
-        public string Type { get; init; }
-        public ulong OwnerID { get; init; }
-        public int Count { get; init; }
-        public bool Stolen { get; init; }
-    }
+    public string Name { get; init; }
+    public string Name_Localised { get; init; }
+    public string Type { get; init; }
+    public ulong OwnerID { get; init; }
+    public int Count { get; init; }
+    public bool Stolen { get; init; }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Powerplay;
+
+public class PowerplayVoucher : PowerplayJoin
 {
-    public class PowerplayVoucher : PowerplayJoin
-    {
-        public ImmutableList<string> Systems { get; init; }
-    }
+    public ImmutableList<string> Systems { get; init; }
 }

@@ -1,11 +1,10 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class SellOrganicData : JournalBase
 {
-    public class SellOrganicData : JournalBase
-    {
-        public ulong MarketID { get; init; }
-        public ImmutableList<BioData> BioData { get; init; }
-    }
+    public ulong MarketID { get; init; }
+    public ImmutableList<BioData> BioData { get; init; }
 }

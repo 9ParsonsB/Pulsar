@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Squadron;
+
+public class SquadronPromotion : SquadronDemotion
 {
-    public class SquadronPromotion : SquadronDemotion
-    {
-    }
 }

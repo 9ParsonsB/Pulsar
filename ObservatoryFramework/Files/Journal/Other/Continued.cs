@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+public class Continued : JournalBase
 {
-    public class Continued : JournalBase
-    {
-        public int Part { get; init; }
-    }
+    public int Part { get; init; }
 }

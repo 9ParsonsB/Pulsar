@@ -1,20 +1,19 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Observatory.Framework.Files.Journal
-{
-    public class CarrierJumpRequest : JournalBase
-    {
-        public string Body { get; init; }
-        public int BodyID { get; init; }
-        public ulong SystemAddress { get; init; }
-        public ulong CarrierID { get; init; }
-        public string SystemName { get; init; }
-        public ulong SystemID { get; init; }
-        public string DepartureTime { get; init; }
+namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
-        [JsonIgnore]
-        public DateTime DepartureTimeDateTime {
-            get => ParseDateTime(DepartureTime);
-        }
+public class CarrierJumpRequest : JournalBase
+{
+    public string Body { get; init; }
+    public int BodyID { get; init; }
+    public ulong SystemAddress { get; init; }
+    public ulong CarrierID { get; init; }
+    public string SystemName { get; init; }
+    public ulong SystemID { get; init; }
+    public string DepartureTime { get; init; }
+
+    [JsonIgnore]
+    public DateTimeOffset DepartureTimeDateTime {
+        get => ParseDateTime(DepartureTime);
     }
 }

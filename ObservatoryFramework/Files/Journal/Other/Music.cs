@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+public class Music : JournalBase
 {
-    public class Music : JournalBase
-    {
-        public string MusicTrack { get; init; }
-    }
+    public string MusicTrack { get; init; }
 }

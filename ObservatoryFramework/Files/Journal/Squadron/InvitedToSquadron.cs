@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Squadron;
+
+public class InvitedToSquadron : SquadronCreated
 {
-    public class InvitedToSquadron : SquadronCreated
-    {
-    }
 }

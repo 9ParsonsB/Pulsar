@@ -1,9 +1,8 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Exploration;
+
+/// <summary>
+/// Event generated when discarding held material resources.
+/// </summary>
+public class MaterialDiscarded : MaterialCollected
 {
-    /// <summary>
-    /// Event generated when discarding held material resources.
-    /// </summary>
-    public class MaterialDiscarded : MaterialCollected
-    {
-    }
 }

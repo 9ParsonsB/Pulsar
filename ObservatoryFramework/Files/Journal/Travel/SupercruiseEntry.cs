@@ -1,11 +1,10 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Travel;
+
+public class SupercruiseEntry : JournalBase
 {
-    public class SupercruiseEntry : JournalBase
-    {
-        public string StarSystem { get; init; }
-        public ulong SystemAddress { get; init; }
-        public bool Taxi { get; init; }
-        public bool Multicrew { get; init; }
-        public bool? Wanted { get; init; }
-    }
+    public string StarSystem { get; init; }
+    public ulong SystemAddress { get; init; }
+    public bool Taxi { get; init; }
+    public bool Multicrew { get; init; }
+    public bool? Wanted { get; init; }
 }

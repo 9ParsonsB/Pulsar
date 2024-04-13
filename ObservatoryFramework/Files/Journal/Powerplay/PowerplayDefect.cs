@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Powerplay;
+
+public class PowerplayDefect : JournalBase
 {
-    public class PowerplayDefect : JournalBase
-    {
-        public string FromPower { get; init; }
-        public string ToPower { get; init; }
-    }
+    public string FromPower { get; init; }
+    public string ToPower { get; init; }
 }

@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Startup;
+
+public class NewCommander : Commander
 {
-    public class NewCommander : Commander
-    {
-        public string Package { get; init; }
-    }
+    public string Package { get; init; }
 }

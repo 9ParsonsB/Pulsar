@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Powerplay;
+
+public class PowerplayDeliver : PowerplayCollect
 {
-    public class PowerplayDeliver : PowerplayCollect
-    {
-    }
 }

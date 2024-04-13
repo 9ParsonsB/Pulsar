@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Squadron;
+
+public class SquadronStartup : SquadronCreated
 {
-    public class SquadronStartup : SquadronCreated
-    {
-        public int CurrentRank { get; init; }
-    }
+    public int CurrentRank { get; init; }
 }

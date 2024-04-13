@@ -1,11 +1,10 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class CreateSuitLoadout : DeleteSuitLoadout
 {
-    public class CreateSuitLoadout : DeleteSuitLoadout
-    {
-        public ImmutableList<SuitModule> Modules { get; init; }
-        public ImmutableList<string> SuitMods { get; init; }
-    }
+    public ImmutableList<SuitModule> Modules { get; init; }
+    public ImmutableList<string> SuitMods { get; init; }
 }

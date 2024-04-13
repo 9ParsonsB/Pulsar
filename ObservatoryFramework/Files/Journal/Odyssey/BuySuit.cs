@@ -1,10 +1,9 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class BuySuit : JournalBase
 {
-    public class BuySuit : JournalBase
-    {
-        public string Name { get; init; }
-        public string Name_Localised { get; init; }
-        public int Price { get; init; }
-        public ulong SuitID { get; init; }
-    }
+    public string Name { get; init; }
+    public string Name_Localised { get; init; }
+    public int Price { get; init; }
+    public ulong SuitID { get; init; }
 }

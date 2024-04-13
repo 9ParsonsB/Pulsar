@@ -1,11 +1,10 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+public class SearchAndRescue : JournalBase
 {
-    public class SearchAndRescue : JournalBase
-    {
-        public ulong MarketID { get; init; }
-        public string Name { get; init; }
-        public string Name_Localised { get; init; }
-        public int Count { get; init; }
-        public int Reward { get; init; }
-    }
+    public ulong MarketID { get; init; }
+    public string Name { get; init; }
+    public string Name_Localised { get; init; }
+    public int Count { get; init; }
+    public int Reward { get; init; }
 }

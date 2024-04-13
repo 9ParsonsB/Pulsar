@@ -1,12 +1,11 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal
+namespace Observatory.Framework.Files.Journal.Startup;
+
+public class Cargo : JournalBase
 {
-    public class Cargo : JournalBase
-    {
-        public string Vessel { get; init; }
-        public int Count { get; init; }
-        public ImmutableList<CargoType> Inventory { get; init; }
-    }
+    public string Vessel { get; init; }
+    public int Count { get; init; }
+    public ImmutableList<CargoType> Inventory { get; init; }
 }

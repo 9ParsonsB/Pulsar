@@ -1,5 +1,4 @@
-﻿namespace Observatory.Framework.Files.Journal
-{
-    public class HeatDamage : JournalBase
-    { }
-}
+﻿namespace Observatory.Framework.Files.Journal.Combat;
+
+public class HeatDamage : JournalBase
+{ }

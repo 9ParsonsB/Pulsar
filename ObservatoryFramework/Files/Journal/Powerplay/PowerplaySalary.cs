@@ -1,7 +1,6 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Powerplay;
+
+public class PowerplaySalary : PowerplayJoin
 {
-    public class PowerplaySalary : PowerplayJoin
-    {
-        public int Amount { get; init; }
-    }
+    public int Amount { get; init; }
 }

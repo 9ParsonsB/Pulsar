@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class CancelDropship : CancelTaxi
 {
-    public class CancelDropship : CancelTaxi
-    {
-    }
 }

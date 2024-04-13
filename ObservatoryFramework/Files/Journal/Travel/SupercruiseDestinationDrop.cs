@@ -1,9 +1,8 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Travel;
+
+public class SupercruiseDestinationDrop : JournalBase
 {
-    public class SupercruiseDestinationDrop : JournalBase
-    {
-        public string Type { get; init; }
-        public int Threat { get; init; }
-        public ulong MarketID { get; init; }
-    }
+    public string Type { get; init; }
+    public int Threat { get; init; }
+    public ulong MarketID { get; init; }
 }

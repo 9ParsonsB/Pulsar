@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
+
+public class DropItems : CollectItems
 {
-    public class DropItems : CollectItems
-    {
-    }
 }

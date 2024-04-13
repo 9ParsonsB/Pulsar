@@ -1,5 +1,4 @@
-﻿namespace Observatory.Framework.Files.Journal
-{
-    public class Liftoff : Touchdown
-    { }
-}
+﻿namespace Observatory.Framework.Files.Journal.Travel;
+
+public class Liftoff : Touchdown
+{ }

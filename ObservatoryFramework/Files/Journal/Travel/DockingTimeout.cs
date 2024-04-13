@@ -1,6 +1,5 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Travel;
+
+public class DockingTimeout : DockingRequested
 {
-    public class DockingTimeout : DockingRequested
-    {
-    }
 }

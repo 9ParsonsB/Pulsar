@@ -1,8 +1,7 @@
-﻿namespace Observatory.Framework.Files.Journal
+﻿namespace Observatory.Framework.Files.Journal.Trade;
+
+public class MiningRefined : JournalBase
 {
-    public class MiningRefined : JournalBase
-    {
-        public string Type { get; init; }
-        public string Type_Localised { get; init; }
-    }
+    public string Type { get; init; }
+    public string Type_Localised { get; init; }
 }
