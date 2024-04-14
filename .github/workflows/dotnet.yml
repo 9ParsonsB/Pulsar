@@ -10,17 +10,26 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-backend:
     runs-on: ubuntu-latest
-
     steps:
+    
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+        
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
+      
+    - name: Build Backend
       run: dotnet build --no-restore
+      
+    - name: Restore Frontend
+      working-directory: 'Pulsar/WebApp'
+      run: npm ci 
+      
+    - name: Build Frontend
+      working-directory: 'Pulsar/WebApp'
+      run: npm run build
