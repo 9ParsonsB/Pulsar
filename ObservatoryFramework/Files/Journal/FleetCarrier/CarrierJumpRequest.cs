@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Observatory.Framework.Files.Journal.FleetCarrier;
+﻿namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
 public class CarrierJumpRequest : JournalBase
 {
@@ -10,10 +8,5 @@ public class CarrierJumpRequest : JournalBase
     public ulong CarrierID { get; init; }
     public string SystemName { get; init; }
     public ulong SystemID { get; init; }
-    public string DepartureTime { get; init; }
-
-    [JsonIgnore]
-    public DateTimeOffset DepartureTimeDateTime {
-        get => ParseDateTime(DepartureTime);
-    }
+    public DateTimeOffset DepartureTime { get; init; }
 }

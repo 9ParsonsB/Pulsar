@@ -7,13 +7,7 @@ public sealed class HttpClient
 
     private static readonly Lazy<System.Net.Http.HttpClient> lazy = new Lazy<System.Net.Http.HttpClient>(() => new System.Net.Http.HttpClient());
 
-    public static System.Net.Http.HttpClient Client
-    {
-        get
-        {
-            return lazy.Value;
-        }
-    }
+    public static System.Net.Http.HttpClient Client => lazy.Value;
 
     public static string GetString(string url)
     {

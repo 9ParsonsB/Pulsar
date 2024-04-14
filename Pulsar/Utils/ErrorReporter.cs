@@ -1,10 +1,8 @@
-﻿using System.Text;
-
-namespace Pulsar.Utils;
+﻿namespace Pulsar.Utils;
 
 public static class ErrorReporter
 {
-    public static void ShowErrorPopup(string title, List<(string error, string detail)> errorList)
+    public static void ShowErrorPopup(string title, List<(string error, JsonObject detail)> errorList)
     {
         // Limit number of errors displayed.
         StringBuilder displayMessage = new();
@@ -22,7 +20,7 @@ public static class ErrorReporter
         foreach (var error in errorList)
         {
             errorLog.AppendLine($"[{timestamp}]:");
-            errorLog.AppendLine($"{error.error} - {error.detail}");
+            errorLog.AppendLine($"{error.error} - {error.detail.ToJsonString()}");
             errorLog.AppendLine();
         }
 

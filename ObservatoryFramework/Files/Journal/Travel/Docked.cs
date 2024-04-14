@@ -22,23 +22,14 @@ public class Docked : JournalBase
     [Obsolete(JournalUtilities.ObsoleteMessage), JsonConverter(typeof(LegacyFactionConverter<Faction>))]
     public Faction Faction 
     {
-        private get
-        {
-            return StationFaction;
-        } 
-        init 
-        { 
-            StationFaction = value; 
-        } 
+        private get => StationFaction;
+        init => StationFaction = value;
     }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string FactionState
     {
-        private get
-        {
-            return StationFaction.FactionState;
-        }
+        private get => StationFaction.FactionState;
 
         init
         {
@@ -51,24 +42,24 @@ public class Docked : JournalBase
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string Government
     {
-        private get { return StationGovernment; }
-        init { StationGovernment = value; }
+        private get => StationGovernment;
+        init => StationGovernment = value;
     }
     public string StationGovernment_Localised { get; init; }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string Government_Localised
     {
-        private get { return StationGovernment_Localised; }
-        init { StationGovernment_Localised = value; }
+        private get => StationGovernment_Localised;
+        init => StationGovernment_Localised = value;
     }
     public string StationAllegiance { get; init; }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string Allegiance
     {
-        private get { return StationAllegiance; }
-        init { StationAllegiance = value; }
+        private get => StationAllegiance;
+        init => StationAllegiance = value;
     }
 
     [JsonConverter(typeof(StationServiceConverter))]
@@ -78,16 +69,16 @@ public class Docked : JournalBase
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string Economy
     {
-        private get { return StationEconomy; }
-        init { StationEconomy = value; }
+        private get => StationEconomy;
+        init => StationEconomy = value;
     }
     public string StationEconomy_Localised { get; init; }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string Economy_Localised
     {
-        private get { return StationEconomy_Localised; }
-        init { StationEconomy_Localised = value; }
+        private get => StationEconomy_Localised;
+        init => StationEconomy_Localised = value;
     }
     public ImmutableList<StationEconomy> StationEconomies { get; init; }
 

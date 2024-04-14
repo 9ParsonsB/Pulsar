@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Observatory.Framework.Files;
+﻿using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
 
 namespace Observatory.Framework;
@@ -26,7 +25,7 @@ public interface IObservatoryPlugin
     /// Short name of the plugin. Used as the tab title for the plugin UI.<br/>
     /// Can be omitted, in which case the full Name will be used.
     /// </summary>
-    public string ShortName { get => Name; }
+    public string ShortName => Name;
 
     /// <summary>
     /// Version string displayed in the Core settings tab's plugin list.<br/>
@@ -38,23 +37,6 @@ public interface IObservatoryPlugin
     /// Reference to plugin UI to display within its tab.
     /// </summary>
     public PluginUI PluginUI { get; }
-
-    /// <summary>
-    /// <para>Accessors for plugin settings object. Should be initialized with a default state during the plugin constructor.</para>
-    /// <para>Saving and loading of settings is handled by Observatory Core, and any previously saved settings will be set after plugin instantiation, but before Load() is called.</para>
-    /// <para>A plugin's settings class is expected to consist of properties with public getters and setters. The settings UI will be automatically generated based on each property type.<br/>
-    /// The [SettingDisplayName(string name)] attribute can be used to specify a display name, otherwise the name of the property will be used.<br/>
-    /// Private or internal properties and methods are ignored and can be used for backing values or any other purpose.<br/>
-    /// If a public property is necessary but not required to be user accessible the [SettingIgnore] property will suppress display.</para>
-    /// </summary>
-    public object Settings { get; set; }
-
-    /// <summary>
-    /// <para>Plugin-specific object implementing the IComparer interface which is used to sort columns in the basic UI datagrid.</para>
-    /// <para>If omitted a natural sort order is used.</para>
-    /// </summary>
-    public IObservatoryComparer ColumnSorter
-    { get => null; }
 
     /// <summary>
     /// Receives data sent by other plugins.
@@ -93,24 +75,6 @@ public interface IObservatoryWorker : IObservatoryPlugin
     /// </summary>
     public void LogMonitorStateChanged(LogMonitorStateChangedEventArgs eventArgs)
     { }
-
-    /// <summary>
-    /// Method called when the user begins "Read All" journal processing, before any journal events are sent.<br/>
-    /// Used to track if a "Read All" operation is in progress or not to avoid unnecessary processing or notifications.<br/>
-    /// Can be omitted for plugins which do not require the distinction.
-    /// </summary>
-    [Obsolete("Deprecated in favour of LogMonitorStateChanged")]
-    public void ReadAllStarted()
-    { }
-
-    /// <summary>
-    /// Method called when "Read All" journal processing completes.<br/>
-    /// Used to track if a "Read All" operation is in progress or not to avoid unnecessary processing or notifications.<br/>
-    /// Can be omitted for plugins which do not require the distinction.
-    /// </summary>
-    [Obsolete("Deprecated in favour of LogMonitorStateChanged")]
-    public void ReadAllFinished()
-    { }
 }
 
 /// <summary>
@@ -127,116 +91,3 @@ public interface IObservatoryNotifier : IObservatoryPlugin
     public void OnNotificationEvent(NotificationArgs notificationEventArgs);
 }
 
-/// <summary>
-/// Interface passed by Observatory Core to plugins. Primarily used for sending notifications and UI updates back to Core.
-/// </summary>
-public interface IObservatoryCore
-{
-    /// <summary>
-    /// Send a notification out to all native notifiers and any plugins implementing IObservatoryNotifier.
-    /// </summary>
-    /// <param name="title">Title text for notification.</param>
-    /// <param name="detail">Detail/body text for notificaiton.</param>
-    /// <returns>Guid associated with the notification during its lifetime. Used as an argument with CancelNotification and UpdateNotification.</returns>
-    public Guid SendNotification(string title, string detail);
-
-    /// <summary>
-    /// Send a notification with arguments out to all native notifiers and any plugins implementing IObservatoryNotifier.
-    /// </summary>
-    /// <param name="notificationEventArgs">NotificationArgs object specifying notification content and behaviour.</param>
-    /// <returns>Guid associated with the notification during its lifetime. Used as an argument with CancelNotification and UpdateNotification.</returns>
-    public Guid SendNotification(NotificationArgs notificationEventArgs);
-
-    /// <summary>
-    /// Cancel or close an active notification.
-    /// </summary>
-    /// <param name="notificationId">Guid of notification to be cancelled.</param>
-    public void CancelNotification(Guid notificationId);
-
-    /// <summary>
-    /// Update an active notification with a new set of NotificationsArgs. Timeout values are reset and begin counting again from zero if specified.
-    /// </summary>
-    /// <param name="notificationId">Guid of notification to be updated.</param>
-    /// <param name="notificationEventArgs">NotificationArgs object specifying updated notification content and behaviour.</param>
-    public void UpdateNotification(Guid notificationId, NotificationArgs notificationEventArgs);
-
-    /// <summary>
-    /// Add an item to the bottom of the basic UI grid.
-    /// </summary>
-    /// <param name="worker">Reference to the calling plugin's worker interface.</param>
-    /// <param name="item">Grid item to be added. Object type should match original template item used to create the grid.</param>
-    public void AddGridItem(IObservatoryWorker worker, object item);
-
-    /// <summary>
-    /// Add multiple items to the bottom of the basic UI grid.
-    /// </summary>
-    /// <param name="worker">Reference to the calling plugin's worker interface.</param>
-    /// <param name="items">Grid items to be added. Object types should match original template item used to create the grid.</param>
-    public void AddGridItems(IObservatoryWorker worker, IEnumerable<Dictionary<string,string>> items);
-
-    /// <summary>
-    /// Replace the contents of the grid with the provided items.
-    /// </summary>
-    /// <param name="worker">Reference to the calling plugin's worker interface.</param>
-    /// <param name="items">Grid items to be added. Object types should match original template item used to create the grid.</param>
-    public void SetGridItems(IObservatoryWorker worker, IEnumerable<Dictionary<string,string>> items);
-        
-    /// <summary>
-    /// Requests current Elite Dangerous status.json content.
-    /// </summary>
-    /// <returns>Status object reflecting current Elite Dangerous player status.</returns>
-    public Status GetStatus();
-
-    /// <summary>
-    /// Version string of Observatory Core.
-    /// </summary>
-    public string Version { get; }
-
-    /// <summary>
-    /// Returns a delegate for logging an error for the calling plugin. A plugin can wrap this method
-    /// or pass it along to its collaborators.
-    /// </summary>
-    /// <param name="plugin">The calling plugin</param>
-    public Action<Exception, string> GetPluginErrorLogger(IObservatoryPlugin plugin);
-
-    /// <summary>
-    /// Shared application HttpClient object. Provided so that plugins can adhere to .NET recommended behaviour of a single HttpClient object per application.
-    /// </summary>
-    public HttpClient HttpClient { get; }
-
-    /// <summary>
-    /// Returns the current LogMonitor state.
-    /// </summary>
-    public LogMonitorState CurrentLogMonitorState { get; }
-
-    /// <summary>
-    /// Returns true if the current LogMonitor state represents a batch-read mode.
-    /// </summary>
-    public bool IsLogMonitorBatchReading { get; }
-
-    /// <summary>
-    /// Retrieves and ensures creation of a location which can be used by the plugin to store persistent data.
-    /// </summary>
-    public string PluginStorageFolder { get; }
-
-    /// <summary>
-    /// Sends arbitrary data to all other plugins. The full name and version of the sending plugin will be used to identify the sender to any recipients.
-    /// </summary>
-    public void SendPluginMessage(IObservatoryPlugin plugin, object message);
-}
-
-/// <summary>
-/// Extends the base IComparer interface with exposed values for the column ID and sort order to use.
-/// </summary>
-public interface IObservatoryComparer : IComparer
-{
-    /// <summary>
-    /// Column ID to be currently sorted by.
-    /// </summary>
-    public int SortColumn { get; set; }
-
-    /// <summary>
-    /// Current order of sorting. Ascending = 1, Descending = -1, No sorting = 0.
-    /// </summary>
-    public int Order { get; set; }
-}

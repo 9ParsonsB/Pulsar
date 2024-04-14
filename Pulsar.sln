@@ -5,8 +5,6 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulsar", "Pulsar\Pulsar.csproj", "{F389FFD8-B189-4A9F-A077-8D355BA23328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer", "Explorer\Explorer.csproj", "{6CDB4320-1DC9-405A-97E8-272C9B4CD27C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botanist", "Botanist\Botanist.csproj", "{25F01564-0E35-471B-A9AC-C61C83AF3275}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservatoryFramework", "ObservatoryFramework\ObservatoryFramework.csproj", "{27525BDD-2940-4CB2-8B76-395677997AEF}"
@@ -21,10 +19,6 @@ Global
 		{F389FFD8-B189-4A9F-A077-8D355BA23328}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F389FFD8-B189-4A9F-A077-8D355BA23328}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F389FFD8-B189-4A9F-A077-8D355BA23328}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CDB4320-1DC9-405A-97E8-272C9B4CD27C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CDB4320-1DC9-405A-97E8-272C9B4CD27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CDB4320-1DC9-405A-97E8-272C9B4CD27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CDB4320-1DC9-405A-97E8-272C9B4CD27C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{25F01564-0E35-471B-A9AC-C61C83AF3275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{25F01564-0E35-471B-A9AC-C61C83AF3275}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25F01564-0E35-471B-A9AC-C61C83AF3275}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Reflection;
 using Observatory.Framework;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Exploration;
@@ -19,7 +18,7 @@ public class Botanist : IObservatoryWorker
 
     // To make this journal locale agnostic, use the genus identifier and map to English names used in notifications.
     // Note: Values here are also used in the lookup for colony distance, so we also use this to resolve misspellings and Frontier bugs.
-    private readonly Dictionary<string, string> EnglishGenusByIdentifier = new()
+    public static readonly IReadOnlyDictionary<string, string> EnglishGenusByIdentifier = new Dictionary<string, string>
     {
         { "$Codex_Ent_Aleoids_Genus_Name;", "Aleoida" },
         { "$Codex_Ent_Bacterial_Genus_Name;", "Bacterium" },
@@ -51,7 +50,7 @@ public class Botanist : IObservatoryWorker
     };
 
     // Note: Some Horizons bios may be missing, but they'll get localized genus name and default colony distance
-    private readonly Dictionary<string, int> ColonyDistancesByGenus = new()
+    public static readonly IReadOnlyDictionary<string, int> ColonyDistancesByGenus = new Dictionary<string, int>()
     {
         { "Aleoida", 150 },
         { "Bacterium", 500 },
@@ -99,7 +98,7 @@ public class Botanist : IObservatoryWorker
     public object Settings
     {
         get => botanistSettings;
-        set { botanistSettings = (BotanistSettings)value; }
+        set => botanistSettings = (BotanistSettings)value;
     }
 
     public void JournalEvent<TJournal>(TJournal journal) where TJournal : JournalBase
@@ -216,8 +215,6 @@ public class Botanist : IObservatoryWorker
                             break;
                     }
                 }
-
-                UpdateUIGrid();
             }
                 break;
             case LeaveBody:
@@ -259,121 +256,4 @@ public class Botanist : IObservatoryWorker
 
         Core = observatoryCore;
     }
-
-    public void LogMonitorStateChanged(LogMonitorStateChangedEventArgs args)
-    {
-        if (LogMonitorStateChangedEventArgs.IsBatchRead(args.NewState))
-        {
-            // Beginning a batch read. Clear grid.
-            Core.SetGridItems(this,
-            [
-                typeof(BotanistGrid).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Select(p => p.Name)
-                    .ToDictionary(p => p, p => string.Empty)
-            ]);
-        }
-        else if (LogMonitorStateChangedEventArgs.IsBatchRead(args.PreviousState))
-        {
-            // Batch read is complete. Show data.
-            UpdateUIGrid();
-        }
-    }
-
-    private void UpdateUIGrid()
-    {
-        // Suppress repainting the entire contents of the grid on every ScanOrganic record we read.
-        if (Core.IsLogMonitorBatchReading) return;
-
-        Core.SetGridItems(this, [
-            typeof(BotanistGrid).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Select(p => p.Name)
-                .ToDictionary(p => p, p => string.Empty)
-        ]);
-        foreach (var bioPlanet in BioPlanets.Values)
-        {
-            if (bioPlanet.SpeciesFound.Count == 0)
-            {
-                var planetRow = new BotanistGrid
-                {
-                    Body = bioPlanet.BodyName,
-                    BioTotal = bioPlanet.BioTotal.ToString(),
-                    Species = "(NO SAMPLES TAKEN)",
-                    Analysed = string.Empty,
-                    ColonyDistance = string.Empty,
-                };
-                Core.AddGridItem(this, planetRow);
-            }
-
-            var firstRow = true;
-            foreach (var entry in bioPlanet.SpeciesFound)
-            {
-                var colonyDistance =
-                    ColonyDistancesByGenus.GetValueOrDefault(entry.Value.Genus ?? "", DEFAULT_COLONY_DISTANCE);
-                var speciesRow = new BotanistGrid
-                {
-                    Body = firstRow ? bioPlanet.BodyName : string.Empty,
-                    BioTotal = firstRow ? bioPlanet.BioTotal.ToString() : string.Empty,
-                    Species = entry.Key,
-                    Analysed = entry.Value.Analysed ? "✓" : "",
-                    ColonyDistance = $"{colonyDistance}m",
-                };
-                Core.AddGridItem(this, speciesRow);
-                firstRow = false;
-            }
-        }
-    }
-}
-
-class BodyAddress
-{
-    public ulong SystemAddress { get; set; }
-    public int BodyID { get; set; }
-
-    public override bool Equals(object obj)
-    {
-        // We want value equality here.
-
-        //       
-        // See the full list of guidelines at
-        //   http://go.microsoft.com/fwlink/?LinkID=85237  
-        // and also the guidance for operator== at
-        //   http://go.microsoft.com/fwlink/?LinkId=85238
-        //
-
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        var other = (BodyAddress)obj;
-        return other.SystemAddress == SystemAddress
-               && other.BodyID == BodyID;
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(SystemAddress, BodyID);
-    }
-}
-
-class BioPlanetDetail
-{
-    public string BodyName { get; set; }
-    public int BioTotal { get; set; }
-    public Dictionary<string, BioSampleDetail> SpeciesFound { get; set; }
-}
-
-class BioSampleDetail
-{
-    public string Genus { get; set; }
-    public bool Analysed { get; set; }
-}
-
-public class BotanistGrid
-{
-    public string Body { get; set; }
-    public string BioTotal { get; set; }
-    public string Species { get; set; }
-    public string Analysed { get; set; }
-    public string ColonyDistance { get; set; }
 }

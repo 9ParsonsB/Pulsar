@@ -14,10 +14,7 @@ public class Location : JournalBase
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string FactionState
     {
-        get
-        {
-                return SystemFaction.FactionState;
-            }
+        get => SystemFaction.FactionState;
         init
         {
                 //Stale Data, discard

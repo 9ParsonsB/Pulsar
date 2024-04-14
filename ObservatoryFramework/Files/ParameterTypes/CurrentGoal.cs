@@ -1,6 +1,4 @@
-﻿using Observatory.Framework.Files.Journal;
-
-namespace Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
 public class CurrentGoal
 {
@@ -8,11 +6,7 @@ public class CurrentGoal
     public string Title { get; init; }
     public string SystemName { get; init; }
     public string MarketName { get; init; }
-    public string Expiry { get; init; }
-    public DateTimeOffset ExpiryDateTime
-    {
-        get => JournalBase.ParseDateTime(Expiry);
-    }
+    public DateTimeOffset Expiry { get; init; }
     public bool IsComplete { get; init; }
     public long CurrentTotal { get; init; }
     public long PlayerContribution { get; init; }

@@ -22,13 +22,7 @@ public class MaterialTrader
     [JsonPropertyName("Raw_Materials_Traded")]
     public int RawMaterialsTraded { get; init; }
 
-    public int DataMaterialsTraded
-    {
-        get
-        {
-            return MaterialsTraded - EncodedMaterialsTraded - RawMaterialsTraded;
-        }
-    }
+    public int DataMaterialsTraded => MaterialsTraded - EncodedMaterialsTraded - RawMaterialsTraded;
 
     [JsonPropertyName("Grade_1_Materials_Traded")]
     public int Grade1MaterialsTraded { get; init; }

@@ -1,34 +1,12 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json.Nodes;
 
 namespace Observatory.Framework.Files.Journal;
 
 public static class JournalUtilities
 {
-    public static string GetEventType(string line)
+    public static string? GetEventType(JsonObject? line)
     {
-        var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(line));
-        var result = string.Empty;
-
-        try
-        {
-            while (reader.Read())
-            {
-                if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "event")
-                {
-                    reader.Read();
-                    result = reader.GetString();
-                }
-            }
-        }
-        catch
-        {
-                
-            result = "InvalidJson";
-        }
-
-
-        return result;
+        return line.ContainsKey("event") ? line["event"]?.ToString() : null;
     }
 
     public static string CleanScanEvent(string line)
@@ -38,6 +16,6 @@ public static class JournalUtilities
 
     public const string ObsoleteMessage = "Unused in Elite Dangerous 3.7+, may appear in legacy journal data.";
 
-    public const string UnusedMessage = "Documented by Frontier, but no occurances of this value ever found in real journal data.";
-     
+    public const string UnusedMessage =
+        "Documented by Frontier, but no occurances of this value ever found in real journal data.";
 }

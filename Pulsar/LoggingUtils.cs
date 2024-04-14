@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Pulsar;
 
 public static class LoggingUtils
