@@ -1,17 +1,18 @@
-﻿using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Journal.Combat;
-using Observatory.Framework.Files.Journal.Exploration;
-using Observatory.Framework.Files.Journal.FleetCarrier;
-using Observatory.Framework.Files.Journal.Odyssey;
-using Observatory.Framework.Files.Journal.Other;
-using Observatory.Framework.Files.Journal.Powerplay;
-using Observatory.Framework.Files.Journal.Squadron;
-using Observatory.Framework.Files.Journal.Startup;
-using Observatory.Framework.Files.Journal.StationServices;
-using Observatory.Framework.Files.Journal.Trade;
-using Observatory.Framework.Files.Journal.Travel;
+﻿namespace Observatory.Framework.Files.Journal;
 
-namespace Observatory.Framework.Files.Journal;
+using System.Text.Json.Serialization;
+using Combat;
+using Exploration;
+using FleetCarrier;
+using Odyssey;
+using Other;
+using Powerplay;
+using Squadron;
+using Startup;
+using StationServices;
+using Trade;
+using Travel;
+
 [JsonDerivedType(typeof(BackpackFile))]
 [JsonDerivedType(typeof(CargoFile))]
 [JsonDerivedType(typeof(FCMaterialsFile))]

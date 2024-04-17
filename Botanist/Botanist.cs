@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿namespace Botanist;
+
 using Observatory.Framework;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Exploration;
@@ -8,7 +9,6 @@ using Observatory.Framework.Files.Journal.Startup;
 using Observatory.Framework.Files.Journal.Travel;
 using Observatory.Framework.Files.ParameterTypes;
 
-namespace Botanist;
 
 public class Botanist : IObservatoryWorker
 {
@@ -77,8 +77,6 @@ public class Botanist : IObservatoryWorker
 
     private const int DEFAULT_COLONY_DISTANCE = 100;
 
-    ObservableCollection<object> GridCollection;
-    private PluginUI pluginUI;
     private Guid? samplerStatusNotification;
 
     private BotanistSettings botanistSettings = new()
@@ -92,8 +90,6 @@ public class Botanist : IObservatoryWorker
     public string ShortName => "Botanist";
 
     public string Version => typeof(Botanist).Assembly.GetName().Version.ToString();
-
-    public PluginUI PluginUI => pluginUI;
 
     public object Settings
     {
@@ -246,12 +242,6 @@ public class Botanist : IObservatoryWorker
 
     public void Load(IObservatoryCore observatoryCore)
     {
-        GridCollection = new();
-        BotanistGrid uiObject = new();
-
-        GridCollection.Add(uiObject);
-        pluginUI = new PluginUI(GridCollection);
-
         BioPlanets = new();
 
         Core = observatoryCore;

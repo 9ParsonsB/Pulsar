@@ -1,21 +1,18 @@
-if (args.Length > 0 && File.Exists(args[0]))
-{
-    var fileInfo = new FileInfo(args[0]);
-    if (fileInfo.Extension is ".eop" or ".zip")
-        File.Copy(fileInfo.FullName, Path.Join(AppDomain.CurrentDomain.BaseDirectory, "plugins", fileInfo.Name));
-}
+using Lamar.Microsoft.DependencyInjection;
 
-try
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddLamar();
+builder.Services.AddControllers();
+builder.Services.AddSignalR();
+builder.Services.AddDbContext<PulsarContext>();
+builder.Services.Configure<PulsarConfiguration>(builder.Configuration.GetSection(nameof(Pulsar)));
+
+var app = builder.Build();
+
+await app.RunAsync();
+
+public class PulsarConfiguration
 {
-    WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
-    
-    var app = builder.Build();
-    
-    SettingsManager.Load();
-    
-    await app.RunAsync();
-}
-catch (Exception ex)
-{
-    LoggingUtils.LogError(ex, "");
+    public string JournalDirectory { get; set; }
 }

@@ -34,11 +34,6 @@ public interface IObservatoryPlugin
     public string Version { get; }
 
     /// <summary>
-    /// Reference to plugin UI to display within its tab.
-    /// </summary>
-    public PluginUI PluginUI { get; }
-
-    /// <summary>
     /// Receives data sent by other plugins.
     /// </summary>
     public void HandlePluginMessage(string sourceName, string sourceVersion, object messageArgs)

@@ -3,7 +3,7 @@ using Observatory.Framework.Files.Journal.Exploration;
 
 namespace Pulsar.Utils;
 
-public class JournalReader
+public static class JournalReader
 {
     public static TJournal ObservatoryDeserializer<TJournal>(string json) where TJournal : JournalBase
     {
