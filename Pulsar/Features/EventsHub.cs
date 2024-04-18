@@ -2,7 +2,6 @@ namespace Pulsar.Features;
 
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
-using Microsoft.AspNetCore.SignalR;
 
 public class EventsHub : Hub<IEventsHub>
 {

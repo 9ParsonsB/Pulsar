@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.SignalR;
-
 namespace Pulsar.Features.Status;
 
 [ApiController]

@@ -19,6 +19,7 @@ builder.Services.Configure<JsonOptions>(options =>
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 builder.Services.AddSpaYarp();
+builder.Services.AddHostedService<FileWatcherService>();
 
 var app = builder.Build();
 
