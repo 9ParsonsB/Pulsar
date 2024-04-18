@@ -4,7 +4,7 @@ using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
 using Microsoft.AspNetCore.SignalR;
 
-public class EventsHub : Hub<IEventHub>
+public class EventsHub : Hub<IEventsHub>
 {
     public async Task StatusUpdated(Observatory.Framework.Files.Status status) => await Clients.All.StatusUpdated(status);
     
@@ -27,7 +27,7 @@ public class EventsHub : Hub<IEventHub>
     public async Task BackpackUpdated(BackpackFile backpack) => await Clients.All.BackpackUpdated(backpack);
 }
 
-public interface IEventHub
+public interface IEventsHub
 {
     Task StatusUpdated(Observatory.Framework.Files.Status status);
     
