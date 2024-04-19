@@ -7,9 +7,9 @@ A Cross Platform Fork of Elite Observatory Core.
 ## Planned Feature
 
  - [ ] Read the Journal
-  - [x] Read Status File
+   - [x] Read Status File
  - [ ] Show Journal information ( Current Ship, Station, etc. )
-  - [ ] Realtime API 
+   - [ ] Realtime API 
  - [ ] Realtime Journal Updates
  - [ ] System Exploration Value
  - [ ] System Exobiology Value
@@ -18,7 +18,7 @@ A Cross Platform Fork of Elite Observatory Core.
  - [ ] Outfitting Targets (does this station have wanted parts for build)
  - [ ] CAPI Integration
  - [ ] EDDN Submission
-  - [ ] Must be easilty disableable for sneaky business
+   - [ ] Must be easilty disableable for sneaky business
  - [ ] IGAU Submission
  - [ ] Plugin System
  - [ ] Overlay
