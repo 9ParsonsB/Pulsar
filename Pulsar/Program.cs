@@ -4,7 +4,12 @@ using Pulsar.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddLamar();
+builder.Host.UseLamar((_, registry) => registry.Scan(scan =>
+{
+    scan.AssemblyContainingType<Program>();
+    scan.WithDefaultConventions();
+    scan.LookForRegistries();
+}));
 builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>
 {
