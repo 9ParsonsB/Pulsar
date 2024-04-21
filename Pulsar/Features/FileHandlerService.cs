@@ -1,3 +1,6 @@
+using Pulsar.Features.ModulesInfo;
+using Pulsar.Features.ShipLocker;
+
 namespace Pulsar.Features;
 
 public interface IFileHandler
@@ -7,7 +10,11 @@ public interface IFileHandler
 
 public interface IFileHandlerService : IFileHandler;
 
-public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusService statusService) : IFileHandlerService
+public class FileHandlerService(
+    ILogger<FileHandlerService> logger,
+    IStatusService statusService,
+    IShipLockerService shipLockerService,
+    IModulesInfoService modulesService) : IFileHandlerService
 {
     public static readonly string MarketFileName = "Market.json";
     public static readonly string StatusFileName = "Status.json";
@@ -22,7 +29,7 @@ public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusServi
     public static readonly string ModulesInfoFileName = "ModulesInfo.json";
     public static readonly string ShipLockerFileName = "ShipLocker.json";
     public static readonly string NavRouteFileName = "NavRoute.json";
-    
+
     public static readonly string[] AllFileNames =
     [
         MarketFileName,
@@ -38,21 +45,23 @@ public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusServi
         ShipLockerFileName,
         NavRouteFileName
     ];
-    
+
     private readonly Dictionary<string, IJournalHandler> Handlers = new()
     {
-        { StatusFileName, statusService }
+        { StatusFileName, statusService },
+        { ModulesInfoFileName, modulesService },
+        { ShipLockerFileName, shipLockerService }
     };
-    
+
     public async Task HandleFile(string path)
     {
         var fileInfo = new FileInfo(path);
         var fileName = fileInfo.Name;
-        
+
         // only scan the file if we recognize it
         var match = AllFileNames.FirstOrDefault(
             f => fileName.StartsWith(f, StringComparison.InvariantCultureIgnoreCase));
-        
+
         if (string.IsNullOrWhiteSpace(match))
         {
             logger.LogWarning("File {FileName} is not recognized", fileName);
@@ -65,7 +74,7 @@ public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusServi
             await handler.HandleFile(fileInfo.Name);
             return;
         }
-        
+
         logger.LogInformation("File {FileName} was not handled", fileName);
     }
 }
