@@ -15,7 +15,7 @@ public class EventsHub : Hub<IEventsHub>
     
     public async Task MarketUpdated(MarketFile market) => await Clients.All.MarketUpdated(market);
     
-    public async Task JournalUpdated(IReadOnlyCollection<JournalBase> journals) => await Clients.All.JournalUpdated(journals);
+    public async Task JournalUpdated(IReadOnlyCollection<IJournal> journals) => await Clients.All.JournalUpdated(journals);
     
     public async Task ModuleInfoUpdated(ModuleInfoFile moduleInfo) => await Clients.All.ModuleInfoUpdated(moduleInfo);
     
@@ -38,7 +38,7 @@ public interface IEventsHub
     
     Task MarketUpdated(MarketFile market);
     
-    Task JournalUpdated(IReadOnlyCollection<JournalBase> journals);
+    Task JournalUpdated(IReadOnlyCollection<IJournal> journals);
     
     Task ModuleInfoUpdated(ModuleInfoFile moduleInfo);
     

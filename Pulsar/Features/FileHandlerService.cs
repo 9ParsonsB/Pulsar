@@ -1,9 +1,11 @@
 namespace Pulsar.Features;
 
-public interface IFileHandlerService
+public interface IFileHandler
 {
-    void HandleFile(string path);
+    Task HandleFile(string path);
 }
+
+public interface IFileHandlerService : IFileHandler;
 
 public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusService statusService) : IFileHandlerService
 {
@@ -12,7 +14,8 @@ public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusServi
     public static readonly string OutfittingFileName = "Outfitting.json";
     public static readonly string ShipyardFileName = "Shipyard.json";
     public static readonly string ModulesFileName = "Modules.json";
-    public static readonly string JournalFileName = "Journal.";
+    public static readonly string JournalLogFileNameRegEx = @"Journal\.\d\d\d\d-\d\d-\d\dT\d+\.\d\d\.log";
+    public static readonly string JournalLogFileName = "Journal.*.log";
     public static readonly string RouteFileName = "Route.json";
     public static readonly string CargoFileName = "Cargo.json";
     public static readonly string BackpackFileName = "Backpack.json";
@@ -27,7 +30,7 @@ public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusServi
         OutfittingFileName,
         ShipyardFileName,
         ModulesFileName,
-        JournalFileName,
+        JournalLogFileNameRegEx,
         RouteFileName,
         CargoFileName,
         BackpackFileName,
@@ -38,10 +41,10 @@ public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusServi
     
     private readonly Dictionary<string, IJournalHandler> Handlers = new()
     {
-        { StatusFileName, statusService },
+        { StatusFileName, statusService }
     };
     
-    public void HandleFile(string path)
+    public async Task HandleFile(string path)
     {
         var fileInfo = new FileInfo(path);
         var fileName = fileInfo.Name;
@@ -59,7 +62,7 @@ public class FileHandlerService(ILogger<FileHandlerService> logger, IStatusServi
         if (Handlers.TryGetValue(match, out var handler))
         {
             logger.LogInformation("Handling file {FileName}", fileName);
-            handler.HandleFile(fileInfo.Name);
+            await handler.HandleFile(fileInfo.Name);
             return;
         }
         

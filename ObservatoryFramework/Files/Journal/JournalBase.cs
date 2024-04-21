@@ -277,7 +277,8 @@ using Travel;
 [JsonDerivedType(typeof(OutfittingFile))]
 [JsonDerivedType(typeof(ShipyardFile))]
 [JsonDerivedType(typeof(Status))]
-public class JournalBase
+[JsonDerivedType(typeof(JournalBase))]
+public interface IJournal
 {
     [JsonPropertyName("timestamp")]
     public DateTimeOffset Timestamp { get; init; }
@@ -286,5 +287,12 @@ public class JournalBase
     public string Event { get;  init; }
 
     [JsonExtensionData]
+    public Dictionary<string, object> AdditionalProperties { get; init; }
+}
+
+public abstract class JournalBase : IJournal
+{
+    public DateTimeOffset Timestamp { get; init; }
+    public string Event { get; init; }
     public Dictionary<string, object> AdditionalProperties { get; init; }
 }
