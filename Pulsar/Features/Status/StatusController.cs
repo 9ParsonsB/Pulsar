@@ -7,6 +7,6 @@ public class StatusController(IStatusService status) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        return Ok(status.Get());
+        return Ok(await status.Get());
     }
 }

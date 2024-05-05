@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as signalR from "@microsoft/signalr"
     import {onMount} from "svelte";
-    let x = $state(null);
+    let x: string | null = $state(null);
     let textarea = $state("");
 
     const connection = new signalR.HubConnectionBuilder()

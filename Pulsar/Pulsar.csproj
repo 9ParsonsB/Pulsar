@@ -9,6 +9,7 @@
         <LangVersion>latest</LangVersion>
         <SpaRoot>WebApp/</SpaRoot>
         <SpaClientUrl>http://localhost:5173</SpaClientUrl>
+        <UserSecretsId>73ec530f-725a-43be-ae2e-b43eeb61cb04</UserSecretsId>
     </PropertyGroup>
     
     <ItemGroup>
@@ -16,7 +17,6 @@
     </ItemGroup>
    
     <ItemGroup>
-      <PackageReference Include="AspNetCore.SpaYarp" Version="2.0.1" />
       <PackageReference Include="Lamar" Version="13.0.3" />
       <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="13.0.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
