@@ -1,35 +1,46 @@
 namespace Pulsar.Features;
 
+using System.Collections.Concurrent;
+using Microsoft.Extensions.FileProviders;
+
 public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHandlerService fileHandlerService) : IHostedService
 {
-    private FileSystemWatcher watcher = null!;
+    private PhysicalFileProvider watcher = null!;
     
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        watcher = new FileSystemWatcher(options.Value.JournalDirectory)
+        if (!Directory.Exists(options.Value.JournalDirectory))
         {
-            EnableRaisingEvents = true,
-            IncludeSubdirectories = true
-        };
+            throw new Exception($"Directory {options.Value.JournalDirectory} does not exist.");
+        }
         
-        watcher.BeginInit();
-        
-        watcher.Created += HandleFileChanged;
-        watcher.Changed += HandleFileChanged;
-        watcher.Renamed += HandleFileChanged; // ?
-        
-        watcher.IncludeSubdirectories = false;
-        watcher.EnableRaisingEvents = true;
-        watcher.NotifyFilter = NotifyFilters.LastWrite & NotifyFilters.Size & NotifyFilters.FileName;
-        
-        watcher.EndInit();
-        
+        watcher = new PhysicalFileProvider(options.Value.JournalDirectory);
+        Watch();
+
         return Task.CompletedTask;
     }
+    
+    ConcurrentDictionary<string, DateTimeOffset> FileDates = new();
 
-    private void HandleFileChanged(object sender, FileSystemEventArgs e)
+    private void HandleFileChanged(object? sender)
     {
-        fileHandlerService.HandleFile(e.FullPath);   
+        foreach (var file in watcher.GetDirectoryContents(""))
+        {
+            if (!file.Name.EndsWith(".json") || file.IsDirectory) continue;
+            
+            var existing = FileDates.GetOrAdd(file.PhysicalPath, file.LastModified);
+            
+            if (existing != file.LastModified)
+            {
+                fileHandlerService.HandleFile(file.PhysicalPath);
+            }
+        }
+        Watch();
+    }
+    
+    private void Watch()
+    {
+        watcher.Watch("**/*.json").RegisterChangeCallback(HandleFileChanged, null);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
