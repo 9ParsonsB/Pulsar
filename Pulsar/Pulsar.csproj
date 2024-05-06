@@ -7,8 +7,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Pulsar</RootNamespace>
         <LangVersion>latest</LangVersion>
-        <SpaRoot>WebApp/</SpaRoot>
-        <SpaClientUrl>http://localhost:5173</SpaClientUrl>
         <UserSecretsId>73ec530f-725a-43be-ae2e-b43eeb61cb04</UserSecretsId>
     </PropertyGroup>
     
@@ -23,5 +21,4 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
-
 </Project>
