@@ -97,7 +97,7 @@ public class Botanist : IObservatoryWorker
         set => botanistSettings = (BotanistSettings)value;
     }
 
-    public void JournalEvent<TJournal>(TJournal journal) where TJournal : IJournal
+    public void JournalEvent<TJournal>(TJournal journal) where TJournal : JournalBase
     {
         switch (journal)
         {

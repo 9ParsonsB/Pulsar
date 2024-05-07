@@ -1,3 +1,5 @@
+using Observatory.Framework.Files;
+using Observatory.Framework.Files.Journal.Odyssey;
 using Pulsar.Features.ModulesInfo;
 using Pulsar.Features.ShipLocker;
 
@@ -12,9 +14,7 @@ public interface IFileHandlerService : IFileHandler;
 
 public class FileHandlerService(
     ILogger<FileHandlerService> logger,
-    IStatusService statusService,
-    IShipLockerService shipLockerService,
-    IModulesInfoService modulesService) : IFileHandlerService
+    IServiceProvider serviceProvider) : IFileHandlerService
 {
     public static readonly string MarketFileName = "Market.json";
     public static readonly string StatusFileName = "Status.json";
@@ -46,11 +46,13 @@ public class FileHandlerService(
         NavRouteFileName
     ];
 
-    private readonly Dictionary<string, IJournalHandler> Handlers = new()
+    private readonly Dictionary<string, Type> Handlers = new()
     {
-        { StatusFileName, statusService },
-        { ModulesInfoFileName, modulesService },
-        { ShipLockerFileName, shipLockerService }
+        { StatusFileName, typeof(IJournalHandler<Observatory.Framework.Files.Status>) },
+        { ModulesInfoFileName, typeof(IJournalHandler<ModuleInfoFile>) },
+        { ShipLockerFileName, typeof(IJournalHandler<ShipLockerMaterials>) },
+        { ShipLockerFileName, typeof(IJournalHandler<ShipLockerMaterials>) },
+        { CargoFileName, typeof(IJournalHandler<CargoFile>) },
     };
 
     public async Task HandleFile(string path)
@@ -68,10 +70,10 @@ public class FileHandlerService(
             return;
         }
 
-        if (Handlers.TryGetValue(match, out var handler))
+        if (Handlers.TryGetValue(match, out var type))
         {
-            logger.LogInformation("Handling file {FileName}", fileName);
-            await handler.HandleFile(fileInfo.Name);
+            logger.LogInformation("Handling file {FileName} with Type {Type}", fileName);
+            (serviceProvider.GetRequiredService(type) as IJournalHandler)?.HandleFile(path);
             return;
         }
 

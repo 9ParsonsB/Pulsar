@@ -1,6 +1,6 @@
 namespace Pulsar.Features.Journal;
 
-using Observatory.Framework.Files;
+using System.Text.RegularExpressions;
 using Observatory.Framework.Files.Journal;
 
 public interface IJournalService : IJournalHandler<List<JournalBase>>;
@@ -12,57 +12,41 @@ public class JournalService
     IEventHubContext hub
 ) : IJournalService
 {
-    public string FileName => "Journal.2024-03-16T152419.01.log"; // FileHandlerService.JournalLogFileName;
-
-    public bool ValidateFile(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            logger.LogWarning("Journal file {JournalFile} does not exist", filePath);
-            return false;
-        }
-
-        var fileInfo = new FileInfo(filePath);
-
-        if (!string.Equals(fileInfo.Name, FileName, StringComparison.InvariantCultureIgnoreCase))
-        {
-            logger.LogWarning("Journal file {name} is not valid");
-            return false;
-        }
-
-        if (fileInfo.Length == 0)
-        {
-            logger.LogWarning("Journal file {name} is empty", filePath);
-            return false;
-        }
-
-        return true;
-    }
-
+    public string FileName => FileHandlerService.JournalLogFileName;
+    
     public async Task HandleFile(string filePath)
     {
-        if (!ValidateFile(filePath))
+        if (!FileHelper.ValidateFile(filePath))
         {
             return;
         }
 
         var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        var moduleInfo = await JsonSerializer.DeserializeAsync<List<JournalBase>>(file);
+        var journals = await JsonSerializer.DeserializeAsync<List<JournalBase>>(file);
 
-        if (moduleInfo == null)
+        if (journals == null)
         {
             logger.LogWarning("Failed to deserialize status file {FilePath}", filePath);
             return;
         }
 
-        // await hub.Clients.All.ModuleInfoUpdated(moduleInfo);
+        await hub.Clients.All.JournalUpdated(journals);
     }
 
     public async Task<List<JournalBase>> Get()
     {
-        var dataFileName = Path.Combine(options.Value.JournalDirectory, FileName);
-
-        if (!ValidateFile(dataFileName))
+        var folder = new DirectoryInfo(options.Value.JournalDirectory);
+        var regex = new Regex(FileHandlerService.JournalLogFileNameRegEx);
+        
+        if (!folder.Exists)
+        {
+            logger.LogWarning("Journal directory {JournalDirectory} does not exist", folder.FullName);
+            return [];
+        }
+        
+        var dataFileName = folder.GetFiles().FirstOrDefault(f => regex.IsMatch(f.Name))?.FullName;
+        
+        if (!FileHelper.ValidateFile(dataFileName))
         {
             return [];
         }

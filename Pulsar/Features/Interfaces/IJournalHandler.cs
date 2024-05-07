@@ -1,5 +1,3 @@
-using Observatory.Framework.Files.Journal;
-
 namespace Pulsar.Features;
 
 /// <summary>
@@ -8,8 +6,6 @@ namespace Pulsar.Features;
 public interface IJournalHandler : IFileHandler
 {
     string FileName { get; }
-
-    public bool ValidateFile(string filePath);
 }
 
 /// <summary>
