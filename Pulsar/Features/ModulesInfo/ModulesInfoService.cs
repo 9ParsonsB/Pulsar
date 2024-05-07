@@ -7,12 +7,36 @@ public interface IModulesInfoService : IJournalHandler<ModuleInfoFile>;
 public class ModulesInfoService(
     ILogger<ModulesInfoService> logger,
     IOptions<PulsarConfiguration> options,
-    IEventHubContext hub)
-    : JournalHandlerBase<ModuleInfoFile>(logger), IModulesInfoService
+    IEventHubContext hub) : IModulesInfoService
 {
-    public override string FileName => FileHandlerService.ModulesInfoFileName;
+    public string FileName => FileHandlerService.ModulesInfoFileName;
 
-    public override async Task HandleFile(string filePath)
+    public bool ValidateFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            logger.LogWarning("Journal file {JournalFile} does not exist", filePath);
+            return false;
+        }
+
+        var fileInfo = new FileInfo(filePath);
+
+        if (!string.Equals(fileInfo.Name, FileName, StringComparison.InvariantCultureIgnoreCase))
+        {
+            logger.LogWarning("Journal file {name} is not valid");
+            return false;
+        }
+
+        if (fileInfo.Length == 0)
+        {
+            logger.LogWarning("Journal file {name} is empty", filePath);
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task HandleFile(string filePath)
     {
         if (!ValidateFile(filePath))
         {
@@ -31,7 +55,7 @@ public class ModulesInfoService(
         await hub.Clients.All.ModuleInfoUpdated(moduleInfo);
     }
 
-    public override async Task<ModuleInfoFile> Get()
+    public async Task<ModuleInfoFile> Get()
     {
         var moduleInfoFile = Path.Combine(options.Value.JournalDirectory, FileName);
 

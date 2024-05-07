@@ -54,7 +54,7 @@ public interface IObservatoryWorker : IObservatoryPlugin
     /// <param name="journal"><para>Elite Dangerous journal event, deserialized into a .NET object.</para>
     /// <para>Unhandled json values within a journal entry type will be contained in member property:<br/>Dictionary&lt;string, object&gt; AdditionalProperties.</para>
     /// <para>Unhandled journal event types will be type JournalBase with all values contained in AdditionalProperties.</para></param>
-    public void JournalEvent<TJournal>(TJournal journal) where TJournal : IJournal;
+    public void JournalEvent<TJournal>(TJournal journal) where TJournal : JournalBase;
 
     /// <summary>
     /// Method called when status.json content is updated.<br/>

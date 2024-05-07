@@ -4,12 +4,41 @@ using Observatory.Framework.Files;
 
 public interface IStatusService : IJournalHandler<Status>;
 
-public class StatusService(ILogger<StatusService> logger, IOptions<PulsarConfiguration> options, IEventHubContext hub)
-    : JournalHandlerBase<Status>(logger), IStatusService
+public class StatusService
+(
+    ILogger<StatusService> logger,
+    IOptions<PulsarConfiguration> options,
+    IEventHubContext hub
+) : IStatusService
 {
-    public override string FileName => FileHandlerService.StatusFileName;
+    public string FileName => FileHandlerService.StatusFileName;
 
-    public override async Task HandleFile(string filePath)
+    public bool ValidateFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            logger.LogWarning("Journal file {JournalFile} does not exist", filePath);
+            return false;
+        }
+
+        var fileInfo = new FileInfo(filePath);
+
+        if (!string.Equals(fileInfo.Name, FileName, StringComparison.InvariantCultureIgnoreCase))
+        {
+            logger.LogWarning("Journal file {name} is not valid");
+            return false;
+        }
+
+        if (fileInfo.Length == 0)
+        {
+            logger.LogWarning("Journal file {name} is empty", filePath);
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task HandleFile(string filePath)
     {
         if (!ValidateFile(filePath))
         {
@@ -28,7 +57,7 @@ public class StatusService(ILogger<StatusService> logger, IOptions<PulsarConfigu
         await hub.Clients.All.StatusUpdated(status);
     }
 
-    public override async Task<Status> Get()
+    public async Task<Status> Get()
     {
         var statusFile = Path.Combine(options.Value.JournalDirectory, FileName);
 

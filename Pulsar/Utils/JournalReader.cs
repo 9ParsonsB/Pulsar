@@ -5,7 +5,7 @@ namespace Pulsar.Utils;
 
 public static class JournalReader
 {
-    public static TJournal ObservatoryDeserializer<TJournal>(string json) where TJournal : IJournal
+    public static TJournal ObservatoryDeserializer<TJournal>(string json) where TJournal : JournalBase
     {
         TJournal deserialized;
 

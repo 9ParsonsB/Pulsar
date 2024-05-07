@@ -7,6 +7,6 @@ public class ModulesInfoController(IModulesInfoService modulesInfo) : Controller
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        return Ok(modulesInfo.Get());
+        return Ok(await modulesInfo.Get());
     }
 }
