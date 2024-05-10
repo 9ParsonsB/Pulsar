@@ -10,7 +10,7 @@
     <nav>
         <ul>
             <li><a href="/">Dashboard</a></li>
-            <li><a href="/settings">Settings</a></li>
+            <!--<li><a href="/settings">Settings</a></li>-->
         </ul>
     </nav>
 </header>

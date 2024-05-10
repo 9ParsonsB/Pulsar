@@ -1,9 +1,7 @@
 <script lang="ts">
     import * as signalR from "@microsoft/signalr"
     import {onMount} from "svelte";
-    import axios from "axios";
     import { useQueryClient } from "@sveltestack/svelte-query";
-    import { text } from "@sveltejs/kit";
     let x: string | null = $state(null);
     let textarea = $state("");
 
@@ -38,7 +36,7 @@
     let status: Welcome | null = $state(null);
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://172.31.0.111:5000/api/events")
+        .withUrl("http://localhost:5000/api/events")
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
@@ -59,8 +57,8 @@
     });
 
     const getStatus = async () => {
-        var response = await axios.get("http://172.31.0.111:5000/api/status/");
-        status = response.data as Welcome;
+        const response = await fetch("http://localhost:5000/api/status/");
+        status = await response.json() as Welcome
         textarea = status.event;
     };
 </script>

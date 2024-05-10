@@ -4,6 +4,8 @@ using Pulsar.Features;
 using Pulsar.Features.Cargo;
 using Pulsar.Features.ModulesInfo;
 using Pulsar.Features.Journal;
+using Pulsar.Features.ShipLocker;
+using Pulsar.Features.Shipyard;
 
 namespace Pulsar;
 
@@ -17,5 +19,7 @@ public class PulsarServiceRegistry : ServiceRegistry
         For<IModulesInfoService>().Use<ModulesInfoService>();
         For<ICargoService>().Use<CargoService>();
         For<IJournalService>().Use<JournalService>();
+        For<IShipLockerService>().Use<ShipLockerService>();
+        For<IShipyardService>().Use<ShipyardService>();
     }
 }

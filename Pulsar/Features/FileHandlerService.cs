@@ -1,8 +1,6 @@
 using Observatory.Framework.Files;
+using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Odyssey;
-using Pulsar.Features.ModulesInfo;
-using Pulsar.Features.ShipLocker;
-
 namespace Pulsar.Features;
 
 public interface IFileHandler
@@ -23,6 +21,8 @@ public class FileHandlerService(
     public static readonly string ModulesFileName = "Modules.json";
     public static readonly string JournalLogFileNameRegEx = @"Journal\.\d\d\d\d-\d\d-\d\dT\d+\.\d\d\.log";
     public static readonly string JournalLogFileName = "Journal.*.log";
+    public static readonly string JournalLogFileNameStart = "Journal.";
+    public static readonly string JournalLogFileNameEnd = ".log";
     public static readonly string RouteFileName = "Route.json";
     public static readonly string CargoFileName = "Cargo.json";
     public static readonly string BackpackFileName = "Backpack.json";
@@ -37,7 +37,7 @@ public class FileHandlerService(
         OutfittingFileName,
         ShipyardFileName,
         ModulesFileName,
-        JournalLogFileNameRegEx,
+        JournalLogFileNameStart,
         RouteFileName,
         CargoFileName,
         BackpackFileName,
@@ -51,8 +51,14 @@ public class FileHandlerService(
         { StatusFileName, typeof(IJournalHandler<Observatory.Framework.Files.Status>) },
         { ModulesInfoFileName, typeof(IJournalHandler<ModuleInfoFile>) },
         { ShipLockerFileName, typeof(IJournalHandler<ShipLockerMaterials>) },
-        { ShipLockerFileName, typeof(IJournalHandler<ShipLockerMaterials>) },
+        { ShipyardFileName, typeof(IJournalHandler<ShipyardFile>) },
+        { MarketFileName, typeof(IJournalHandler<MarketFile>) },
+        { NavRouteFileName, typeof(IJournalHandler<NavRouteFile>) },
         { CargoFileName, typeof(IJournalHandler<CargoFile>) },
+        { BackpackFileName, typeof(IJournalHandler<BackpackFile>) },
+        { RouteFileName, typeof(IJournalHandler<NavRouteFile>) },
+        { OutfittingFileName, typeof(IJournalHandler<OutfittingFile>) },
+        { JournalLogFileNameStart, typeof(IJournalHandler<List<JournalBase>>) }
     };
 
     public async Task HandleFile(string path)
@@ -70,13 +76,19 @@ public class FileHandlerService(
             return;
         }
 
-        if (Handlers.TryGetValue(match, out var type))
+        if (!Handlers.TryGetValue(match, out var type))
         {
-            logger.LogInformation("Handling file {FileName} with Type {Type}", fileName);
-            (serviceProvider.GetRequiredService(type) as IJournalHandler)?.HandleFile(path);
+            logger.LogInformation("File {FileName} was not handled", fileName);
             return;
         }
-
-        logger.LogInformation("File {FileName} was not handled", fileName);
+        
+        if (serviceProvider.GetRequiredService(type) is not IJournalHandler handler)
+        {
+            logger.LogWarning("Handler for {FileName} is not available", fileName);
+            return;
+        }
+            
+        logger.LogInformation("Handling file {FileName} with Type {Type}", fileName, handler.GetType().ToString());
+        await handler.HandleFile(path);
     }
 }

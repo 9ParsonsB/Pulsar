@@ -1,12 +1,11 @@
 <script lang="ts">
-    import axios from "axios";
     import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
 
     const queryClient = useQueryClient();
 
     const getData = async () => {
-        const response = await axios.get("http://localhost:5000/api/journal/");
-        return response.data;
+        const response = await fetch("http://localhost:5000/api/journal/");
+        return response.json();
     };
 
     const query = useQuery("journal", getData, { staleTime: Infinity });

@@ -2,6 +2,7 @@ namespace Pulsar.Features;
 
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.Journal.Odyssey;
 
 public class EventsHub : Hub<IEventsHub>
 {
@@ -24,6 +25,8 @@ public class EventsHub : Hub<IEventsHub>
     public async Task CargoUpdated(CargoFile cargo) => await Clients.All.CargoUpdated(cargo);
 
     public async Task BackpackUpdated(BackpackFile backpack) => await Clients.All.BackpackUpdated(backpack);
+    
+    public async Task ShipLockerUpdated(ShipLockerMaterials shipLocker) => await Clients.All.ShipLockerUpdated(shipLocker);
 }
 
 public interface IEventsHub
@@ -47,4 +50,6 @@ public interface IEventsHub
     Task CargoUpdated(CargoFile cargo);
 
     Task BackpackUpdated(BackpackFile backpack);
+    
+    Task ShipLockerUpdated(ShipLockerMaterials shipLocker);
 }

@@ -19,6 +19,8 @@
       <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="13.0.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
+      <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
+      <PackageReference Include="NSwag.SwaggerGeneration" Version="12.3.0" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
 </Project>

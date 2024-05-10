@@ -17,6 +17,7 @@ A Cross Platform Fork of Elite Observatory Core.
  - [ ] !System Exobiology Value 
    - [ ] !Exobiology Scan info (+[Show Req. Disatance](https://github.com/EDCD/EDDI/blob/e28ef64a1d41c1e39485863aa362d207e8d36834/Utilities/Functions.cs#L128C1-L152C10) for next scan)
  - [ ] !Fuel/Jump Warning
+ - [ ] Material Tracking (Flag planets with materials, set goals, closest trader) [e.g.](https://github.com/jixxed/ed-odyssey-materials-helper)
  - [ ] Custom Sounds (on user-defined Events)
  - [ ] Mission Targets [Mission Stack Viewer](https://github.com/kaivalagi/EDMissionStackViewer)
  - [ ] Commodities Targets/Alerts (Commodity Above/Below value at current station)

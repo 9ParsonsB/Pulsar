@@ -4,43 +4,45 @@ using Observatory.Framework.Files.Journal.Odyssey;
 
 public interface IShipLockerService : IJournalHandler<ShipLockerMaterials>;
 
-public class ShipLockerService(ILogger<ShipLockerService> logger)
+public class ShipLockerService(ILogger<ShipLockerService> logger, IOptions<PulsarConfiguration> options,
+    IEventHubContext hub)
     : IShipLockerService
 {
     public string FileName => FileHandlerService.ShipLockerFileName;
 
-    public bool ValidateFile(string filePath)
+    public async Task<ShipLockerMaterials> Get()
     {
-        if (!File.Exists(filePath))
+        var shipLockerFile = Path.Combine(options.Value.JournalDirectory, FileName);
+
+        if (!FileHelper.ValidateFile(shipLockerFile))
         {
-            logger.LogWarning("Journal file {JournalFile} does not exist", filePath);
-            return false;
+            return new ShipLockerMaterials();
         }
 
-        var fileInfo = new FileInfo(filePath);
+        await using var file = File.Open(shipLockerFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        var shipLocker = await JsonSerializer.DeserializeAsync<ShipLockerMaterials>(file);
+        if (shipLocker != null) return shipLocker;
 
-        if (!string.Equals(fileInfo.Name, FileName, StringComparison.InvariantCultureIgnoreCase))
-        {
-            logger.LogWarning("Journal file {name} is not valid");
-            return false;
-        }
-
-        if (fileInfo.Length == 0)
-        {
-            logger.LogWarning("Journal file {name} is empty", filePath);
-            return false;
-        }
-
-        return true;
+        logger.LogWarning("Failed to deserialize ship locker file {ShipLockerFile}", shipLockerFile);
+        return new ShipLockerMaterials();
     }
 
-    public Task<ShipLockerMaterials> Get()
+    public async Task HandleFile(string filePath)
     {
-        throw new NotImplementedException();
-    }
+        if (!FileHelper.ValidateFile(filePath))
+        {
+            return;
+        }
 
-    public Task HandleFile(string filePath)
-    {
-        throw new NotImplementedException();
+        var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        var shipLocker = await JsonSerializer.DeserializeAsync<ShipLockerMaterials>(file);
+
+        if (shipLocker == null)
+        {
+            logger.LogWarning("Failed to deserialize status file {FilePath}", filePath);
+            return;
+        }
+
+        await hub.Clients.All.ShipLockerUpdated(shipLocker);
     }
 }

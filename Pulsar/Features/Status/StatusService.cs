@@ -40,7 +40,7 @@ public class StatusService
 
     public async Task HandleFile(string filePath)
     {
-        if (!ValidateFile(filePath))
+        if (!FileHelper.ValidateFile(filePath))
         {
             return;
         }
@@ -61,7 +61,7 @@ public class StatusService
     {
         var statusFile = Path.Combine(options.Value.JournalDirectory, FileName);
 
-        if (!ValidateFile(statusFile))
+        if (!FileHelper.ValidateFile(statusFile))
         {
             return new Status();
         }

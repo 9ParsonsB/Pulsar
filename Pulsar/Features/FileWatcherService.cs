@@ -26,7 +26,10 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
     {
         foreach (var file in watcher.GetDirectoryContents(""))
         {
-            if (!file.Name.EndsWith(".json") || file.IsDirectory) continue;
+            if (file.IsDirectory || !file.Name.EndsWith(".json") && !(file.Name.StartsWith(FileHandlerService.JournalLogFileNameStart) && file.Name.EndsWith(FileHandlerService.JournalLogFileNameEnd)))
+            {
+                continue;
+            }
             
             var existing = FileDates.GetOrAdd(file.PhysicalPath, file.LastModified);
             
@@ -40,7 +43,7 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
     
     private void Watch()
     {
-        watcher.Watch("**/*.json").RegisterChangeCallback(HandleFileChanged, null);
+        watcher.Watch("*.*").RegisterChangeCallback(HandleFileChanged, null);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
