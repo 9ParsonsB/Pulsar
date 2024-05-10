@@ -1,56 +1,44 @@
 <script lang="ts">
-    import * as signalR from "@microsoft/signalr"
-    import {onMount} from "svelte";
-    let x: string | null = $state(null);
-    let textarea = $state("");
-
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5000/api/events")
-        .configureLogging(signalR.LogLevel.Information)
-        .build();
-
-    onMount(async () => {
-
-        connection.onclose(async () => {
-            console.log("Lost connection to Event Hub. Attempting to reconnect...");
-            await connection.start();
-        });
-
-        connection.on("StatusUpdated", (message) => {
-            console.log('we did it!');
-            console.log(message);
-            textarea += JSON.stringify(message) + "\n"
-        });
-
-        await connection.start();
-    })
-
-    const getStatus = async () => {
-        var response = await fetch("http://localhost:5000/api/status", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        });
-
-        if (response.ok)
-        {
-            const data = await response.text();
-            console.log(data);
-            x = data;
-        }
-
-        console.log(response);
-    }
+    import Status from "$lib/Status.svelte";
+    import Ship from "$lib/Ship.svelte";
+    import Debug from "$lib/Debug.svelte";
+    import MissionStack from "$lib/MissionStack.svelte";
 </script>
 
-<h1>Welcome to Pulsar</h1>
+<section>
+    <div>
+        <Status />
+    </div>
+    <div>
+        <!-- <Ship /> -->
+    </div>
+    <div>
+        <!-- <MissionStack /> -->
+    </div>
+    <!--<div>
+        <Debug />
+    </div>-->
+</section>
 
-<button on:click={getStatus}> GetStatus </button>
+<style>
+    div {
+        border: 2px solid #d66325;
+    }
 
-<span> {x} </span>
+    section {
+        display: flex;
+        flex-wrap: wrap;
+        /* display: grid; */
+        /* grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); */
+        gap: 20px;
 
-<br/>
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* gap: 10px; */
+    }
 
-<textarea bind:value={textarea}></textarea>
+    div {
+        flex: 50%;
+        padding: 5px;
+    }
+</style>
