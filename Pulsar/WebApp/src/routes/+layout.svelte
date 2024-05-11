@@ -1,10 +1,5 @@
 <script>
-  import Fuel from "$lib/Fuel.svelte";
-    import {
-        QueryClient,
-        QueryClientProvider,
-    } from "@sveltestack/svelte-query";
-    const queryClient = new QueryClient();
+    import Fuel from "$lib/Fuel.svelte";
 </script>
 
 <header>
@@ -17,20 +12,18 @@
     <Fuel />
 </header>
 
-<QueryClientProvider client={queryClient}>
-    <main>
-        <slot />
-    </main>
-</QueryClientProvider>
+<main>
+    <slot />
+</main>
 
 <style>
     :root {
         --background-color: #0d0302;
-        /* #290d00; */
         --header-color: #202225;
         --headings-color: #ffffff;
-        --font-color: #eeeeee;
-        --border-color: #141414;
+        --font-color-1: #cccccc;
+        --font-color-2: #000000;
+        --border-color: #5f3100;
         --line-color: #ffffff;
         --link-color: #d06527;
         --link-color-hover: #000000;
@@ -38,8 +31,9 @@
 
     :global(body) {
         background-color: var(--background-color);
-        color: var(--font-color);
-        font-family: "Open Sans", sans-serif;
+        color: var(--font-color-1);
+        font-family: "Eurostile", Helvetica, sans-serif;
+        letter-spacing: 0.05em;
         font-size: 1rem;
         box-sizing: border-box;
         margin: 0px;
