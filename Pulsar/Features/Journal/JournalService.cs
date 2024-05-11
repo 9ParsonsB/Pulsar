@@ -9,28 +9,42 @@ public class JournalService
 (
     ILogger<JournalService> logger,
     IOptions<PulsarConfiguration> options,
-    IEventHubContext hub
+    IEventHubContext hub,
+    PulsarContext context
 ) : IJournalService
 {
     public string FileName => FileHandlerService.JournalLogFileName;
     
-    public async Task HandleFile(string filePath)
+    public Task HandleFile(string filePath) => HandleFile(filePath, CancellationToken.None);
+    public async Task HandleFile(string filePath, CancellationToken token)
     {
         if (!FileHelper.ValidateFile(filePath))
         {
             return;
         }
 
-        var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        var journals = await JsonSerializer.DeserializeAsync<List<JournalBase>>(file);
+        var file = await File.ReadAllLinesAsync(filePath, Encoding.UTF8, token);
+        var journals = file.Select(line => JsonSerializer.Deserialize<JournalBase>(line)).ToList();
 
-        if (journals == null)
+        
+        var newJournals = new List<JournalBase>();
+        var notBefore = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromHours(6));
+        foreach (var journal in journals)
         {
-            logger.LogWarning("Failed to deserialize status file {FilePath}", filePath);
-            return;
+            if (context.Journals.Any(j => j.Timestamp == journal.Timestamp && j.Event == journal.Event))
+            {
+                continue;
+            }
+
+            context.Journals.Add(journal);
+            
+            if (journal.Timestamp > notBefore)
+            {
+                newJournals.Add(journal);
+            }
         }
 
-        await hub.Clients.All.JournalUpdated(journals);
+        await hub.Clients.All.JournalUpdated(newJournals);
     }
 
     public async Task<List<JournalBase>> Get()

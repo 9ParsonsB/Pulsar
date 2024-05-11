@@ -8,7 +8,7 @@
         return response.json();
     };
 
-    const query = useQuery("journal", getData, { staleTime: Infinity });
+    const query = useQuery("journal", getData, { staleTime: Number.POSITIVE_INFINITY });
 </script>
 
 <h1>Mission Stack</h1>
@@ -26,7 +26,7 @@
         {/if}
     {/each}
 {/if}
-
+                        
 <style>
     table {
         table-layout: fixed;

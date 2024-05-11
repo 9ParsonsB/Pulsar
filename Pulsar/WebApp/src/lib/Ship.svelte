@@ -10,7 +10,7 @@
         return response.json();
     };
 
-    const query = useQuery("modulesinfo", getData, { staleTime: Infinity });
+    const query = useQuery("modulesinfo", getData, { staleTime: Number.POSITIVE_INFINITY });
 </script>
 
 <h1>Ship</h1>

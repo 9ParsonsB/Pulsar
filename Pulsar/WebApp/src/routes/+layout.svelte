@@ -1,4 +1,5 @@
 <script>
+  import Fuel from "$lib/Fuel.svelte";
     import {
         QueryClient,
         QueryClientProvider,
@@ -13,6 +14,7 @@
             <!--<li><a href="/settings">Settings</a></li>-->
         </ul>
     </nav>
+    <Fuel />
 </header>
 
 <QueryClientProvider client={queryClient}>

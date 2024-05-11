@@ -2,12 +2,16 @@
     import Status from "$lib/Status.svelte";
     import Ship from "$lib/Ship.svelte";
     import Debug from "$lib/Debug.svelte";
-    import MissionStack from "$lib/MissionStack.svelte";
+    import MissionStack from "$lib/MissionStack.svelte"; 
+    import JournalLog from "$lib/JournalLog.svelte";
 </script>
 
 <section>
     <div>
         <Status />
+    </div>
+    <div>
+        <JournalLog />
     </div>
     <div>
         <!-- <Ship /> -->
