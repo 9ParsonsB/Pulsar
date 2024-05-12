@@ -10,16 +10,7 @@ public class Location : JournalBase
     [JsonConverter(typeof(IntBoolFlexConverter))]
     public bool Docked { get; init; }
     public double DistFromStarLS { get; init; }
-
-    [Obsolete(JournalUtilities.ObsoleteMessage)]
-    public string FactionState
-    {
-        get => SystemFaction.FactionState;
-        init
-        {
-                //Stale Data, discard
-            }
-    }
+    
     /// <summary>
     /// Name of the station at which this event occurred.
     /// </summary>

@@ -89,6 +89,6 @@ public class FileHandlerService(
         }
             
         logger.LogInformation("Handling file {FileName} with Type {Type}", fileName, handler.GetType().ToString());
-        Task.Run(() => handler.HandleFile(path));
+        await handler.HandleFile(path);
     }
 }

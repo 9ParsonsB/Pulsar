@@ -14,6 +14,9 @@ class MutableStringDoubleConverter : JsonConverter<object>
 
     public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        if (value.GetType() == typeof(string))
+            writer.WriteStringValue((string)value);
+        else
+            writer.WriteNumberValue((double)value);
     }
 }

@@ -20,15 +20,7 @@ public class FSDJump : JournalBase
     public int BoostUsed { get; init; }
     [JsonConverter(typeof(LegacyFactionConverter<SystemFaction>))]
     public SystemFaction SystemFaction { get; init; }
-    [Obsolete(JournalUtilities.ObsoleteMessage)]
-    public string FactionState
-    {
-        get => SystemFaction.FactionState;
-        init
-        {
-                //Stale Data, discard
-            }
-    }
+
     public string SystemAllegiance { get; init; }
     public string SystemEconomy { get; init; }
     public string SystemEconomy_Localised { get; init; }

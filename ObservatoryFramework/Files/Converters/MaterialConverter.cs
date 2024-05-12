@@ -11,42 +11,44 @@ namespace Observatory.Framework.Files.Converters;
 /// </summary>
 public class MaterialConverter : JsonConverter<ImmutableList<Material>>
 {
-    public override ImmutableList<Material> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ImmutableList<Material> Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
-            if (reader.TokenType == JsonTokenType.StartObject)
+        if (reader.TokenType == JsonTokenType.StartObject)
+        {
+            var materialComposition = new List<Material>();
+            while (reader.Read())
             {
-                var materialComposition = new List<Material>();
-                while (reader.Read())
+                if (reader.TokenType != JsonTokenType.EndObject)
                 {
-                    if (reader.TokenType != JsonTokenType.EndObject)
+                    if (reader.TokenType == JsonTokenType.PropertyName)
                     {
-                        if (reader.TokenType == JsonTokenType.PropertyName)
+                        var name = reader.GetString();
+                        reader.Read();
+                        var count = reader.GetInt32();
+                        var material = new Material
                         {
-                            var name = reader.GetString();
-                            reader.Read();
-                            var count = reader.GetInt32();
-                            var material = new Material
-                            {
-                                Name = name,
-                                Name_Localised = name,
-                                Count = count
-                            };
-                            materialComposition.Add(material);
-                        }
-                    }
-                    else
-                    {
-                        break;
+                            Name = name,
+                            Name_Localised = name,
+                            Count = count
+                        };
+                        materialComposition.Add(material);
                     }
                 }
-                return materialComposition.ToImmutableList();
+                else
+                {
+                    break;
+                }
             }
 
-            return (ImmutableList<Material>)JsonSerializer.Deserialize(ref reader, typeof(ImmutableList<Material>));
+            return materialComposition.ToImmutableList();
         }
+
+        return JsonSerializer.Deserialize<ImmutableList<Material>>(ref reader, options)!;
+    }
 
     public override void Write(Utf8JsonWriter writer, ImmutableList<Material> value, JsonSerializerOptions options)
     {
-            throw new NotImplementedException();
-        }
+        JsonSerializer.Serialize(writer, value, options);
+    }
 }

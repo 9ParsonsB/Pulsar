@@ -17,6 +17,6 @@ public class StarPosConverter : JsonConverter<(double x, double y, double z)>
 
     public override void Write(Utf8JsonWriter writer, (double x, double y, double z) value, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        JsonSerializer.Serialize(writer, value, options);
     }
 }

@@ -14,6 +14,6 @@ class PipConverter : JsonConverter<(int Sys, int Eng, int Wep)>
 
     public override void Write(Utf8JsonWriter writer, (int Sys, int Eng, int Wep) value, JsonSerializerOptions options)
     {
-        JsonSerializer.Serialize(writer, new[] { value.Sys, value.Eng, value.Wep });
+        JsonSerializer.Serialize(writer, new {value.Sys, value.Eng, value.Wep}, options);
     }
 }

@@ -41,11 +41,12 @@ public class MaterialCompositionConverter : JsonConverter<ImmutableList<Material
             return materialComposition.ToImmutableList();
         }
 
-        return (ImmutableList<MaterialComposition>)JsonSerializer.Deserialize(ref reader, typeof(ImmutableList<MaterialComposition>));
+        return JsonSerializer.Deserialize<ImmutableList<MaterialComposition>>(ref reader, options)!;
     }
 
-    public override void Write(Utf8JsonWriter writer, ImmutableList<MaterialComposition> value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ImmutableList<MaterialComposition> value,
+        JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        JsonSerializer.Serialize(writer, value, options);
     }
 }

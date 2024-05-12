@@ -21,6 +21,6 @@ public class LegacyFactionConverter<TFaction> : JsonConverter<TFaction> where TF
 
     public override void Write(Utf8JsonWriter writer, TFaction value, JsonSerializerOptions options)
     {
-            throw new NotImplementedException();
-        }
+        JsonSerializer.Serialize(writer, value, options);
+    }
 }

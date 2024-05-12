@@ -14,6 +14,6 @@ class StringIntConverter : JsonConverter<int>
 
     public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value.ToString());
+        JsonSerializer.Serialize(writer, value, options);
     }
 }

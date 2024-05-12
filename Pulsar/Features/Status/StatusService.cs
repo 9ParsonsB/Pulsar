@@ -13,31 +13,6 @@ public class StatusService
 {
     public string FileName => FileHandlerService.StatusFileName;
 
-    public bool ValidateFile(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            logger.LogWarning("Journal file {JournalFile} does not exist", filePath);
-            return false;
-        }
-
-        var fileInfo = new FileInfo(filePath);
-
-        if (!string.Equals(fileInfo.Name, FileName, StringComparison.InvariantCultureIgnoreCase))
-        {
-            logger.LogWarning("Journal file {name} is not valid");
-            return false;
-        }
-
-        if (fileInfo.Length == 0)
-        {
-            logger.LogWarning("Journal file {name} is empty", filePath);
-            return false;
-        }
-
-        return true;
-    }
-
     public async Task HandleFile(string filePath)
     {
         if (!FileHelper.ValidateFile(filePath))
@@ -46,6 +21,13 @@ public class StatusService
         }
 
         var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        
+        if (file.Length < 2)
+        {
+            logger.LogWarning("File {FilePath} is empty", filePath);
+            return;
+        }
+            
         var status = await JsonSerializer.DeserializeAsync<Status>(file);
 
         if (status == null)

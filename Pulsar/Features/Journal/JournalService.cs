@@ -1,12 +1,12 @@
 namespace Pulsar.Features.Journal;
 
+using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Observatory.Framework.Files.Journal;
 
 public interface IJournalService : IJournalHandler<List<JournalBase>>;
 
-public class JournalService
-(
+public class JournalService(
     ILogger<JournalService> logger,
     IOptions<PulsarConfiguration> options,
     IEventHubContext hub,
@@ -14,74 +14,52 @@ public class JournalService
 ) : IJournalService
 {
     public string FileName => FileHandlerService.JournalLogFileName;
+
+    static ConcurrentBag<JournalBase> _journals = new();
     
-    public Task HandleFile(string filePath) => HandleFile(filePath, CancellationToken.None);
-    public async Task HandleFile(string filePath, CancellationToken token)
+    static DateTimeOffset notBefore = DateTimeOffset.UtcNow.AddHours(-1);
+
+    public async Task HandleFile(string filePath)
     {
         if (!FileHelper.ValidateFile(filePath))
         {
             return;
         }
 
-        var file = await File.ReadAllLinesAsync(filePath, Encoding.UTF8, token);
-        var journals = file.Select(line => JsonSerializer.Deserialize<JournalBase>(line)).ToList();
-
-        
+        var file = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
         var newJournals = new List<JournalBase>();
-        var notBefore = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromHours(6));
-        foreach (var journal in journals)
+        var select = file.AsParallel().Select(line => JsonSerializer.Deserialize<JournalBase>(line,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JournalConverter(logger) }
+            }));
+        
+        foreach (var journal in select)
         {
-            if (context.Journals.Any(j => j.Timestamp == journal.Timestamp && j.Event == journal.Event))
+            if (_journals.Any(j => j.Timestamp == journal.Timestamp && j.Event == journal.Event))
+            {
+                continue;
+            }
+            
+            if (journal.Timestamp < notBefore)
             {
                 continue;
             }
 
-            context.Journals.Add(journal);
-            
-            if (journal.Timestamp > notBefore)
-            {
-                newJournals.Add(journal);
-            }
+            _journals.Add(journal);
+            newJournals.Add(journal);
         }
 
-        await hub.Clients.All.JournalUpdated(newJournals);
+        if (newJournals.Any())
+        {
+            await hub.Clients.All.JournalUpdated(newJournals);
+        }
     }
 
     public async Task<List<JournalBase>> Get()
     {
-        var folder = new DirectoryInfo(options.Value.JournalDirectory);
-        var regex = new Regex(FileHandlerService.JournalLogFileNameRegEx);
-        
-        if (!folder.Exists)
-        {
-            logger.LogWarning("Journal directory {JournalDirectory} does not exist", folder.FullName);
-            return [];
-        }
-        
-        var dataFileName = folder.GetFiles().FirstOrDefault(f => regex.IsMatch(f.Name))?.FullName;
-        
-        if (!FileHelper.ValidateFile(dataFileName))
-        {
-            return [];
-        }
-
-        // Seems each entry is a new line. Not sure if this can be relied on?
-        var logs = File.ReadAllLines(dataFileName);
-
-        var journals = new List<JournalBase>();
-        foreach (var log in logs)
-        {
-            // var info = JournalReader.ObservatoryDeserializer<JournalBase>(log);
-            var info = JsonSerializer.Deserialize<JournalBase>(log);
-            if (info != null)
-            {
-                journals.Add(info);
-            }
-        }
-
-        if (journals.Count > 0) return journals;
-
-        logger.LogWarning("Failed to deserialize module info file {file}", dataFileName);
-        return [];
+        await hub.Clients.All.JournalUpdated(_journals.ToList());
+        return _journals.ToList();
     }
 }

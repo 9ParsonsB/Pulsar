@@ -32,6 +32,6 @@ public class MissionEffectConverter : JsonConverter<MissionEffect>
 
     public override void Write(Utf8JsonWriter writer, MissionEffect value, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        JsonSerializer.Serialize(writer, value, options);
     }
 }
