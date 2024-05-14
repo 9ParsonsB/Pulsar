@@ -288,6 +288,59 @@ public class JournalConverter(ILogger logger) : JsonConverter<JournalBase>
                 return JsonSerializer.Deserialize<MaterialDiscovered>(ref reader)!;
             case "storedships":
                 return JsonSerializer.Deserialize<StoredShips>(ref reader)!;
+            case "scanorganic":
+                return JsonSerializer.Deserialize<ScanOrganic>(ref reader)!;
+            case "market":
+                return JsonSerializer.Deserialize<Market>(ref reader)!;
+            case "missioncompleted":
+                return JsonSerializer.Deserialize<MissionCompleted>(ref reader)!;
+            case "sellshiponrebuy":
+                return JsonSerializer.Deserialize<SellShipOnRebuy>(ref reader)!;
+            case "missionaccepted":
+                return JsonSerializer.Deserialize<MissionAccepted>(ref reader)!;
+            case "approachsettlement":
+                return JsonSerializer.Deserialize<ApproachSettlement>(ref reader)!;
+            case "screenshot":
+                return JsonSerializer.Deserialize<Screenshot>(ref reader)!;
+            case "moduleswap":
+                return JsonSerializer.Deserialize<ModuleSwap>(ref reader)!;
+            case "underattack":
+                return JsonSerializer.Deserialize<UnderAttack>(ref reader)!;
+            case "datascanned":
+                return JsonSerializer.Deserialize<DataScanned>(ref reader)!;
+            case "dockingdenied":
+                return JsonSerializer.Deserialize<DockingDenied>(ref reader)!;
+            case "fetchremotemodule":
+                return JsonSerializer.Deserialize<FetchRemoteModule>(ref reader)!; 
+            case "engineercontribution":
+                return JsonSerializer.Deserialize<EngineerContribution>(ref reader)!;
+            case "collectcargo":
+                return JsonSerializer.Deserialize<CollectCargo>(ref reader)!;
+            case "moduleretrieve":
+                return JsonSerializer.Deserialize<ModuleRetrieve>(ref reader)!;
+            case "marketbuy":
+                return JsonSerializer.Deserialize<MarketBuy>(ref reader)!;
+            case "selldrones":
+                return JsonSerializer.Deserialize<SellDrones>(ref reader)!;
+            case "interdicted":
+                return JsonSerializer.Deserialize<Interdicted>(ref reader)!;
+            case "sellorganicdata":
+                return JsonSerializer.Deserialize<SellOrganicData>(ref reader)!;
+            case "wingadd":
+                return JsonSerializer.Deserialize<WingAdd>(ref reader)!;
+            case "winginvite":
+                return JsonSerializer.Deserialize<WingInvite>(ref reader)!;
+            case "wingjoin":
+                return JsonSerializer.Deserialize<WingJoin>(ref reader)!;
+            case "wingleave":
+                return JsonSerializer.Deserialize<WingLeave>(ref reader)!;
+            case "bounty":
+                return JsonSerializer.Deserialize<Bounty>(ref reader)!;
+            case "commitcrime":
+                return JsonSerializer.Deserialize<CommitCrime>(ref reader)!;
+            case "modulestore":
+                return JsonSerializer.Deserialize<ModuleStore>(ref reader)!;
+            
             default:
                 logger.LogWarning("Unknown Journal event type {EventName}", eventName);
                 return JsonSerializer.Deserialize<JournalBase>(ref reader)!;

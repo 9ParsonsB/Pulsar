@@ -18,14 +18,14 @@
 
 <section>
   <div class="title">
-    <h1>Journals</h1>
+    <h1>Live Journals</h1>
   </div>
   <button
     onclick={() => {
       fetch("http://localhost:5000/api/journal");
     }}
   >
-    Refresh (debug)
+    Fetch All (debug)
   </button>
   <ul>
     {#each values as value (value.timestamp + value.event)}

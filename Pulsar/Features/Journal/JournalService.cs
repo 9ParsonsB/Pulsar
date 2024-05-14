@@ -10,7 +10,8 @@ public class JournalService(
     ILogger<JournalService> logger,
     IOptions<PulsarConfiguration> options,
     IEventHubContext hub,
-    PulsarContext context
+    PulsarContext context,
+    IServiceProvider serviceProvider
 ) : IJournalService
 {
     public string FileName => FileHandlerService.JournalLogFileName;
@@ -32,7 +33,7 @@ public class JournalService(
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
-                Converters = { new JournalConverter(logger) }
+                Converters = { ActivatorUtilities.CreateInstance<JournalConverter>(serviceProvider) }
             }));
         
         foreach (var journal in select)

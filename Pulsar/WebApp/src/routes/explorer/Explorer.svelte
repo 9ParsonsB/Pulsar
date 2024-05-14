@@ -1,11 +1,34 @@
 <script lang="ts">
   const data: unknown[] = [{}, {}, {}, {}];
+  // number of scans completed
+  const scanned = 2;
+  // total bodies in the current system (FSSDiscovery event)
+  const totalBodies = 12;
+  // accumulated list of bodies in the current system (Scan events)
+  const bodies = $state([
+    { value: 50 },
+    { value: 1000 },
+    { value: 800000 },
+    { value: 800000 },
+  ]);
 </script>
 
 <section>
   <div class="title">
     <h1>Explorer</h1>
   </div>
+  <!-- summary & high value targets -->
+  <h1>Bodies</h1>
+  Scan:&nbsp;<span>{scanned}</span>/<span>{totalBodies}</span>
+  <div class="title">High Value (>500kcr)</div>
+  <ol>
+    {#each bodies.filter((b) => b.value > 500000) as body}
+      <li>[HMC/WW/ELT/ELN] $body.name - {body.value}cr</li>
+    {/each}
+  </ol>
+  <br />
+  <br />
+  <!-- Full system data -->
   <div class="box">
     {#each data as row}
       <div class="group">
