@@ -43,7 +43,7 @@ public class Scan : ScanBaryCentre
                     }
                 }
                 Parent = ParentList.ToImmutableList();
-            }
+            }           
     }
     /// <summary>
     /// "Parents" object rearranged into more intuitive structure for ease of use.

@@ -12,7 +12,6 @@ namespace Pulsar.Utils;
 
 using Observatory.Framework.Files.Journal;
 
-
 [Flags]
 public enum JournalReaderState
 {
@@ -20,14 +19,17 @@ public enum JournalReaderState
     /// Have read the first character of the object
     /// </summary>
     Start,
+
     /// <summary>
     /// Have read the timestamp. Generally the first property in a journal entry.
     /// </summary>
     Timestamp,
+
     /// <summary>
     /// have read the event name. Generally the second property in a journal entry.
     /// </summary>
     Event,
+
     /// <summary>
     /// Have read the last character of the object, the next character should be a newline, whitespace, EOF, or another object.
     /// </summary>
@@ -40,9 +42,10 @@ public enum JournalReaderState
 /// all Journals can be deserialized into a JournalBase object for identification
 /// and then deserialized into their respective types.
 /// </summary>
-public class JournalConverter(ILogger logger) : JsonConverter<JournalBase>
+public class JournalConverter(ILogger<JournalConverter> logger) : JsonConverter<JournalBase>
 {
     private JournalReaderState state = JournalReaderState.Start;
+
     public override JournalBase? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         Utf8JsonReader clone = reader;
@@ -86,12 +89,13 @@ public class JournalConverter(ILogger logger) : JsonConverter<JournalBase>
                                 break;
                         }
                     }
-                    
+
                     if ((state & JournalReaderState.Event) != 0)
                     {
                         // create destination type
                         return GetDestinationType(ref reader, eventName!);
                     }
+
                     break;
                 case JsonTokenType.Comment:
                     continue;
@@ -108,7 +112,6 @@ public class JournalConverter(ILogger logger) : JsonConverter<JournalBase>
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
         } while (clone.Read());
 
         return new() { Timestamp = timestamp!.Value, Event = eventName! };
@@ -340,7 +343,20 @@ public class JournalConverter(ILogger logger) : JsonConverter<JournalBase>
                 return JsonSerializer.Deserialize<CommitCrime>(ref reader)!;
             case "modulestore":
                 return JsonSerializer.Deserialize<ModuleStore>(ref reader)!;
-            
+            case "factionkillbond":
+                return JsonSerializer.Deserialize<FactionKillBond>(ref reader)!;
+            case "rebootrepair":
+                return JsonSerializer.Deserialize<RebootRepair>(ref reader)!;
+            case "launchdrone":
+                return JsonSerializer.Deserialize<LaunchDrone>(ref reader)!;
+            case "sellmicroresources":
+                return JsonSerializer.Deserialize<SellMicroResources>(ref reader)!;
+            case "navbeaconscan":
+                return JsonSerializer.Deserialize<NavBeaconScan>(ref reader)!;
+            case "searchandrescue":
+                return JsonSerializer.Deserialize<SearchAndRescue>(ref reader)!;
+            case "marketsell":
+                return JsonSerializer.Deserialize<MarketSell>(ref reader)!;
             default:
                 logger.LogWarning("Unknown Journal event type {EventName}", eventName);
                 return JsonSerializer.Deserialize<JournalBase>(ref reader)!;

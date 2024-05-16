@@ -1,5 +1,6 @@
 export enum StatusFlags {
-	Docked = 1,
+	None = 0,
+	Docked = 1 << 0,
 	Landed = 1 << 1,
 	LandingGear = 1 << 2,
 	Shields = 1 << 3,
@@ -34,7 +35,8 @@ export enum StatusFlags {
 }
 
 export enum StatusFlags2 {
-	OnFoot = 1,
+	None = 0,
+	OnFoot = 1 << 0,
 	InTaxi = 1 << 1,
 	InMulticrew = 1 << 2,
 	OnFootInStation = 1 << 3,
