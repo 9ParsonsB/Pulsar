@@ -42,7 +42,7 @@ public enum JournalReaderState
 /// all Journals can be deserialized into a JournalBase object for identification
 /// and then deserialized into their respective types.
 /// </summary>
-public class JournalConverter(ILogger<JournalConverter> logger) : JsonConverter<JournalBase>
+public class JournalJsonConverter(ILogger<JournalJsonConverter> logger) : JsonConverter<JournalBase>
 {
     private JournalReaderState state = JournalReaderState.Start;
 
@@ -58,17 +58,11 @@ public class JournalConverter(ILogger<JournalConverter> logger) : JsonConverter<
             depth++;
             switch (clone.TokenType)
             {
-                case JsonTokenType.None:
-                    break;
                 case JsonTokenType.StartObject:
                     state = JournalReaderState.Start;
                     break;
                 case JsonTokenType.EndObject:
                     state = JournalReaderState.End;
-                    break;
-                case JsonTokenType.StartArray:
-                    break;
-                case JsonTokenType.EndArray:
                     break;
                 case JsonTokenType.PropertyName:
                     var propertyName = clone.GetString();
@@ -99,23 +93,23 @@ public class JournalConverter(ILogger<JournalConverter> logger) : JsonConverter<
                     break;
                 case JsonTokenType.Comment:
                     continue;
+                case JsonTokenType.None:
+                case JsonTokenType.StartArray:
+                case JsonTokenType.EndArray:
                 case JsonTokenType.String:
-                    break;
                 case JsonTokenType.Number:
-                    break;
                 case JsonTokenType.True:
-                    break;
                 case JsonTokenType.False:
-                    break;
                 case JsonTokenType.Null:
+                    logger.LogWarning("Unexpected token type {TokenType} at depth {Depth}", clone.TokenType, depth);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         } while (clone.Read());
 
-        return new() { Timestamp = timestamp!.Value, Event = eventName! };
-
+        logger.LogWarning("Failed to deserialize journal entry at depth: {Depth}. Event?: {EventName}, Timestamp?: {Timestamp}", depth, eventName, timestamp);
+        return null;
         // TODO: handle inf (invalid data) in the journal files
         // else if (typeof(TJournal) == typeof(Scan) && json.Contains("\"RotationPeriod\":inf"))
         // {
@@ -125,237 +119,237 @@ public class JournalConverter(ILogger<JournalConverter> logger) : JsonConverter<
 
     private JournalBase GetDestinationType(ref Utf8JsonReader reader, string eventName)
     {
-        switch (eventName.ToLower())
+        switch (eventName)
         {
-            case "fileheader":
+            case "Fileheader":
                 return JsonSerializer.Deserialize<FileHeader>(ref reader)!;
-            case "commander":
+            case "Commander":
                 return JsonSerializer.Deserialize<Commander>(ref reader)!;
-            case "materials":
+            case "Materials":
                 return JsonSerializer.Deserialize<Materials>(ref reader)!;
-            case "rank":
+            case "Rank":
                 return JsonSerializer.Deserialize<Rank>(ref reader)!;
-            case "music":
+            case "Music":
                 return JsonSerializer.Deserialize<Music>(ref reader)!;
-            case "cargo":
+            case "Cargo":
                 return JsonSerializer.Deserialize<Cargo>(ref reader)!;
-            case "loadout":
+            case "Loadout":
                 return JsonSerializer.Deserialize<Loadout>(ref reader)!;
-            case "missions":
+            case "Missions":
                 return JsonSerializer.Deserialize<Missions>(ref reader)!;
-            case "fsssignaldiscovered":
+            case "FSSSignalDiscovered":
                 return JsonSerializer.Deserialize<FSSSignalDiscovered>(ref reader)!;
-            case "reputation":
+            case "Reputation":
                 return JsonSerializer.Deserialize<Reputation>(ref reader)!;
-            case "loadgame":
+            case "LoadGame":
                 return JsonSerializer.Deserialize<LoadGame>(ref reader)!;
-            case "receivetext":
+            case "ReceiveText":
                 return JsonSerializer.Deserialize<ReceiveText>(ref reader)!;
-            case "shiplocker":
+            case "ShipLocker":
                 return JsonSerializer.Deserialize<ShipLockerMaterials>(ref reader)!;
-            case "location":
+            case "Location":
                 return JsonSerializer.Deserialize<Location>(ref reader)!;
-            case "powerplay":
+            case "Powerplay":
                 return JsonSerializer.Deserialize<Powerplay>(ref reader)!;
-            case "reservoirreplenished":
+            case "ReservoirReplenished":
                 return JsonSerializer.Deserialize<ReservoirReplenished>(ref reader)!;
-            case "statistics":
+            case "Statistics":
                 return JsonSerializer.Deserialize<Statistics>(ref reader)!;
-            case "scan":
+            case "Scan":
                 return JsonSerializer.Deserialize<Scan>(ref reader)!;
-            case "shipyard":
+            case "Shipyard":
                 return JsonSerializer.Deserialize<Shipyard>(ref reader)!;
-            case "docked":
+            case "Docked":
                 return JsonSerializer.Deserialize<Docked>(ref reader)!;
-            case "leavebody":
+            case "LeaveBody":
                 return JsonSerializer.Deserialize<LeaveBody>(ref reader)!;
-            case "progress":
+            case "Progress":
                 return JsonSerializer.Deserialize<Progress>(ref reader)!;
-            case "supercruiseexit":
+            case "SupercruiseExit":
                 return JsonSerializer.Deserialize<SupercruiseExit>(ref reader)!;
-            case "engineerprogress":
+            case "EngineerProgress":
                 return JsonSerializer.Deserialize<EngineerProgress>(ref reader)!;
-            case "dockingrequested":
+            case "DockingRequested":
                 return JsonSerializer.Deserialize<DockingRequested>(ref reader)!;
-            case "npccrewpaidwage":
+            case "NpcCrewPaidWage":
                 return JsonSerializer.Deserialize<NpcCrewPaidWage>(ref reader)!;
-            case "supercruiseentry":
+            case "SupercruiseEntry":
                 return JsonSerializer.Deserialize<SupercruiseEntry>(ref reader)!;
-            case "dockinggranted":
+            case "DockingGranted":
                 return JsonSerializer.Deserialize<DockingGranted>(ref reader)!;
-            case "startjump":
+            case "StartJump":
                 return JsonSerializer.Deserialize<StartJump>(ref reader)!;
-            case "fssallbodiesfound":
+            case "FSSAllBodiesFound":
                 return JsonSerializer.Deserialize<FSSAllBodiesFound>(ref reader)!;
-            case "fssbodysignals":
+            case "FSSBodySignals":
                 return JsonSerializer.Deserialize<FSSBodySignals>(ref reader)!;
-            case "liftoff":
+            case "Liftoff":
                 return JsonSerializer.Deserialize<Liftoff>(ref reader)!;
-            case "supercruisedestinationdrop":
+            case "SupercruiseDestinationDrop":
                 return JsonSerializer.Deserialize<SupercruiseDestinationDrop>(ref reader)!;
-            case "fsdtarget":
+            case "FSDTarget":
                 return JsonSerializer.Deserialize<FSDTarget>(ref reader)!;
-            case "fsdjump":
+            case "FSDJump":
                 return JsonSerializer.Deserialize<FSDJump>(ref reader)!;
-            case "codexentry":
+            case "CodexEntry":
                 return JsonSerializer.Deserialize<CodexEntry>(ref reader)!;
-            case "hulldamage":
+            case "HullDamage":
                 return JsonSerializer.Deserialize<HullDamage>(ref reader)!;
-            case "materialcollected":
+            case "MaterialCollected":
                 return JsonSerializer.Deserialize<MaterialCollected>(ref reader)!;
-            case "navroute":
+            case "NavRoute":
                 return JsonSerializer.Deserialize<NavRoute>(ref reader)!;
-            case "navrouteclear":
+            case "NavRouteClear":
                 return JsonSerializer.Deserialize<NavRouteClear>(ref reader)!;
-            case "scanbarycentre":
+            case "ScanBaryCentre":
                 return JsonSerializer.Deserialize<ScanBaryCentre>(ref reader)!;
-            case "jetconeboost":
+            case "JetConeBoost":
                 return JsonSerializer.Deserialize<JetConeBoost>(ref reader)!;
-            case "shutdown":
+            case "Shutdown":
                 return JsonSerializer.Deserialize<Shutdown>(ref reader)!;
-            case "fuelscoop":
+            case "FuelScoop":
                 return JsonSerializer.Deserialize<FuelScoop>(ref reader)!;
-            case "fssdiscoveryscan":
+            case "FSSDiscoveryScan":
                 return JsonSerializer.Deserialize<FSSDiscoveryScan>(ref reader)!;
-            case "moduleinfo":
+            case "ModuleInfo":
                 return JsonSerializer.Deserialize<ModuleInfo>(ref reader)!;
-            case "shiptargeted":
+            case "ShipTargeted":
                 return JsonSerializer.Deserialize<ShipTargeted>(ref reader)!;
-            case "afmurepairs":
+            case "AfmuRepairs":
                 return JsonSerializer.Deserialize<AfmuRepairs>(ref reader)!;
-            case "heatwarning":
+            case "HeatWarning":
                 return JsonSerializer.Deserialize<HeatWarning>(ref reader)!;
-            case "modulebuy":
+            case "ModuleBuy":
                 return JsonSerializer.Deserialize<ModuleBuy>(ref reader)!;
-            case "buydrones":
+            case "BuyDrones":
                 return JsonSerializer.Deserialize<BuyDrones>(ref reader)!;
-            case "shieldstate":
+            case "ShieldState":
                 return JsonSerializer.Deserialize<ShieldState>(ref reader)!;
-            case "buyammo":
+            case "BuyAmmo":
                 return JsonSerializer.Deserialize<BuyAmmo>(ref reader)!;
-            case "ejectcargo":
+            case "EjectCargo":
                 return JsonSerializer.Deserialize<EjectCargo>(ref reader)!;
-            case "approachbody":
+            case "ApproachBody":
                 return JsonSerializer.Deserialize<ApproachBody>(ref reader)!;
-            case "docksrv":
+            case "DockSRV":
                 return JsonSerializer.Deserialize<DockSRV>(ref reader)!;
-            case "touchdown":
+            case "Touchdown":
                 return JsonSerializer.Deserialize<Touchdown>(ref reader)!;
-            case "saasignalsfound":
+            case "SAASignalsFound":
                 return JsonSerializer.Deserialize<SAASignalsFound>(ref reader)!;
-            case "engineercraft":
+            case "EngineerCraft":
                 return JsonSerializer.Deserialize<EngineerCraft>(ref reader)!;
-            case "materialtrade":
+            case "MaterialTrade":
                 return JsonSerializer.Deserialize<MaterialTrade>(ref reader)!;
-            case "repair":
+            case "Repair":
                 return JsonSerializer.Deserialize<Repair>(ref reader)!;
-            case "refuelall":
+            case "RefuelAll":
                 return JsonSerializer.Deserialize<RefuelAll>(ref reader)!;
-            case "storedmodules":
+            case "StoredModules":
                 return JsonSerializer.Deserialize<StoredModules>(ref reader)!;
-            case "synthesis":
+            case "Synthesis":
                 return JsonSerializer.Deserialize<Synthesis>(ref reader)!;
-            case "scanned":
+            case "Scanned":
                 return JsonSerializer.Deserialize<Scanned>(ref reader)!;
-            case "sendtext":
+            case "SendText":
                 return JsonSerializer.Deserialize<SendText>(ref reader)!;
-            case "embark":
+            case "Embark":
                 return JsonSerializer.Deserialize<Embark>(ref reader)!;
-            case "multisellexplorationdata":
+            case "MultiSellExplorationData":
                 return JsonSerializer.Deserialize<MultiSellExplorationData>(ref reader)!;
-            case "backpack":
+            case "Backpack":
                 return JsonSerializer.Deserialize<BackpackMaterials>(ref reader)!;
-            case "modulesell":
+            case "ModuleSell":
                 return JsonSerializer.Deserialize<ModuleSell>(ref reader)!;
-            case "undocked":
+            case "Undocked":
                 return JsonSerializer.Deserialize<Undocked>(ref reader)!;
-            case "repairall":
+            case "RepairAll":
                 return JsonSerializer.Deserialize<RepairAll>(ref reader)!;
-            case "outfitting":
+            case "Outfitting":
                 return JsonSerializer.Deserialize<Outfitting>(ref reader)!;
-            case "powerplaysalary":
+            case "PowerplaySalary":
                 return JsonSerializer.Deserialize<PowerplaySalary>(ref reader)!;
-            case "redeemvoucher":
+            case "RedeemVoucher":
                 return JsonSerializer.Deserialize<RedeemVoucher>(ref reader)!;
-            case "saascancomplete":
+            case "SAAScanComplete":
                 return JsonSerializer.Deserialize<SAAScanComplete>(ref reader)!;
-            case "friends":
+            case "Friends":
                 return JsonSerializer.Deserialize<Friends>(ref reader)!;
-            case "launchsrv":
+            case "LaunchSRV":
                 return JsonSerializer.Deserialize<LaunchSRV>(ref reader)!;
-            case "suitloadout":
+            case "SuitLoadout":
                 return JsonSerializer.Deserialize<SuitLoadout>(ref reader)!;
-            case "disembark":
+            case "Disembark":
                 return JsonSerializer.Deserialize<Disembark>(ref reader)!;
-            case "materialdiscovered":
+            case "MaterialDiscovered":
                 return JsonSerializer.Deserialize<MaterialDiscovered>(ref reader)!;
-            case "storedships":
+            case "StoredShips":
                 return JsonSerializer.Deserialize<StoredShips>(ref reader)!;
-            case "scanorganic":
+            case "ScanOrganic":
                 return JsonSerializer.Deserialize<ScanOrganic>(ref reader)!;
-            case "market":
+            case "Market":
                 return JsonSerializer.Deserialize<Market>(ref reader)!;
-            case "missioncompleted":
+            case "MissionCompleted":
                 return JsonSerializer.Deserialize<MissionCompleted>(ref reader)!;
-            case "sellshiponrebuy":
+            case "SellShipOnRebuy":
                 return JsonSerializer.Deserialize<SellShipOnRebuy>(ref reader)!;
-            case "missionaccepted":
+            case "MissionAccepted":
                 return JsonSerializer.Deserialize<MissionAccepted>(ref reader)!;
-            case "approachsettlement":
+            case "ApproachSettlement":
                 return JsonSerializer.Deserialize<ApproachSettlement>(ref reader)!;
-            case "screenshot":
+            case "Screenshot":
                 return JsonSerializer.Deserialize<Screenshot>(ref reader)!;
-            case "moduleswap":
+            case "ModuleSwap":
                 return JsonSerializer.Deserialize<ModuleSwap>(ref reader)!;
-            case "underattack":
+            case "UnderAttack":
                 return JsonSerializer.Deserialize<UnderAttack>(ref reader)!;
-            case "datascanned":
+            case "DataScanned":
                 return JsonSerializer.Deserialize<DataScanned>(ref reader)!;
-            case "dockingdenied":
+            case "DockingDenied":
                 return JsonSerializer.Deserialize<DockingDenied>(ref reader)!;
-            case "fetchremotemodule":
+            case "FetchRemoteModule":
                 return JsonSerializer.Deserialize<FetchRemoteModule>(ref reader)!; 
-            case "engineercontribution":
+            case "EngineerContribution":
                 return JsonSerializer.Deserialize<EngineerContribution>(ref reader)!;
-            case "collectcargo":
+            case "CollectCargo":
                 return JsonSerializer.Deserialize<CollectCargo>(ref reader)!;
-            case "moduleretrieve":
+            case "ModuleRetrieve":
                 return JsonSerializer.Deserialize<ModuleRetrieve>(ref reader)!;
-            case "marketbuy":
+            case "MarketBuy":
                 return JsonSerializer.Deserialize<MarketBuy>(ref reader)!;
-            case "selldrones":
+            case "SellDrones":
                 return JsonSerializer.Deserialize<SellDrones>(ref reader)!;
-            case "interdicted":
+            case "Interdicted":
                 return JsonSerializer.Deserialize<Interdicted>(ref reader)!;
-            case "sellorganicdata":
+            case "SellOrganicData":
                 return JsonSerializer.Deserialize<SellOrganicData>(ref reader)!;
-            case "wingadd":
+            case "WingAdd":
                 return JsonSerializer.Deserialize<WingAdd>(ref reader)!;
-            case "winginvite":
+            case "WingInvite":
                 return JsonSerializer.Deserialize<WingInvite>(ref reader)!;
-            case "wingjoin":
+            case "WingJoin":
                 return JsonSerializer.Deserialize<WingJoin>(ref reader)!;
-            case "wingleave":
+            case "WingLeave":
                 return JsonSerializer.Deserialize<WingLeave>(ref reader)!;
-            case "bounty":
+            case "Bounty":
                 return JsonSerializer.Deserialize<Bounty>(ref reader)!;
-            case "commitcrime":
+            case "CommitCrime":
                 return JsonSerializer.Deserialize<CommitCrime>(ref reader)!;
-            case "modulestore":
+            case "ModuleStore":
                 return JsonSerializer.Deserialize<ModuleStore>(ref reader)!;
-            case "factionkillbond":
+            case "FactionKillBond":
                 return JsonSerializer.Deserialize<FactionKillBond>(ref reader)!;
-            case "rebootrepair":
+            case "RebootRepair":
                 return JsonSerializer.Deserialize<RebootRepair>(ref reader)!;
-            case "launchdrone":
+            case "LaunchDrone":
                 return JsonSerializer.Deserialize<LaunchDrone>(ref reader)!;
-            case "sellmicroresources":
+            case "SellMicroResources":
                 return JsonSerializer.Deserialize<SellMicroResources>(ref reader)!;
-            case "navbeaconscan":
+            case "NavBeaconScan":
                 return JsonSerializer.Deserialize<NavBeaconScan>(ref reader)!;
-            case "searchandrescue":
+            case "SearchAndRescue":
                 return JsonSerializer.Deserialize<SearchAndRescue>(ref reader)!;
-            case "marketsell":
+            case "MarketSell":
                 return JsonSerializer.Deserialize<MarketSell>(ref reader)!;
             default:
                 logger.LogWarning("Unknown Journal event type {EventName}", eventName);

@@ -19,6 +19,13 @@ public class JournalService(
     static ConcurrentBag<JournalBase> _journals = new();
     
     static DateTimeOffset notBefore = DateTimeOffset.UtcNow.AddHours(-1);
+    
+    readonly JsonSerializerOptions options = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        AllowOutOfOrderMetadataProperties = true,
+        // Converters = { ActivatorUtilities.CreateInstance<JournalJsonConverter>(serviceProvider) }
+    };
 
     public async Task HandleFile(string filePath)
     {
@@ -29,28 +36,35 @@ public class JournalService(
 
         var file = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
         var newJournals = new List<JournalBase>();
-        var select = file.AsParallel().Select(line => JsonSerializer.Deserialize<JournalBase>(line,
-            new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                Converters = { ActivatorUtilities.CreateInstance<JournalConverter>(serviceProvider) }
-            }));
-        
-        foreach (var journal in select)
+        await Parallel.ForEachAsync(file, (line, _) =>
         {
-            if (_journals.Any(j => j.Timestamp == journal.Timestamp && j.Event == journal.Event))
+            if (string.IsNullOrWhiteSpace(line))
             {
-                continue;
+                return ValueTask.CompletedTask;
             }
+
+            var journal = JsonSerializer.Deserialize<JournalBase>(line, options);
+            if (journal == null)
+            {
+                return ValueTask.CompletedTask;
+            }
+
+            if (_journals.Any(j => j.Timestamp == journal.Timestamp && j.GetType() == journal.GetType()))
+            {
+                return ValueTask.CompletedTask;
+            }
+            
+            _journals.Add(journal);
             
             if (journal.Timestamp < notBefore)
             {
-                continue;
+                return ValueTask.CompletedTask;
             }
 
-            _journals.Add(journal);
             newJournals.Add(journal);
-        }
+            return ValueTask.CompletedTask;
+        });
+        
 
         if (newJournals.Any())
         {
@@ -60,7 +74,6 @@ public class JournalService(
 
     public async Task<List<JournalBase>> Get()
     {
-        await hub.Clients.All.JournalUpdated(_journals.ToList());
-        return _journals.ToList();
+        return [];
     }
 }

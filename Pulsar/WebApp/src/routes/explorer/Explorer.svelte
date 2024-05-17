@@ -1,29 +1,91 @@
 <script lang="ts">
-  const data: unknown[] = [{}, {}, {}, {}];
-  // number of scans completed
-  const scanned = 2;
+  import connection from "$lib/stores/Connection.store";
+  import type { FSSDiscoveryScan } from "../../types/api/FSSDiscoveryScan";
+  import type { Scan } from "../../types/api/Scan";
+  import type JournalBase from "../../types/api/JournalBase";
+
+  const data: Partial<Scan>[] = [{}, {}, {}, {}];
   // total bodies in the current system (FSSDiscovery event)
-  const totalBodies = 12;
+  let totalBodies = $state(0);
+  let currentSystem = $state("");
   // accumulated list of bodies in the current system (Scan events)
-  const bodies = $state([
-    { value: 50 },
-    { value: 1000 },
-    { value: 800000 },
-    { value: 800000 },
-  ]);
+  let scans = $state([] as Scan[]);
+
+  const targetEvents = ["Scan", "FSSScanBaryCenter", "FSSDiscoveryScan"];
+
+  $connection.on("JournalUpdated", (messages: JournalBase[]) => {
+    const filtered = messages.filter((message) =>
+      targetEvents.includes(message.event)
+    );
+    if (!filtered.length) return;
+
+    for (let i = 0; i < filtered.length; i++) {
+      const message = filtered[i];
+
+      switch (message.event) {
+        case "FSSDiscoveryScan": {
+          // initial scan when jumping into a system
+          const scan = message as FSSDiscoveryScan;
+          totalBodies = scan.bodyCount;
+          if (currentSystem !== scan.systemName) {
+            scans = [];
+            currentSystem = scan.systemName;
+          }
+          break;
+        }
+        case "Scan": {
+          // contains all information about a scanned body (resources, biology, mapping/discovery status, body type, etc.)
+          const scan = message as Scan;
+          if (currentSystem !== scan.starSystem) {
+            currentSystem = scan.starSystem;
+            scans = [];
+          }
+          scans.push(scan);
+          break;
+        }
+        case "FSSAllBodiesFound": {
+          // when all bodies in a system have been scanned
+          break;
+        }
+        default:
+          console.log(message);
+          break;
+      }
+    }
+  });
+
+  const toShortPlanetClass = (planetClass?: string) => {
+    switch (planetClass) {
+      case "High metal content":
+      case "High metal content body":
+        return "HMC";
+      case "Sudarsky class I gas giant":
+      case "Sudarsky class II gas giant":
+      case "Sudarsky class III gas giant":
+      case "Sudarsky class IV gas giant":
+        return "GAS";
+      default:
+        return planetClass;
+    }
+  };
 </script>
 
 <section>
   <div class="title">
     <h1>Explorer</h1>
   </div>
+  Current System: {currentSystem}
   <!-- summary & high value targets -->
   <h1>Bodies</h1>
-  Scan:&nbsp;<span>{scanned}</span>/<span>{totalBodies}</span>
+  Scan:&nbsp;<span>{scans.length}</span>/<span>{totalBodies}</span>
   <div class="title">High Value (>500kcr)</div>
   <ol>
-    {#each bodies.filter((b) => b.value > 500000) as body}
-      <li>[HMC/WW/ELT/ELN] $body.name - {body.value}cr</li>
+    <li>example</li>
+    {#each scans as body}
+      <li>
+        [HMC/WW/ELT/ELN] {toShortPlanetClass(body.planetClass)}
+        {body.bodyName} - 0cr
+      </li>
     {/each}
   </ol>
   <br />
@@ -78,7 +140,7 @@
 <style lang="scss">
   section {
     margin-top: 5px;
-    max-height: 500px;
+    max-height: 300px;
     overflow-y: scroll;
   }
 

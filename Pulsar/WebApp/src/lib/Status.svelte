@@ -17,6 +17,7 @@
   let loading = $state(true);
 
   let alert: JournalBase[] = $state([]);
+  let fuelDown = $state(false);
 
   onMount(async () => {
 
@@ -39,17 +40,19 @@
       last.push(message.fuel?.fuelMain ?? 0);
 
       const change = [];
-      for (let i = last.length - 1; i === 0; i--) {
+      for (let i = last.length - 1; i > 0; i--) {
         change.push(last[i] - last[i - 1]);
       }
 
       const avg = change.length ? change.reduce((a, b) => a + b, 0) / change.length : 0;
       const max = 32;
-      if ($statusStore.fuel?.fuelMain && avg) {
-        timeToMax = (max - $statusStore.fuel?.fuelMain) / avg;
+      const currentEmpty = (max - message.fuel?.fuelMain);
+      if (message.fuel?.fuelMain && !Number.isNaN(avg) && avg) {
+        fuelDown = avg < 0;   
+        timeToMax = fuelDown ? (message.fuel?.fuelMain / -avg) : currentEmpty / avg ;
       }
 
-      console.log($statusStore);
+      console.log(message); 
     });
 
     $connection.on("JournalUpdated", (message) => {
@@ -97,7 +100,7 @@
 <div>
   {#if $statusStore}
     <span
-      >Fuel%: {(($statusStore.fuel?.fuelMain ?? 0) / 32) * 100}% est: {timeToMax}s</span
+      >Fuel%: {((($statusStore.fuel?.fuelMain ?? 0) / 32) * 100).toFixed(2)}% est{fuelDown ? ' REMAINING' : ' to fill'}: {timeToMax.toFixed(2  )}s</span
     >
     <div class="power">
       <div class="sys">
@@ -148,6 +151,7 @@
         height: 100%;
         flex-direction: column-reverse;
         align-items: center;
+        min-width: 2vw;
         div.pip {
           min-width: 2vw;
           min-height: 1vh;

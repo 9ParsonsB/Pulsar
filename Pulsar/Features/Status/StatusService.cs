@@ -41,7 +41,7 @@ public class StatusService
 
     public async Task<Status> Get()
     {
-        var statusFile = Path.Combine(options.Value.JournalDirectory, FileName);
+        var statusFile = Path.Join(options.Value.JournalDirectory, FileName);
 
         if (!FileHelper.ValidateFile(statusFile))
         {
