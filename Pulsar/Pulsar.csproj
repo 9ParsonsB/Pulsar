@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Pulsar</RootNamespace>
@@ -21,6 +21,7 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
       <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
       <PackageReference Include="NSwag.SwaggerGeneration" Version="12.3.0" />
+      <PackageReference Include="System.Text.Json" Version="9.0.0-preview.3.24172.9" />
       <PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
     </ItemGroup>
 </Project>
