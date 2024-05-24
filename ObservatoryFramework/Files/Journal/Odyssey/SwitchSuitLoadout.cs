@@ -2,4 +2,5 @@
 
 public class SwitchSuitLoadout : CreateSuitLoadout
 {
+    public override string Event => "SwitchSuitLoadout";
 }

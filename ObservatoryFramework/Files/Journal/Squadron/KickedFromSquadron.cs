@@ -2,4 +2,5 @@
 
 public class KickedFromSquadron : SquadronCreated
 {
+    public override string Event => "KickedFromSquadron";
 }

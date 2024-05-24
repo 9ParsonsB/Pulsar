@@ -6,6 +6,7 @@ namespace Observatory.Framework.Files.Journal.Odyssey;
 
 public class TradeMicroResources : JournalBase
 {
+    public override string Event => "TradeMicroResources";
     public ImmutableList<MicroResource> Offered { get; init; }
     public string Received { get; init; }
     [JsonConverter(typeof(JsonStringEnumConverter))]

@@ -5,6 +5,7 @@
 /// </summary>
 public class MaterialCollected : JournalBase
 {
+    public override string Event => "MaterialCollected";
     /// <summary>
     /// Category to which the material belongs.
     /// </summary>

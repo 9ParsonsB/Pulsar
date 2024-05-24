@@ -2,5 +2,6 @@
 
 public class CommunityGoalReward : CommunityGoalDiscard
 {
+    public override string Event => "CommunityGoalReward";
     public long Reward { get; init; }
 }

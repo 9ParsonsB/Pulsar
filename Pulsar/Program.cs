@@ -2,7 +2,9 @@ using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.FileProviders;
 using Pulsar.Features;
+using Pulsar.Features.Journal;
 
+Console.WriteLine((string?)null!);
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
 {
@@ -35,7 +37,7 @@ builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(new CorsPolicy()
-        { Origins = { "http://localhost:5000" }, Headers = { "*" }, Methods = { "*" } });
+        { Origins = { "http://172.31.0.222:5000", "http://localhost:5000" }, Headers = { "*" }, Methods = { "*" } });
 });
 builder.Services.AddSignalR().AddJsonProtocol(options =>
     options.PayloadSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
@@ -43,17 +45,20 @@ builder.Services.AddDbContext<PulsarContext>();
 builder.Services.Configure<JsonOptions>(options =>
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-
+// builder.Services.AddOpenApiDocument(config => config.DocumentName = "v1");
 builder.Services.AddHttpForwarder();
 builder.Services.AddHostedService<FileWatcherService>();
+builder.Services.AddHostedService<JournalProcessor>();
 
 var app = builder.Build();
-
 app.UseWebSockets();
-app.UseRouting();
+// app.UseOpenApi();
+// app.UseSwaggerUi();
+app.UseRouting();   
 app.MapReverseProxy();
 app.MapControllers();
 app.MapHub<EventsHub>("api/events");
 app.MapFallbackToFile("index.html").AllowAnonymous();
+
 
 await app.RunAsync();

@@ -6,6 +6,12 @@ using Observatory.Framework.Files.Journal.Odyssey;
 
 public class EventsHub : Hub<IEventsHub>
 {
+    public async Task Status([FromServices] IStatusService statusService)
+    {
+        var status = await statusService.Get();
+        await Clients.Caller.StatusUpdated(status);
+    }
+    
     public async Task StatusUpdated(Observatory.Framework.Files.Status status) => await Clients.All.StatusUpdated(status);
 
     public async Task OutfittingUpdated(OutfittingFile outfitting) => await Clients.All.OutfittingUpdated(outfitting);
@@ -21,7 +27,7 @@ public class EventsHub : Hub<IEventsHub>
     public async Task ModuleInfoUpdated(ModuleInfoFile moduleInfo) => await Clients.All.ModuleInfoUpdated(moduleInfo);
 
     public async Task FleetCarrierUpdated(FCMaterialsFile fleetCarrier) => await Clients.All.FleetCarrierUpdated(fleetCarrier);
-
+            
     public async Task CargoUpdated(CargoFile cargo) => await Clients.All.CargoUpdated(cargo);
 
     public async Task BackpackUpdated(BackpackFile backpack) => await Clients.All.BackpackUpdated(backpack);

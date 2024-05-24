@@ -4,6 +4,7 @@ namespace Observatory.Framework.Files.Journal.Startup;
 
 public class FileHeader : JournalBase
 {
+    public override string Event => "FileHeader";
     [JsonPropertyName("part")]
     public int Part { get; init; }
 

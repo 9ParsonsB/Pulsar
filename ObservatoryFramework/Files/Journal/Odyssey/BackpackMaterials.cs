@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Odyssey;
 
 public class BackpackMaterials : JournalBase
 {
+    public override string Event => "BackpackMaterials";
     public ImmutableList<BackpackItem> Items { get; init; }
     public ImmutableList<BackpackItem> Components { get; init; }
     public ImmutableList<BackpackItem> Consumables { get; init; }

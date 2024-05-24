@@ -5,6 +5,7 @@
 /// </summary>
 public class BuyExplorationData : JournalBase
 {
+    public override string Event => "BuyExplorationData";
     /// <summary>
     /// Name of the system for which data was purchased.
     /// </summary>

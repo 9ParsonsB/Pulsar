@@ -2,6 +2,7 @@
 
 public class ModuleBuy : JournalBase
 {
+    public override string Event => "ModuleBuy";
     public ulong MarketID { get; init; }
     public string Slot { get; init; }
     public string BuyItem { get; init; }

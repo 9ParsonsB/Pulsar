@@ -2,6 +2,7 @@
 
 public class CarrierBankTransfer : JournalBase
 {
+    public override string Event => "CarrierBankTransfer";
     public ulong CarrierID { get; init; }
     public long Deposit { get; init; }
     public long Withdraw { get; init; }

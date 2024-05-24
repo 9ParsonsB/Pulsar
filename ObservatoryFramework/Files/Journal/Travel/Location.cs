@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Travel;
 
 public class Location : JournalBase
 {
+    public override string Event => "Location";
     [JsonConverter(typeof(IntBoolFlexConverter))]
     public bool Docked { get; init; }
     public double DistFromStarLS { get; init; }

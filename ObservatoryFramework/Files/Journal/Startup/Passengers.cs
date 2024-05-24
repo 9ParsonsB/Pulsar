@@ -4,6 +4,8 @@ namespace Observatory.Framework.Files.Journal.Startup;
 
 public class Passengers : JournalBase
 {
+    public override string Event => "Passengers";
+    
     [JsonPropertyName("Passengers_Missions_Accepted")]
     public int PassengersMissionsAccepted { get; init; }
 

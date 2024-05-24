@@ -2,5 +2,6 @@
 
 public class UnderAttack : JournalBase
 {
+    public override string Event => "UnderAttack";
     public string Target { get; init; }
 }

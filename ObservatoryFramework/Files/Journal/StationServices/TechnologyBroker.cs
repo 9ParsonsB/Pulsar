@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.StationServices;
 
 public class TechnologyBroker : JournalBase
 {
+    public override string Event => "TechnologyBroker";
     public string BrokerType { get; init; }
     public ulong MarketID { get; init; }
     public ImmutableList<ItemName> ItemsUnlocked { get; init; }

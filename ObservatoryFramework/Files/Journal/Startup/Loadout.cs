@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Startup;
 
 public class Loadout : JournalBase
 {
+    public override string Event => "Loadout";
     public string Ship { get; init; }
     public ulong ShipID { get; init; }
     public string ShipName { get; init; }

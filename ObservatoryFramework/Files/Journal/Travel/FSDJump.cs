@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Travel;
 
 public class FSDJump : JournalBase
 {
+    public override string Event => "FSDJump";
     public string StarSystem { get; init; }
     public ulong SystemAddress { get; init; }
     [JsonConverter(typeof(StarPosConverter))]

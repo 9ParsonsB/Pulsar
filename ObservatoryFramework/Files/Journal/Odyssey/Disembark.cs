@@ -2,6 +2,7 @@
 
 public class Disembark : JournalBase
 {
+    public override string Event => "Disembark";
     public bool SRV { get; init; }
     public bool Taxi { get; init; }
     public bool Multicrew { get; init; }

@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
 public class CarrierShipPack : JournalBase
 {
+    public override string Event => "CarrierShipPack";
     public ulong CarrierID { get; init; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CarrierOperation Operation { get; init; }

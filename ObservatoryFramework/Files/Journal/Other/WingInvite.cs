@@ -2,4 +2,5 @@
 
 public class WingInvite : WingAdd
 {
+    public override string Event => "WingInvite";
 }

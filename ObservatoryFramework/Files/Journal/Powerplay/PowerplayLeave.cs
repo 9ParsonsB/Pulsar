@@ -2,4 +2,5 @@
 
 public class PowerplayLeave : PowerplayJoin
 {
+    public override string Event => "PowerplayLeave";
 }

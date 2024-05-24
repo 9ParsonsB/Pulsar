@@ -2,6 +2,7 @@
 
 public class CarrierBuy : JournalBase
 {
+    public override string Event => "CarrierBuy";
     public long BoughtAtMarket { get; init; }
     public ulong SystemAddress { get; init; }
     public ulong CarrierID { get; init; }

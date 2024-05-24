@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Startup;
 
 public class Statistics : JournalBase
 {
+    public override string Event => "Statistics";
     [JsonPropertyName("Bank_Account")]
     public BankAccount BankAccount { get; init; }
     public ParameterTypes.Combat Combat { get; init; }

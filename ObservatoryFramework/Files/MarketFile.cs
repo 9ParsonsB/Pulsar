@@ -9,6 +9,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class MarketFile : JournalBase
 {
+    public override string Event => "Market";
     /// <summary>
     /// Unique ID of current market.
     /// </summary>

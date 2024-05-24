@@ -2,6 +2,7 @@
 
 public class Undocked : JournalBase
 {
+    public override string Event => "Undocked";
     /// <summary>
     /// Name of the station at which this event occurred.
     /// </summary>

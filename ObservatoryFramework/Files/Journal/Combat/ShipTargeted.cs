@@ -2,6 +2,7 @@
 
 public class ShipTargeted : JournalBase
 {
+    public override string Event => "ShipTargeted";
     public bool TargetLocked { get; init; }
     public string Ship { get; init; }
     public string Ship_Localised { get; init; }

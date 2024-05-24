@@ -2,4 +2,5 @@
 
 public class PayFines : PayBounties
 {
+    public override string Event => "PayFines";
 }

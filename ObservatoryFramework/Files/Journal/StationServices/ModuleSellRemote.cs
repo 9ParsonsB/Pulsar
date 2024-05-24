@@ -2,6 +2,7 @@
 
 public class ModuleSellRemote : JournalBase
 {
+    public override string Event => "ModuleSellRemote";
     public int StorageSlot { get; init; }
     public string SellItem { get; init; }
     public string SellItem_Localised { get; init; }

@@ -2,4 +2,5 @@
 
 public class LaunchFighter : LaunchSRV
 {
+    public override string Event => "LaunchFighter";
 }

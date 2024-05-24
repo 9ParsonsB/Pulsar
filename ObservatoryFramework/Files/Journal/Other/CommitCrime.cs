@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Other;
 
 public class CommitCrime : JournalBase
 {
+    public override string Event => "CommitCrime";
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CrimeType CrimeType { get; init; }
     public string Faction { get; init; }

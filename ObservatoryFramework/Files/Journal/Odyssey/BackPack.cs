@@ -2,5 +2,5 @@
 
 public class BackPack : JournalBase
 {
-       
+    public override string Event => "BackPack";
 }

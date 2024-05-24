@@ -18,7 +18,7 @@ public class PulsarServiceRegistry : ServiceRegistry
         For<IStatusService>().Use<StatusService>();
         For<IModulesInfoService>().Use<ModulesInfoService>();
         For<ICargoService>().Use<CargoService>();
-        For<IJournalService>().Use<JournalService>();
+        For<IJournalService>().Use<JournalService>().Singleton();
         For<IShipLockerService>().Use<ShipLockerService>();
         For<IShipyardService>().Use<ShipyardService>();
     }

@@ -2,4 +2,5 @@
 
 public class SquadronPromotion : SquadronDemotion
 {
+    public override string Event => "SquadronPromotion";
 }

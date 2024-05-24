@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.StationServices;
 
 public class RedeemVoucher : JournalBase
 {
+    public override string Event => "RedeemVoucher";
     [JsonConverter(typeof(VoucherTypeConverter))]
     public VoucherType Type { get; init; }
     public long Amount { get; init; }

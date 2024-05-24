@@ -2,4 +2,5 @@
 
 public class SharedBookmarkToSquadron : SquadronCreated
 {
+    public override string Event => "SharedBookmarkToSquadron";
 }

@@ -2,6 +2,7 @@
 
 public class RestockVehicle : JournalBase
 {
+    public override string Event => "RestockVehicle";
     public string Type { get; init; }
     public string Loadout { get; init; }
     public int Cost { get; init; }

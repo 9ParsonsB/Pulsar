@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Exploration;
 /// </summary>
 public class SellExplorationData : JournalBase
 {
+    public override string Event => "SellExplorationData";
     /// <summary>
     /// List of systems for which data was sold.
     /// </summary>

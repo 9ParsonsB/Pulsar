@@ -2,6 +2,7 @@
 
 public class CollectItems : JournalBase
 {
+    public override string Event => "CollectItems";
     public string Name { get; init; }
     public string Name_Localised { get; init; }
     public string Type { get; init; }

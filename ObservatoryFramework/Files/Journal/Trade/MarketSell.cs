@@ -2,6 +2,7 @@
 
 public class MarketSell : JournalBase
 {
+    public override string Event => "MarketSell";
     public ulong MarketID { get; init; }
     public string Type { get; init; }
     public string Type_Localised { get; init; }

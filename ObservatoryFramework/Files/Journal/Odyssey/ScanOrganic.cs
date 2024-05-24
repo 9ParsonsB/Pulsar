@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Odyssey;
 
 public class ScanOrganic : JournalBase
 {
+    public override string Event => "ScanOrganic";
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ScanOrganicType ScanType { get; init; }
     public string Genus { get; init; }

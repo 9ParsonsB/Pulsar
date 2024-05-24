@@ -5,6 +5,7 @@
 /// </summary>
 public class MaterialDiscovered : JournalBase
 {
+    public override string Event => "MaterialDiscovered";
     /// <summary>
     /// Category of the material.
     /// </summary>

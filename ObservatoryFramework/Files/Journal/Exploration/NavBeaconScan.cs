@@ -5,6 +5,7 @@
 /// </summary>
 public class NavBeaconScan : JournalBase
 {
+    public override string Event => "NavBeaconScan";
     /// <summary>
     /// Number of bodies in system.
     /// </summary>

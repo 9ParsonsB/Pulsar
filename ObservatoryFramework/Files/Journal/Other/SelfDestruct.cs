@@ -2,4 +2,5 @@
 
 public class SelfDestruct : JournalBase
 {
+    public override string Event => "SelfDestruct";
 }

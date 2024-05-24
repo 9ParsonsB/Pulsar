@@ -8,7 +8,7 @@ public class CargoService(IOptions<PulsarConfiguration> options, ILogger<CargoSe
 {
     public string FileName => "Cargo.json";
     
-    public async Task HandleFile(string filePath)
+    public async Task HandleFile(string filePath, CancellationToken token = new())
     {
         if (!FileHelper.ValidateFile(filePath))
         {
@@ -16,7 +16,7 @@ public class CargoService(IOptions<PulsarConfiguration> options, ILogger<CargoSe
         }
 
         var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        var moduleInfo = await JsonSerializer.DeserializeAsync<CargoFile>(file);
+        var moduleInfo = await JsonSerializer.DeserializeAsync<CargoFile>(file, cancellationToken: token);
 
         if (moduleInfo == null)
         {

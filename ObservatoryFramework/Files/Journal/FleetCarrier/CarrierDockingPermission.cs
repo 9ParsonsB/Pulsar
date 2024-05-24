@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
 public class CarrierDockingPermission : JournalBase
 {
+    public override string Event => "CarrierDockingPermission";
     public ulong CarrierID { get; init; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CarrierDockingAccess DockingAccess { get; init; }

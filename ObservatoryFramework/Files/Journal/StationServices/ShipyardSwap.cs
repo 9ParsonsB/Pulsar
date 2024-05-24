@@ -2,6 +2,7 @@
 
 public class ShipyardSwap : JournalBase
 {
+    public override string Event => "ShipyardSwap";
     public ulong MarketID { get; init; }
     public string ShipType { get; init; }
     public string ShipType_Localised { get; init; }

@@ -6,6 +6,7 @@ namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
 public class CarrierStats : JournalBase
 {
+    public override string Event => "CarrierStats";
     public ulong CarrierID { get; init; }
     public string Callsign { get; init; }
     public string Name { get; init; }

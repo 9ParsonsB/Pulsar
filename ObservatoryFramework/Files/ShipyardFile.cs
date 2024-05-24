@@ -9,6 +9,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class ShipyardFile : JournalBase
 {
+    public override string Event => "Shipyard";
     /// <summary>
     /// Unique ID of current market.
     /// </summary>

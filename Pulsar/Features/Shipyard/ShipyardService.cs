@@ -25,7 +25,7 @@ public class ShipyardService(ILogger<ShipyardService> logger, IOptions<PulsarCon
         return new ShipyardFile();
     }
 
-    public async Task HandleFile(string path)
+    public async Task HandleFile(string path, CancellationToken token = new())
     {
         if (!FileHelper.ValidateFile(path))
         {
@@ -33,7 +33,7 @@ public class ShipyardService(ILogger<ShipyardService> logger, IOptions<PulsarCon
         }
 
         var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        var shipyard = await JsonSerializer.DeserializeAsync<ShipyardFile>(file);
+        var shipyard = await JsonSerializer.DeserializeAsync<ShipyardFile>(file, cancellationToken: token);
 
         if (shipyard == null)
         {

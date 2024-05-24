@@ -2,5 +2,5 @@
 
 public class RefuelPartial : RefuelAll
 {
-
+    public override string Event => "RefuelPartial";
 }

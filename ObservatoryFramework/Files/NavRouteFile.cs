@@ -9,6 +9,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class NavRouteFile : JournalBase
 {
+    public override string Event => "Route";
     /// <summary>
     /// List of star systems and their locations in the current route.
     /// </summary>

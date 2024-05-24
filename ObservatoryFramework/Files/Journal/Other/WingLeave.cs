@@ -2,4 +2,5 @@
 
 public class WingLeave : JournalBase
 {
+    public override string Event => "WingLeave";
 }

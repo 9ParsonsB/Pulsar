@@ -2,8 +2,9 @@
 
 public class CarrierDecommission : JournalBase
 {
+    public override string Event => "CarrierDecommission";
     public ulong CarrierID { get; init; }
     public long ScrapRefund { get; init; }
     public long ScrapTime { get; init; }
-    public DateTime ScrapTimeUTC => DateTimeOffset.FromUnixTimeSeconds(ScrapTime).UtcDateTime;
+    public DateTimeOffset ScrapTimeUTC => DateTimeOffset.FromUnixTimeSeconds(ScrapTime);
 }

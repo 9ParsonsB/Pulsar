@@ -16,17 +16,17 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
         }
 
         watcher = new PhysicalFileProvider(options.Value.JournalDirectory);
-        Watch();
+        Watch(cancellationToken);
 
         // read the journal directory to get the initial files
 #if DEBUG
         Task.Run(() =>
         {
-            Thread.Sleep(TimeSpan.FromSeconds(10));
-            HandleFileChanged();
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+            HandleFileChanged(cancellationToken);
         }, cancellationToken);
 #else
-        HandleFileChanged();
+        HandleFileChanged(cancellationToken);
 #endif
 
 
@@ -35,38 +35,47 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
 
     ConcurrentDictionary<string, DateTimeOffset> FileDates = new();
 
-    private void HandleFileChanged(object? sender = null)
+    private void HandleFileChanged(CancellationToken token = new())
     {
+        var tasks = new List<Task>();
         foreach (var file in watcher.GetDirectoryContents(""))
         {
             if (file.IsDirectory || !file.Name.EndsWith(".json") &&
                 !(file.Name.StartsWith(FileHandlerService.JournalLogFileNameStart) &&
                   file.Name.EndsWith(FileHandlerService.JournalLogFileNameEnd)))
             {
-                continue;
+                return;
             }
+
 
             FileDates.AddOrUpdate(file.PhysicalPath, _ =>
             {
-                Task.Run(() => fileHandlerService.HandleFile(file.PhysicalPath));
+                tasks.Add(Task.Run(() => fileHandlerService.HandleFile(file.PhysicalPath, token), token));
                 return file.LastModified;
             }, (_, existing) =>
             {
                 if (existing != file.LastModified)
                 {
-                    Task.Run(() => fileHandlerService.HandleFile(file.PhysicalPath));
+                    tasks.Add(Task.Run(() => fileHandlerService.HandleFile(file.PhysicalPath, token), token));
                 }
 
                 return file.LastModified;
             });
         }
 
-        Watch();
+        Watch(token);
+        
+        Task.WaitAll(tasks.ToArray(), token);
     }
 
-    private void Watch()
+    private void Watch(CancellationToken token)
     {
-        watcher.Watch("*.*").RegisterChangeCallback(HandleFileChanged, null);
+        void Handle(object? _)
+        {
+            HandleFileChanged(token);
+        }
+
+        watcher.Watch("*.*").RegisterChangeCallback(Handle, null);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

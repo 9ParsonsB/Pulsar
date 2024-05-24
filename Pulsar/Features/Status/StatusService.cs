@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Observatory.Framework.Files.Journal.Startup;
+
 namespace Pulsar.Features.Status;
 
 using Observatory.Framework.Files;
@@ -8,12 +11,13 @@ public class StatusService
 (
     ILogger<StatusService> logger,
     IOptions<PulsarConfiguration> options,
-    IEventHubContext hub
+    IEventHubContext hub,
+    PulsarContext context
 ) : IStatusService
 {
     public string FileName => FileHandlerService.StatusFileName;
 
-    public async Task HandleFile(string filePath)
+    public async Task HandleFile(string filePath, CancellationToken token = new())
     {
         if (!FileHelper.ValidateFile(filePath))
         {
@@ -28,7 +32,7 @@ public class StatusService
             return;
         }
             
-        var status = await JsonSerializer.DeserializeAsync<Status>(file);
+        var status = await JsonSerializer.DeserializeAsync<Status>(file, cancellationToken: token);
 
         if (status == null)
         {
@@ -45,14 +49,19 @@ public class StatusService
 
         if (!FileHelper.ValidateFile(statusFile))
         {
-            return new Status();
+            return new ();
         }
 
         await using var file = File.Open(statusFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var status = await JsonSerializer.DeserializeAsync<Status>(file);
-        if (status != null) return status;
+        if (status != null)
+        {
+            return status;
+        }
 
         logger.LogWarning("Failed to deserialize status file {StatusFile}", statusFile);
-        return new Status();
+        return new ();
     }
+    
+
 }

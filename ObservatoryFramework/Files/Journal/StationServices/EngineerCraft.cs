@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.StationServices;
 
 public class EngineerCraft : JournalBase
 {
+    public override string Event => "EngineerCraft";
     public string Engineer { get; init; }
     public ulong EngineerID { get; init; }
     public string Blueprint { get; init; }

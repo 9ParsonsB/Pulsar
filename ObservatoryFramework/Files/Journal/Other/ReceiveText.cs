@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Other;
 
 public class ReceiveText : JournalBase
 {
+    public override string Event => "ReceiveText";
     public string From { get; init; }
     public string From_Localised { get; init; }
     public string Message { get; init; }

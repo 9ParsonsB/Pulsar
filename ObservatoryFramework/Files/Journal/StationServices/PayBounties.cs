@@ -2,6 +2,7 @@
 
 public class PayBounties : JournalBase
 {
+    public override string Event => "PayBounties";
     public long Amount { get; init; }
     public float BrokerPercentage { get; init; }
     public bool AllFines { get; init; }

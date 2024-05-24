@@ -2,4 +2,5 @@
 
 public class Shutdown : JournalBase
 {
+    public override string Event => "Shutdown";
 }

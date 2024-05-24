@@ -2,6 +2,7 @@
 
 public class EjectCargo : JournalBase
 {
+    public override string Event => "EjectCargo";
     public string Type { get; init; }
     public string Type_Localised { get; init; }
     public int Count { get; init; }

@@ -3,9 +3,9 @@ using Observatory.Framework.Files.ParameterTypes;
 
 namespace Observatory.Framework.Files.Journal.StationServices;
 
-// TODO: Read market.json file - Will only be valid for most recent market event
 public class Market : JournalBase
 {
+    public override string Event => "Market";
     public ulong MarketID { get; init; }
     /// <summary>
     /// Name of the station at which this event occurred.

@@ -9,6 +9,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class FCMaterialsFile : JournalBase
 {
+    public override string Event => "FCMaterials";
     /// <summary>
     /// List of items in stock and in demand from the carrier bartender.
     /// </summary>

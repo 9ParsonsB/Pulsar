@@ -2,4 +2,5 @@
 
 public class SellWeapon : BuyWeapon
 {
+    public override string Event => "SellWeapon";
 }

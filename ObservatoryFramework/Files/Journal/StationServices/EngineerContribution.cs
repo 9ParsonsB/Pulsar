@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.StationServices;
 
 public class EngineerContribution : JournalBase
 {
+    public override string Event => "EngineerContribution";
     public string Engineer { get; init; }
     public ulong EngineerID { get; init; }
     [JsonConverter(typeof(JsonStringEnumConverter))]

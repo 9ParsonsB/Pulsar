@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Other;
 
 public class ApproachSettlement : JournalBase
 {
+    public override string Event => "ApproachSettlement";
     public ulong SystemAddress { get; init; }
     public string Name { get; init; }
     public string Name_Localised { get; init; }

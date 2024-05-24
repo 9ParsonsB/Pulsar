@@ -5,4 +5,5 @@
 /// </summary>
 public class FSSBodySignals : SAASignalsFound
 {
+    public override string Event => "FSSBodySignals";
 }

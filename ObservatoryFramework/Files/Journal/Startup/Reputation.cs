@@ -2,6 +2,7 @@
 
 public class Reputation : JournalBase
 {
+    public override string Event => "Reputation";
     public float Empire { get; init; }
 
     public float Federation { get; init; }

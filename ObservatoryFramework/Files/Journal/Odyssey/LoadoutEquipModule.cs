@@ -2,6 +2,7 @@
 
 public class LoadoutEquipModule : JournalBase
 {
+    public override string Event => "LoadoutEquipModule";
     public ulong SuitID { get; init; }
     public string SuitName { get; init; }
     public string SuitName_Localised { get; init; }

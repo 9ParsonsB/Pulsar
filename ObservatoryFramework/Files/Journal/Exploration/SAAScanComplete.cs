@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Exploration;
 /// </summary>
 public class SAAScanComplete : JournalBase
 {
+    public override string Event => "SAAScanComplete";
     /// <summary>
     /// Unique ID of current system.
     /// </summary>

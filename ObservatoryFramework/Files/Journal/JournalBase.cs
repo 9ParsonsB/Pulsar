@@ -1,4 +1,8 @@
-﻿namespace Observatory.Framework.Files.Journal;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
+using DateTimeOffset = System.DateTimeOffset;
+
+namespace Observatory.Framework.Files.Journal;
 
 using System.Text.Json.Serialization;
 using Combat;
@@ -15,7 +19,7 @@ using Travel;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "event", UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization)]
 [JsonDerivedType(typeof(Bounty), "Bounty")]
-[JsonDerivedType(typeof(CapShipBound), "CapShipBound")]
+[JsonDerivedType(typeof(CapShipBond), "CapShipBound")]
 [JsonDerivedType(typeof(Died), "Died")]
 [JsonDerivedType(typeof(EscapeInterdiction), "EscapeInterdiction")]
 [JsonDerivedType(typeof(FactionKillBond), "FactionKillBond")]
@@ -63,8 +67,7 @@ using Travel;
 [JsonDerivedType(typeof(CarrierShipPack), "CarrierShipPack")]
 [JsonDerivedType(typeof(CarrierStats), "CarrierStats")]
 [JsonDerivedType(typeof(CarrierTradeOrder), "CarrierTradeOrder")]
-[JsonDerivedType(typeof(FCMaterlas), "FCMaterlas")]
-[JsonDerivedType(typeof(InvalidJson), "InvalidJson")]
+[JsonDerivedType(typeof(FleetCarrier.FCMaterials), "FCMaterlas")]
 [JsonDerivedType(typeof(BackpackChange), "BackpackChange")]
 [JsonDerivedType(typeof(BackpackMaterials), "Backpack")]
 [JsonDerivedType(typeof(BookDropship), "BookDropship")]
@@ -81,7 +84,7 @@ using Travel;
 [JsonDerivedType(typeof(DropItems), "DropItems")]
 [JsonDerivedType(typeof(DropShipDeploy), "DropShipDeploy")]
 [JsonDerivedType(typeof(Embark), "Embark")]
-[JsonDerivedType(typeof(FCMaterials), "FCMaterials")]
+[JsonDerivedType(typeof(Odyssey.FCMaterials), "FCMaterials")]
 [JsonDerivedType(typeof(LoadoutEquipModule), "LoadoutEquipModule")]
 [JsonDerivedType(typeof(LoadoutRemoveModule), "LoadoutRemoveModule")]
 [JsonDerivedType(typeof(RenameSuitLoadout), "RenameSuitLoadout")]
@@ -273,8 +276,16 @@ public abstract class JournalBase
 {
     [JsonPropertyName("timestamp")]
     public DateTimeOffset Timestamp { get; init; }
+
+    /// <summary>
+    /// As this is used for the JsonPolymorphic attribute, this will not be deserilized.
+    /// </summary>
+    [JsonPropertyName("event")]
+    public abstract string Event { get; }
     
     [JsonExtensionData]
+    [IgnoreDataMember]
+    [NotMapped]
     public Dictionary<string, object> AdditionalProperties { get; init; }
 }
         

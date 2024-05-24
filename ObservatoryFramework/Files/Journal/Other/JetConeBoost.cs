@@ -2,5 +2,6 @@
 
 public class JetConeBoost : JournalBase
 {
+    public override string Event => "JetConeBoost";
     public float BoostValue { get; init; }
 }

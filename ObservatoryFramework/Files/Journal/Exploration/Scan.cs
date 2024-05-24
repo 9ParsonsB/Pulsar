@@ -10,6 +10,7 @@ namespace Observatory.Framework.Files.Journal.Exploration;
 /// </summary>
 public class Scan : ScanBaryCentre
 {
+    public override string Event => "Scan";
     /// <summary>
     /// Type of scan which generated the event. Possible options include "Detailed", "AutoScan", and "NavBeaconDetail" (non-exhaustive).
     /// </summary>
@@ -119,6 +120,7 @@ public class Scan : ScanBaryCentre
     /// <summary>
     /// Rotation period of body in seconds.
     /// </summary>
+    [JsonConverter(typeof(JournalInvalidFloatConverter))]
     public float RotationPeriod { get; init; }
     /// <summary>
     /// Axial tilt of body in radians.

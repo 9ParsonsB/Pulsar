@@ -3,4 +3,6 @@
 namespace Observatory.Framework.Files.Journal.Other;
 
 public class Promotion : Rank
-{ }
+{
+    public override string Event => "Promotion";
+}

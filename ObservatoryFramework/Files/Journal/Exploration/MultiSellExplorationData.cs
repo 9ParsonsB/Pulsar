@@ -8,6 +8,7 @@ namespace Observatory.Framework.Files.Journal.Exploration;
 /// </summary>
 public class MultiSellExplorationData : JournalBase
 {
+    public override string Event => "MultiSellExplorationData";
     /// <summary>
     /// List of all sold first discoveries.
     /// </summary>

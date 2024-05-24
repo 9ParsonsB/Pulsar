@@ -10,6 +10,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class Status : JournalBase
 {
+    public override string Event => "Status";
     /// <summary>
     /// Set of flags representing current player state.
     /// </summary>

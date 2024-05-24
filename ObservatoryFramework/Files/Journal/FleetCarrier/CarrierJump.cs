@@ -8,6 +8,7 @@ namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
 public class CarrierJump : FSDJump
 {
+    public override string Event => "CarrierJump";
     public bool Docked { get; init; }
     public bool OnFoot { get; init; }
     /// <summary>

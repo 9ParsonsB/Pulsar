@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Startup;
 
 public class Materials : JournalBase
 {
+    public override string Event => "Materials";
     public ImmutableList<Material> Raw { get; init; }
     public ImmutableList<Material> Manufactured { get; init; }
     public ImmutableList<Material> Encoded { get; init; }

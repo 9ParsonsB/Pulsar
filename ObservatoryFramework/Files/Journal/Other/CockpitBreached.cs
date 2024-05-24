@@ -2,4 +2,5 @@
 
 public class CockpitBreached : JournalBase
 {
+    public override string Event => "CockpitBreached";
 }

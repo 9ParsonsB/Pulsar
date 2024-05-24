@@ -1,77 +1,42 @@
 namespace Pulsar.Features.Journal;
 
 using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
 using Observatory.Framework.Files.Journal;
 
-public interface IJournalService : IJournalHandler<List<JournalBase>>;
+public interface IJournalService : IJournalHandler<List<JournalBase>>
+{
+    public bool TryDequeue(out string filePath);
+}
 
 public class JournalService(
-    ILogger<JournalService> logger,
-    IOptions<PulsarConfiguration> options,
-    IEventHubContext hub,
-    PulsarContext context,
-    IServiceProvider serviceProvider
+    ILogger<JournalService> logger
 ) : IJournalService
 {
     public string FileName => FileHandlerService.JournalLogFileName;
 
-    static ConcurrentBag<JournalBase> _journals = new();
+    private readonly ConcurrentQueue<string> JournalFileQueue = new();
     
-    static DateTimeOffset notBefore = DateTimeOffset.UtcNow.AddHours(-1);
-    
-    readonly JsonSerializerOptions options = new()
+    public void EnqueueFile(string filePath)
     {
-        PropertyNameCaseInsensitive = true,
-        AllowOutOfOrderMetadataProperties = true,
-        // Converters = { ActivatorUtilities.CreateInstance<JournalJsonConverter>(serviceProvider) }
-    };
+        JournalFileQueue.Enqueue(filePath);
+    }
+    
+    public bool TryDequeue(out string filePath)
+    {
+        return JournalFileQueue.TryDequeue(out filePath);
+    }
 
-    public async Task HandleFile(string filePath)
+    public Task HandleFile(string filePath, CancellationToken token = new())
     {
         if (!FileHelper.ValidateFile(filePath))
         {
-            return;
+            return Task.CompletedTask;
         }
 
-        var file = await File.ReadAllLinesAsync(filePath, Encoding.UTF8);
-        var newJournals = new List<JournalBase>();
-        await Parallel.ForEachAsync(file, (line, _) =>
-        {
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                return ValueTask.CompletedTask;
-            }
-
-            var journal = JsonSerializer.Deserialize<JournalBase>(line, options);
-            if (journal == null)
-            {
-                return ValueTask.CompletedTask;
-            }
-
-            if (_journals.Any(j => j.Timestamp == journal.Timestamp && j.GetType() == journal.GetType()))
-            {
-                return ValueTask.CompletedTask;
-            }
-            
-            _journals.Add(journal);
-            
-            if (journal.Timestamp < notBefore)
-            {
-                return ValueTask.CompletedTask;
-            }
-
-            newJournals.Add(journal);
-            return ValueTask.CompletedTask;
-        });
-        
-
-        if (newJournals.Any())
-        {
-            await hub.Clients.All.JournalUpdated(newJournals);
-        }
+        EnqueueFile(filePath);
+        return Task.CompletedTask;
     }
-
+    
     public async Task<List<JournalBase>> Get()
     {
         return [];

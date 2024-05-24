@@ -5,6 +5,7 @@
 /// </summary>
 public class FSSDiscoveryScan : JournalBase
 {
+    public override string Event => "FSSDiscoveryScan";
     /// <summary>
     /// Name of the current system.
     /// </summary>

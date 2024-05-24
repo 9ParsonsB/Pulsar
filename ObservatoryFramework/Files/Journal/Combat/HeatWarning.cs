@@ -2,4 +2,5 @@
 
 public class HeatWarning : JournalBase
 {
+    public override string Event => "HeatWarning";
 }

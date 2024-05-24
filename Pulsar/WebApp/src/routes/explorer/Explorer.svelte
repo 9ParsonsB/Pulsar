@@ -3,6 +3,7 @@
   import type { FSSDiscoveryScan } from "../../types/api/FSSDiscoveryScan";
   import type { Scan } from "../../types/api/Scan";
   import type JournalBase from "../../types/api/JournalBase";
+  import type { FSSBodySignals } from "../../types/api/Signals";
 
   const data: Partial<Scan>[] = [{}, {}, {}, {}];
   // total bodies in the current system (FSSDiscovery event)
@@ -10,6 +11,13 @@
   let currentSystem = $state("");
   // accumulated list of bodies in the current system (Scan events)
   let scans = $state([] as Scan[]);
+  let signals = $state([] as FSSBodySignals[]);
+
+  const filterImportantScans = (scans: Scan[], signals: FSSBodySignals[]) => {
+    return [] as Scan[];
+  };
+
+  const importantScans = $derived(filterImportantScans(scans, signals));
 
   const targetEvents = ["Scan", "FSSScanBaryCenter", "FSSDiscoveryScan"];
 
@@ -59,11 +67,17 @@
       case "High metal content":
       case "High metal content body":
         return "HMC";
+      case "Metal rich body":
+        return "MRB";
       case "Sudarsky class I gas giant":
       case "Sudarsky class II gas giant":
       case "Sudarsky class III gas giant":
       case "Sudarsky class IV gas giant":
         return "GAS";
+      case "Icy body":
+        return "ICE";
+      case "Rocky body":
+        return "ROC";
       default:
         return planetClass;
     }

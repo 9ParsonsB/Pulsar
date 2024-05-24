@@ -2,4 +2,5 @@
 
 public class LeftSquadron : SquadronCreated
 {
+    public override string Event => "LeftSquadron";
 }

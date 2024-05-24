@@ -2,4 +2,5 @@
 
 public class BookDropship : BookTaxi
 {
+    public override string Event => "BookDropship";
 }

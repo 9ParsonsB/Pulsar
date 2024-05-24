@@ -5,6 +5,7 @@
 /// </summary>
 public class Screenshot : JournalBase
 {
+    public override string Event => "Screenshot";
     /// <summary>
     /// <para>Filename of the screenshot taken in the form of "\\ED Pictures\\filename"</para>
     /// <para>"\\ED Pictures\\" corresponds to "%userprofile%\Pictures\Frontier Developments\Elite Dangerous\"</para>

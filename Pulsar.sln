@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botanist", "Botanist\Botani
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservatoryFramework", "ObservatoryFramework\ObservatoryFramework.csproj", "{27525BDD-2940-4CB2-8B76-395677997AEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{0B98F709-5D13-4C33-911C-E654C2E93FB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{27525BDD-2940-4CB2-8B76-395677997AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27525BDD-2940-4CB2-8B76-395677997AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27525BDD-2940-4CB2-8B76-395677997AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B98F709-5D13-4C33-911C-E654C2E93FB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B98F709-5D13-4C33-911C-E654C2E93FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B98F709-5D13-4C33-911C-E654C2E93FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B98F709-5D13-4C33-911C-E654C2E93FB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

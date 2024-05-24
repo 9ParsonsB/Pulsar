@@ -2,5 +2,6 @@
 
 public class CarrierJumpCancelled : JournalBase
 {
+    public override string Event => "CarrierJumpCancelled";
     public ulong CarrierID { get; init; }
 }

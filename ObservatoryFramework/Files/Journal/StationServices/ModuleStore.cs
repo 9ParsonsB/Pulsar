@@ -2,6 +2,7 @@
 
 public class ModuleStore : JournalBase
 {
+    public override string Event => "ModuleStore";
     public ulong MarketID { get; init; }
     public string Slot { get; init; }
     public string Ship { get; init; }

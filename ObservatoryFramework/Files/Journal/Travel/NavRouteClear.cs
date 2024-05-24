@@ -2,4 +2,5 @@
 
 public class NavRouteClear : JournalBase
 {
+    public override string Event => "NavRouteClear";
 }

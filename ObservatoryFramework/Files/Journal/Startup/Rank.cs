@@ -4,6 +4,7 @@ namespace Observatory.Framework.Files.Journal.Startup;
 
 public class Rank : JournalBase
 {
+    public override string Event => "Rank";
     public RankCombat Combat { get; init; }
     public RankTrade Trade { get; init; }
     public RankExploration Explore { get; init; }

@@ -2,4 +2,5 @@
 
 public class DisbandedSquadron : SquadronCreated
 {
+    public override string Event => "DisbandedSquadron";
 }

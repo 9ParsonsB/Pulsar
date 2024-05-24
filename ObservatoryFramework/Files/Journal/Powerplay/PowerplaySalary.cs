@@ -2,5 +2,6 @@
 
 public class PowerplaySalary : PowerplayJoin
 {
+    public override string Event => "PowerplaySalary";
     public int Amount { get; init; }
 }

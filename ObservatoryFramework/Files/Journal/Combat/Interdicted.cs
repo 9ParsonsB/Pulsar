@@ -2,6 +2,7 @@
 
 public class Interdicted : JournalBase
 {
+    public override string Event => "Interdicted";
     public bool Submitted { get; init; }
     public string Interdictor { get; init; }
     public string Interdictor_Localised { get; init; }

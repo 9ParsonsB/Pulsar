@@ -2,4 +2,5 @@
 
 public class JoinedSquadron : SquadronCreated
 {
+    public override string Event => "JoinedSquadron";
 }

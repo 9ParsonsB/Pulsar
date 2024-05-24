@@ -2,6 +2,7 @@
 
 public class ClearImpound : JournalBase
 {
+    public override string Event => "ClearImpound";
     public string ShipType { get; init; }
     public string ShipType_Localised { get; init; }
     public ulong ShipID { get; init; }

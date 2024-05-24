@@ -5,4 +5,5 @@
 /// </summary>
 public class MaterialDiscarded : MaterialCollected
 {
+    public override string Event => "MaterialDiscarded";
 }

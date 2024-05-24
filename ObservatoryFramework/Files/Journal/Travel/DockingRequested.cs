@@ -4,6 +4,7 @@ namespace Observatory.Framework.Files.Journal.Travel;
 
 public class DockingRequested : JournalBase
 {
+    public override string Event => "DockingRequested";
     /// <summary>
     /// Name of the station at which this event occurred.
     /// </summary>

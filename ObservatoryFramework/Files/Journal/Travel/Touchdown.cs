@@ -2,6 +2,7 @@
 
 public class Touchdown : JournalBase
 {
+    public override string Event => "Touchdown";
     public double Latitude { get; init; }
     public double Longitude { get; init; }
     public string NearestDestination { get; init; }

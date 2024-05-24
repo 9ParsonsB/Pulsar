@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Odyssey;
@@ -5,7 +6,7 @@ namespace Pulsar.Features;
 
 public interface IFileHandler
 {
-    Task HandleFile(string path);
+    Task HandleFile(string path, CancellationToken token = new());
 }
 
 public interface IFileHandlerService : IFileHandler;
@@ -60,8 +61,9 @@ public class FileHandlerService(
         { OutfittingFileName, typeof(IJournalHandler<OutfittingFile>) },
         { JournalLogFileNameStart, typeof(IJournalHandler<List<JournalBase>>) }
     };
+    
 
-    public async Task HandleFile(string path)
+    public async Task HandleFile(string path, CancellationToken token = new())
     {
         var fileInfo = new FileInfo(path);
         var fileName = fileInfo.Name;
@@ -78,7 +80,7 @@ public class FileHandlerService(
 
         if (!Handlers.TryGetValue(match, out var type))
         {
-            logger.LogInformation("File {FileName} was not handled", fileName);
+            logger.LogWarning("File {FileName} was not handled", fileName);
             return;
         }
         
@@ -89,6 +91,6 @@ public class FileHandlerService(
         }
             
         logger.LogInformation("Handling file {FileName} with Type {Type}", fileName, handler.GetType().ToString());
-        await handler.HandleFile(path);
+        await handler.HandleFile(path, token);
     }
 }

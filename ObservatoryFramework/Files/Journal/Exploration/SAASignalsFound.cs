@@ -8,6 +8,7 @@ namespace Observatory.Framework.Files.Journal.Exploration;
 /// </summary>
 public class SAASignalsFound : JournalBase
 {
+    public override string Event => "SAASignalsFound";
     /// <summary>
     /// Unique ID of current system.
     /// </summary>

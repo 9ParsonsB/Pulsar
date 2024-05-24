@@ -11,7 +11,7 @@ public class ModulesInfoService(
 {
     public string FileName => FileHandlerService.ModulesInfoFileName;
 
-    public async Task HandleFile(string filePath)
+    public async Task HandleFile(string filePath, CancellationToken token = new())
     {
         if (!FileHelper.ValidateFile(filePath))
         {
@@ -19,7 +19,7 @@ public class ModulesInfoService(
         }
 
         var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        var moduleInfo = await JsonSerializer.DeserializeAsync<ModuleInfoFile>(file);
+        var moduleInfo = await JsonSerializer.DeserializeAsync<ModuleInfoFile>(file, cancellationToken: token);
 
         if (moduleInfo == null)
         {

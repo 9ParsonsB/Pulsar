@@ -20,18 +20,10 @@
   let fuelDown = $state(false);
 
   onMount(async () => {
-
-    if ($connection.state === HubConnectionState.Disconnected)
-    {
-      await $connection.start();
-    }
-
     loading = false;
 
     $connection.on("StatusUpdated", (message) => {
-      statusStore.update((s) => {
-        return { ...s, ...message };
-      });
+      $statusStore = { ...$statusStore, ...message };
 
       // only 3 in array
       if (last.length >= 3) {
@@ -66,16 +58,13 @@
       }
     });
 
+    if ($connection.state === HubConnectionState.Disconnected)
+    {
+      await $connection.start();
+    }
+
     if (!$statusStore.pips) {
-      const value = (await (
-        await fetch("http://localhost:5000/api/status")
-      ).json()) as Status;
-
-      console.log(value);
-
-      statusStore.set({
-        ...value,
-      });
+      await $connection.invoke("Status");
     }
   });
 </script>
@@ -98,10 +87,13 @@
 {/if}
 
 <div>
-  {#if $statusStore}
+  {#if $statusStore}  
     <span
-      >Fuel%: {((($statusStore.fuel?.fuelMain ?? 0) / 32) * 100).toFixed(2)}% est{fuelDown ? ' REMAINING' : ' to fill'}: {timeToMax.toFixed(2  )}s</span
-    >
+      >Fuel%: {((($statusStore.fuel?.fuelMain ?? 0) / 32) * 100).toFixed(2)}%
+      {#if $statusStore.flags! & StatusFlags.FuelScooping}
+      <span>est{fuelDown ? ' REMAINING' : ' to fill'}: {timeToMax.toFixed(2  )}s</span>
+      {/if}
+    </span>
     <div class="power">
       <div class="sys">
         <div>{$statusStore?.pips?.sys ?? "?"}</div>
@@ -129,8 +121,8 @@
     <span>dest?: {$statusStore?.destination?.name}</span>
     <span>gui focus: {getEnumNameFromValue(FocusStatus, $statusStore.guiFocus!)}</span>
     <span>cargo: {$statusStore.cargo}</span>
-    <span>flag1: {getEnumNamesFromFlag(StatusFlags, $statusStore.flags!)}</span>
-    <span>flag2: {getEnumNamesFromFlag(StatusFlags2,  $statusStore.flags2!)}</span>     
+    <span>flag1: {getEnumNamesFromFlag(StatusFlags, $statusStore.flags!)} ({$statusStore.flags})</span>
+    <span>flag2: {getEnumNamesFromFlag(StatusFlags2,  $statusStore.flags2!)} ({$statusStore.flags2})</span>     
   {:else}
     <span>No data :(</span>
   {/if}

@@ -2,4 +2,5 @@
 
 public class AppliedToSquadron : SquadronCreated
 {
+    public override string Event => "AppliedToSquadron";
 }

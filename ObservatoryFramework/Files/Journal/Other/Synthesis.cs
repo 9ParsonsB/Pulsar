@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Other;
 
 public class Synthesis : JournalBase
 {
+    public override string Event => "Synthesis";
     public string Name { get; init; }
 
     [JsonConverter(typeof(MaterialConverter))]

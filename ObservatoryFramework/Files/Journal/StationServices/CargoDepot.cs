@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.StationServices;
 
 public class CargoDepot : JournalBase
 {
+    public override string Event => "CargoDepot";
     public ulong MissionID { get; init; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public UpdateType UpdateType { get; init; }

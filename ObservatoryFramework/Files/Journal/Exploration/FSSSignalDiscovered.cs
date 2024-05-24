@@ -5,6 +5,7 @@
 /// </summary>
 public class FSSSignalDiscovered : JournalBase
 {
+    public override string Event => "FSSSignalDiscovered";
     /// <summary>
     /// Name of the signal type.
     /// </summary>

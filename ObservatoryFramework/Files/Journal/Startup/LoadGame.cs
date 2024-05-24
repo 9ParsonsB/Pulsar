@@ -4,6 +4,7 @@ namespace Observatory.Framework.Files.Journal.Startup;
 
 public class LoadGame : JournalBase
 {
+    public override string Event => "LoadGame";
     public string Commander { get; init; }
     public string FID { get; init; }
     public bool Horizons { get; init; }

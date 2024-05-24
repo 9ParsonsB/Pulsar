@@ -9,6 +9,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class CargoFile : JournalBase
 {
+    public override string Event => "Cargo";
     /// <summary>
     /// Type of vehicle currently being reported. "Ship" or "SRV".
     /// </summary>

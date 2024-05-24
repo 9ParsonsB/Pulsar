@@ -2,5 +2,5 @@
 
 public class ModuleInfo : JournalBase
 {
-
+    public override string Event => "ModuleInfo";
 }

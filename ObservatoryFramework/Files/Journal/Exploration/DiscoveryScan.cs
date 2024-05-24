@@ -5,6 +5,7 @@
 /// </summary>
 public class DiscoveryScan : JournalBase
 {
+    public override string Event => "DiscoveryScan";
     /// <summary>
     /// Unique ID of system.
     /// </summary>

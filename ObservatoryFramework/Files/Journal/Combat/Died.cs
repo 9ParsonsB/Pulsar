@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Combat;
 
 public class Died : JournalBase
 {
+    public override string Event => "Died";
     public string KillerName { get; init; }
     public string KillerName_Localised { get; init; }
     public string KillerShip { get; init; }

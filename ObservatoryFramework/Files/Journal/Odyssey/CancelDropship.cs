@@ -2,4 +2,5 @@
 
 public class CancelDropship : CancelTaxi
 {
+    public override string Event => "CancelDropship";
 }

@@ -5,6 +5,8 @@
 /// </summary>
 public class FSSAllBodiesFound : JournalBase
 {
+    public override string Event => "FSSAllBodiesFound";
+
     /// <summary>
     /// Name of the system.
     /// </summary>

@@ -2,6 +2,8 @@
 
 public class Powerplay : JournalBase
 {
+    public override string Event => "Powerplay";
+    
     public string Power { get; init; }
 
     public int Rank { get; init; }

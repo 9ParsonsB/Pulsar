@@ -9,6 +9,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class ModuleInfoFile : JournalBase
 {
+    public override string Event => "ModuleInfo";
     /// <summary>
     /// List of all equipped modules.
     /// </summary>

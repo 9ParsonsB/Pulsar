@@ -5,6 +5,7 @@ namespace Observatory.Framework.Files.Journal.Odyssey;
 
 public class SellOrganicData : JournalBase
 {
+    public override string Event => "SellOrganicData";
     public ulong MarketID { get; init; }
     public ImmutableList<BioData> BioData { get; init; }
 }

@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Exploration;
 /// </summary>
 public class CodexEntry : JournalBase
 {
+    public override string Event => "CodexEntry";
     /// <summary>
     /// Unique ID of the entry.
     /// </summary>

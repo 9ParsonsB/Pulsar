@@ -2,6 +2,7 @@
 
 public class SearchAndRescue : JournalBase
 {
+    public override string Event => "SearchAndRescue";
     public ulong MarketID { get; init; }
     public string Name { get; init; }
     public string Name_Localised { get; init; }

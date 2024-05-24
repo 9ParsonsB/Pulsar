@@ -2,4 +2,5 @@
 
 public class DockingTimeout : DockingRequested
 {
+    public override string Event => "DockingTimeout";
 }

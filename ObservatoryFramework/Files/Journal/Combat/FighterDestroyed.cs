@@ -2,5 +2,6 @@
 
 public class FighterDestroyed : JournalBase
 {
+    public override string Event => "FighterDestroyed";
     public ulong ID { get; init; }
 }

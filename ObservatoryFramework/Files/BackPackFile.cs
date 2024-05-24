@@ -9,6 +9,7 @@ namespace Observatory.Framework.Files;
 /// </summary>
 public class BackpackFile : JournalBase
 {
+    public override string Event => "Backpack";
     /// <summary>
     /// List of all items carried.
     /// </summary>

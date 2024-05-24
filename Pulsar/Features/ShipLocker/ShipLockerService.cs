@@ -27,7 +27,7 @@ public class ShipLockerService(ILogger<ShipLockerService> logger, IOptions<Pulsa
         return new ShipLockerMaterials();
     }
 
-    public async Task HandleFile(string filePath)
+    public async Task HandleFile(string filePath, CancellationToken token = new())
     {
         if (!FileHelper.ValidateFile(filePath))
         {
@@ -35,7 +35,7 @@ public class ShipLockerService(ILogger<ShipLockerService> logger, IOptions<Pulsa
         }
 
         var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        var shipLocker = await JsonSerializer.DeserializeAsync<ShipLockerMaterials>(file);
+        var shipLocker = await JsonSerializer.DeserializeAsync<ShipLockerMaterials>(file, cancellationToken: token);
 
         if (shipLocker == null)
         {

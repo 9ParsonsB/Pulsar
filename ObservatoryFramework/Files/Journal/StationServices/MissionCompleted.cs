@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.StationServices;
 
 public class MissionCompleted : JournalBase
 {
+    public override string Event => "MissionCompleted";
     public string Name { get; init; }
     public string LocalisedName { get; init; }
     public string Faction { get; init; }

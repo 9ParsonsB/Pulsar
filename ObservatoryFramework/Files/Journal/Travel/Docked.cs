@@ -7,6 +7,7 @@ namespace Observatory.Framework.Files.Journal.Travel;
 
 public class Docked : JournalBase
 {
+    public override string Event => "Docked";
     /// <summary>
     /// Name of the station at which this event occurred.
     /// </summary>

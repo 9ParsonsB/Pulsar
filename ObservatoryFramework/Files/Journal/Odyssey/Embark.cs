@@ -2,4 +2,5 @@
 
 public class Embark : Disembark
 {
+    public override string Event => "Embark";
 }

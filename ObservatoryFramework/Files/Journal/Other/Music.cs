@@ -2,5 +2,6 @@
 
 public class Music : JournalBase
 {
+    public override string Event => "Music";
     public string MusicTrack { get; init; }
 }

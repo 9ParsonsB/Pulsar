@@ -5,6 +5,7 @@
 /// </summary>
 public class ScanBaryCentre : JournalBase
 {
+    public override string Event => "ScanBaryCentre";
     /// <summary>
     /// Name of star system containing scanned body.
     /// </summary>

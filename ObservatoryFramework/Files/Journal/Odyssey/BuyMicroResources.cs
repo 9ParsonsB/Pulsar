@@ -6,6 +6,7 @@ namespace Observatory.Framework.Files.Journal.Odyssey;
 
 public class BuyMicroResources : JournalBase
 {
+    public override string Event => "BuyMicroResources";
     public string Name { get; init; }
     public string Name_Localised { get; init; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
