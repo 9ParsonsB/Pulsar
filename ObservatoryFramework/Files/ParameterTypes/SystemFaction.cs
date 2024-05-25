@@ -14,11 +14,11 @@ public class SystemFaction : Faction
 
     public double MyReputation { get; init; }
 
-    public IReadOnlyCollection<FactionStateTrend> PendingStates { get; init; }
+    public List<FactionStateTrend> PendingStates { get; init; }
 
-    public IReadOnlyCollection<FactionStateTrend> RecoveringStates { get; init; }
+    public List<FactionStateTrend> RecoveringStates { get; init; }
 
-    public IReadOnlyCollection<FactionState> ActiveStates { get; init; }
+    public List<FactionState> ActiveStates { get; init; }
 
     public bool? SquadronFaction { get; init; }
 

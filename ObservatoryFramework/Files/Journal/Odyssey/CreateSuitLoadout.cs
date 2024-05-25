@@ -6,6 +6,6 @@ namespace Observatory.Framework.Files.Journal.Odyssey;
 public class CreateSuitLoadout : DeleteSuitLoadout
 {
     public override string Event => "CreateSuitLoadout";
-    public IReadOnlyCollection<SuitModule> Modules { get; init; }
-    public ICollection<string> SuitMods { get; init; }
+    public List<SuitModule> Modules { get; init; }
+    public IList<string> SuitMods { get; init; }
 }

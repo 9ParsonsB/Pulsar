@@ -11,5 +11,5 @@ public class Synthesis : JournalBase
     public string Name { get; init; }
 
     [JsonConverter(typeof(MaterialConverter))]
-    public IReadOnlyCollection<Material> Materials { get; init; }
+    public List<Material> Materials { get; init; }
 }

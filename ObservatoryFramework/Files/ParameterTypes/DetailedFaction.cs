@@ -10,6 +10,6 @@ public class DetailedFaction : Faction
     public string Happiness { get; init; }
     public string Happiness_Localised { get; init; }
     public float MyReputation { get; init; }
-    public IReadOnlyCollection<FactionStateTrend> RecoveringStates { get; init; }
-    public IReadOnlyCollection<FactionState> ActiveStates { get; init; }
+    public List<FactionStateTrend> RecoveringStates { get; init; }
+    public List<FactionState> ActiveStates { get; init; }
 }

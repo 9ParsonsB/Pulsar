@@ -16,7 +16,7 @@ public class ApproachSettlement : JournalBase
     public float Longitude { get; init; }
     public int BodyID { get; init; }
     public string BodyName { get; init; }
-    public IReadOnlyCollection<StationEconomy> StationEconomies { get; init; }
+    public List<StationEconomy> StationEconomies { get; init; }
     public string StationEconomy { get; init; }
     public string StationEconomy_Localised { get; init; }
     public Faction StationFaction { get; init; }

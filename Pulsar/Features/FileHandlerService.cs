@@ -1,8 +1,8 @@
-using System.Collections.Concurrent;
+namespace Pulsar.Features;
+
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Odyssey;
-namespace Pulsar.Features;
 
 public interface IFileHandler
 {

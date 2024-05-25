@@ -7,5 +7,5 @@ public class SellOrganicData : JournalBase
 {
     public override string Event => "SellOrganicData";
     public ulong MarketID { get; init; }
-    public IReadOnlyCollection<BioData> BioData { get; init; }
+    public List<BioData> BioData { get; init; }
 }

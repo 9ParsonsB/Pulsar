@@ -1,17 +1,20 @@
-using Pulsar.Features.Journal;
-
 namespace Pulsar.Features;
 
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Odyssey;
-
+                
 public class EventsHub(IJournalService journalService) : Hub<IEventsHub>
 {
     public override async Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
         await Clients.Caller.JournalUpdated(await journalService.GetLastStartupEvents());
+        var state = await journalService.GetLatestState();
+        if (state.Any())
+        {
+            await Clients.Caller.JournalUpdated(state);
+        }
     }
 
     public async Task Status([FromServices] IStatusService statusService)
@@ -30,7 +33,7 @@ public class EventsHub(IJournalService journalService) : Hub<IEventsHub>
 
     public async Task MarketUpdated(MarketFile market) => await Clients.All.MarketUpdated(market);
 
-    public async Task JournalUpdated(IReadOnlyCollection<JournalBase> journals) => await Clients.All.JournalUpdated(journals);
+    public async Task JournalUpdated(List<JournalBase> journals) => await Clients.All.JournalUpdated(journals);
 
     public async Task ModuleInfoUpdated(ModuleInfoFile moduleInfo) => await Clients.All.ModuleInfoUpdated(moduleInfo);
 
@@ -55,7 +58,7 @@ public interface IEventsHub
 
     Task MarketUpdated(MarketFile market);
 
-    Task JournalUpdated(IReadOnlyCollection<JournalBase> journals);
+    Task JournalUpdated(List<JournalBase> journals);
 
     Task ModuleInfoUpdated(ModuleInfoFile moduleInfo);
 

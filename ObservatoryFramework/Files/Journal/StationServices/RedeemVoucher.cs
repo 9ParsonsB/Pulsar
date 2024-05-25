@@ -13,6 +13,6 @@ public class RedeemVoucher : JournalBase
     public long Amount { get; init; }
     public string Faction { get; init; }
     public float BrokerPercentage { get; init; }
-    public IReadOnlyCollection<VoucherFaction> Factions { get; init; }
+    public List<VoucherFaction> Factions { get; init; }
 
 }

@@ -15,7 +15,7 @@ public class EngineerProgress : JournalBase
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Progress? Progress { get; set; }
 
-    public IReadOnlyCollection<EngineerType> Engineers { get; set; }
+    public List<EngineerType> Engineers { get; set; }
 }
 //{ "timestamp":"2024-05-25T04:44:34Z", "event":"EngineerProgress",
 //"Engineers":[

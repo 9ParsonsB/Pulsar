@@ -22,7 +22,7 @@ public class Scan : ScanBaryCentre
     /// <summary>
     /// List which reflects Frontier's JSON structure for the "Parents" object. Use of Parent property is recommended instead.
     /// </summary>
-    public IReadOnlyCollection<Parent> Parents { 
+    public List<Parent> Parents { 
         get => _Parents; 
         init
         {
@@ -51,8 +51,8 @@ public class Scan : ScanBaryCentre
     /// "Parents" object rearranged into more intuitive structure for ease of use.
     /// </summary>
     [JsonIgnore]
-    public IReadOnlyCollection<(ParentType ParentType, int Body)> Parent { get; init; }
-    private IReadOnlyCollection<Parent> _Parents;
+    public List<(ParentType ParentType, int Body)> Parent { get; init; }
+    private List<Parent> _Parents;
     /// <summary>
     /// Body distance from system arrival point in light-seconds.
     /// </summary>
@@ -80,7 +80,7 @@ public class Scan : ScanBaryCentre
     /// <summary>
     /// List containing full breakdown of atmospheric components and their relative percentages.
     /// </summary>
-    public IReadOnlyCollection<MaterialComposition> AtmosphereComposition { get; init; }
+    public List<MaterialComposition> AtmosphereComposition { get; init; }
     /// <summary>
     /// Descriptive string for type of volcanism present, or an empty string for none, e.g. "major silicate vapour geysers volcanism".
     /// </summary>
@@ -113,7 +113,7 @@ public class Scan : ScanBaryCentre
     /// List containing full breakdown of prospectable surface materials and their relative percentages.
     /// </summary>
     [JsonConverter(typeof(MaterialCompositionConverter))]
-    public IReadOnlyCollection<MaterialComposition> Materials { get; init; }
+    public List<MaterialComposition> Materials { get; init; }
     /// <summary>
     /// Overall composition of body, expressed as percentages of ice, rock, and metal.
     /// </summary>
@@ -130,7 +130,7 @@ public class Scan : ScanBaryCentre
     /// <summary>
     /// List of all planetary or stellar ring systems around the body.
     /// </summary>
-    public IReadOnlyCollection<Ring> Rings { get; init; }
+    public List<Ring> Rings { get; init; }
     /// <summary>
     /// Description of the minable material abundance.<br/>Possible values inclue "PristineResources", "MajorResources", "CommonResources", "LowResources", and "DepletedResources". 
     /// </summary>

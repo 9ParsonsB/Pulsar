@@ -1,10 +1,9 @@
-using Observatory.Framework.Files.Journal.StationServices;
-
 namespace Pulsar.Features.Journal;
 
 using Observatory.Framework;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Startup;
+using Observatory.Framework.Files.Journal.StationServices;
 
 public class JournalProcessor(
     ILogger<JournalProcessor> logger,

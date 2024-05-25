@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Observatory.Framework.Files.Journal.Startup;
+using Pulsar.Context;
 
 namespace Pulsar.Features.Status;
 

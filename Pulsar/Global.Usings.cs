@@ -1,6 +1,9 @@
 global using Pulsar;
 global using Pulsar.Utils;
+global using Pulsar.Context;
+global using Pulsar.Features;
 global using Pulsar.Features.Status;
+global using Pulsar.Features.Journal;
 global using System.Text;
 global using System.Text.Json;
 global using System.Text.Json.Nodes;
@@ -8,4 +11,5 @@ global using System.Text.Json.Serialization;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.SignalR;
 global using Microsoft.Extensions.Options;
+global using Microsoft.EntityFrameworkCore;
 global using IEventHubContext = Microsoft.AspNetCore.SignalR.IHubContext<Pulsar.Features.EventsHub, Pulsar.Features.IEventsHub>;

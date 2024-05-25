@@ -24,9 +24,9 @@ public class SAASignalsFound : JournalBase
     /// <summary>
     /// List of signals found.
     /// </summary>
-    public IReadOnlyCollection<Signal> Signals { get; init; }
+    public List<Signal> Signals { get; init; }
     /// <summary>
     /// List of genuses present.
     /// </summary>
-    public IReadOnlyCollection<GenusType> Genuses { get; init; }
+    public List<GenusType> Genuses { get; init; }
 }

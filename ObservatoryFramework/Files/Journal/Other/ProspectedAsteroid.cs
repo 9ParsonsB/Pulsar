@@ -6,7 +6,7 @@ namespace Observatory.Framework.Files.Journal.Other;
 public class ProspectedAsteroid : JournalBase
 {
     public override string Event => "ProspectedAsteroid";
-    public IReadOnlyCollection<ProspectMaterial> Materials { get; init; }
+    public List<ProspectMaterial> Materials { get; init; }
     public string Content { get; init; }
     public string Content_Localised { get; init; }
     public string MotherlodeMaterial { get; init; }

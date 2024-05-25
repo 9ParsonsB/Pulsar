@@ -9,5 +9,5 @@ public class MassModuleStore : JournalBase
     public ulong MarketID { get; init; }
     public string Ship { get; init; }
     public ulong ShipID { get; init; }
-    public IReadOnlyCollection<Item> Items { get; init; }
+    public List<Item> Items { get; init; }
 }

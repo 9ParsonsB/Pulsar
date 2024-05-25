@@ -13,5 +13,5 @@ public class FCMaterialsFile : JournalBase
     /// <summary>
     /// List of items in stock and in demand from the carrier bartender.
     /// </summary>
-    public IReadOnlyCollection<FCMaterial> Items { get; init; }
+    public List<FCMaterial> Items { get; init; }
 }

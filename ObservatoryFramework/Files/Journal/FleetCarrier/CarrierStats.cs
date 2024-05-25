@@ -19,7 +19,7 @@ public class CarrierStats : JournalBase
     public bool PendingDecommission { get; init; }
     public CarrierSpaceUsage SpaceUsage { get; init; }
     public ParameterTypes.CarrierFinance Finance { get; init; }
-    public IReadOnlyCollection<CarrierCrew> Crew { get; init; }
-    public IReadOnlyCollection<CarrierPack> ShipPacks { get; init; }
-    public IReadOnlyCollection<CarrierPack> ModulePacks { get; init; }
+    public List<CarrierCrew> Crew { get; init; }
+    public List<CarrierPack> ShipPacks { get; init; }
+    public List<CarrierPack> ModulePacks { get; init; }
 }

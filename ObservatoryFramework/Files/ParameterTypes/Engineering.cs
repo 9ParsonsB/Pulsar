@@ -18,5 +18,5 @@ public class Engineering
 
     public string ExperimentalEffect { get; init; }
 
-    public IReadOnlyCollection<Modifiers> Modifiers { get; init; }
+    public List<Modifiers> Modifiers { get; init; }
 }

@@ -6,5 +6,5 @@ namespace Observatory.Framework.Files.Journal.StationServices;
 public class CommunityGoal : JournalBase
 {
     public override string Event => "CommunityGoal";
-    public IReadOnlyCollection<CurrentGoal> CurrentGoals { get; init; }
+    public List<CurrentGoal> CurrentGoals { get; init; }
 }

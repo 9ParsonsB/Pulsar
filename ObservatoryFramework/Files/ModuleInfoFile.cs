@@ -13,5 +13,5 @@ public class ModuleInfoFile : JournalBase
     /// <summary>
     /// List of all equipped modules.
     /// </summary>
-    public IReadOnlyCollection<Module> Modules { get; init; }
+    public List<Module> Modules { get; init; }
 }

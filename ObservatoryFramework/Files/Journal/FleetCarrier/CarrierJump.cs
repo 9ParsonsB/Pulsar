@@ -24,5 +24,5 @@ public class CarrierJump : FSDJump
     public StationService StationServices { get; init; }
     public string StationEconomy { get; init; }
     public string StationEconomy_Localised { get; init; }
-    public IReadOnlyCollection<StationEconomy> StationEconomies { get; init; }
+    public List<StationEconomy> StationEconomies { get; init; }
 }

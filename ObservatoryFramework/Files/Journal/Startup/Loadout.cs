@@ -19,5 +19,5 @@ public class Loadout : JournalBase
     public double MaxJumpRange { get; init; }
     public ulong Rebuy { get; init; }
     public bool Hot { get; init; }
-    public IReadOnlyCollection<Modules> Modules { get; init; }
+    public List<Modules> Modules { get; init; }
 }

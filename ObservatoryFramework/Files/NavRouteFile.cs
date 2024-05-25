@@ -13,5 +13,5 @@ public class NavRouteFile : JournalBase
     /// <summary>
     /// List of star systems and their locations in the current route.
     /// </summary>
-    public IReadOnlyCollection<Route> Route { get; init; }
+    public List<Route> Route { get; init; }
 }

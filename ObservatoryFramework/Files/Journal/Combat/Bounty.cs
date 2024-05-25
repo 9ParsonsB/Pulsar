@@ -6,7 +6,7 @@ namespace Observatory.Framework.Files.Journal.Combat;
 public class Bounty : JournalBase
 {
     public override string Event => "Bounty";
-    public IReadOnlyCollection<Rewards> Rewards { get; init; }
+    public List<Rewards> Rewards { get; init; }
     public string PilotName { get; set; }
     public string PilotName_Localised { get; set; }
     public string Target { get; init; }

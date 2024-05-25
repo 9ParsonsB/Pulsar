@@ -12,6 +12,6 @@ public class StoredShips : JournalBase
     /// </summary>
     public string StationName { get; init; }
     public string StarSystem { get; init; }
-    public IReadOnlyCollection<StoredShip> ShipsHere { get; init; }
-    public IReadOnlyCollection<StoredShip> ShipsRemote { get; init; }
+    public List<StoredShip> ShipsHere { get; init; }
+    public List<StoredShip> ShipsRemote { get; init; }
 }

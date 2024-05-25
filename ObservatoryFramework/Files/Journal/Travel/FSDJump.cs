@@ -33,9 +33,9 @@ public class FSDJump : JournalBase
     public string SystemSecurity_Localised { get; init; }
     public long Population { get; init; }
     public bool Wanted { get; init; }
-    public IReadOnlyCollection<SystemFaction> Factions { get; init; }
-    public IReadOnlyCollection<Conflict> Conflicts { get; init; }
-    public ICollection<string> Powers { get; init; }
+    public List<SystemFaction> Factions { get; init; }
+    public List<Conflict> Conflicts { get; init; }
+    public IList<string> Powers { get; init; }
     public string PowerplayState { get; init; }
     public bool Taxi { get; init; }
     public bool Multicrew { get; init; }

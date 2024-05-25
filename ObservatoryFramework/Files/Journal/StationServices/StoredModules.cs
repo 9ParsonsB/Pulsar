@@ -12,5 +12,5 @@ public class StoredModules : JournalBase
     /// </summary>
     public string StationName { get; init; }
     public ulong MarketID { get; init; }
-    public IReadOnlyCollection<StoredItem> Items { get; init; }
+    public List<StoredItem> Items { get; init; }
 }

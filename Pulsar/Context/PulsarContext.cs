@@ -1,12 +1,11 @@
+namespace Pulsar.Context;
+
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Odyssey;
 using Observatory.Framework.Files.Journal.Startup;
 using Observatory.Framework.Files.Journal.StationServices;
 using Observatory.Framework.Files.Journal.Travel;
-using Pulsar.Features.ShipLocker;
 
 /// <summary>
 /// An in-memory database context for Pulsar.
@@ -14,7 +13,6 @@ using Pulsar.Features.ShipLocker;
 public class PulsarContext : DbContext
 {
     public SqliteConnection Connection { get; private set; }
-
     
     public DbSet<Commander> Commander { get; set; }
     public DbSet<Materials> Materials { get; set; }

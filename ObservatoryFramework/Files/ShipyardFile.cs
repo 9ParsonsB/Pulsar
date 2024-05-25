@@ -34,5 +34,5 @@ public class ShipyardFile : JournalBase
     /// <summary>
     /// List of all ships and prices for them at the current shipyard.
     /// </summary>
-    public IReadOnlyCollection<ShipyardPrice> PriceList { get; init; }
+    public List<ShipyardPrice> PriceList { get; init; }
 }

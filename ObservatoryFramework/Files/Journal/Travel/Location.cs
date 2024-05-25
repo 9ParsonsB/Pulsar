@@ -30,10 +30,10 @@ public class Location : JournalBase
     public string StationGovernment { get; init; }
     public string StationGovernment_Localised { get; init; }
     public string StationAllegiance { get; init; }
-    public ICollection<string> StationServices { get; init; }
+    public IList<string> StationServices { get; init; }
     public string StationEconomy { get; init; }
     public string StationEconomy_Localised { get; init; }
-    public IReadOnlyCollection<StationEconomy> StationEconomies { get; init; }
+    public List<StationEconomy> StationEconomies { get; init; }
     public string StarSystem { get; init; }
     public ulong SystemAddress { get; init; }
 
@@ -53,13 +53,13 @@ public class Location : JournalBase
     public string Body { get; init; }
     public int BodyID { get; init; }
     public string BodyType { get; init; }
-    public IReadOnlyCollection<DetailedFaction> Factions { get; init; }
+    public List<DetailedFaction> Factions { get; init; }
 
     [JsonConverter(typeof(LegacyFactionConverter<DetailedFaction>))]
     public DetailedFaction SystemFaction { get; init; }
 
-    public IReadOnlyCollection<Conflict> Conflicts { get; init; }
-    public ICollection<string> Powers { get; init; }
+    public List<Conflict> Conflicts { get; init; }
+    public IList<string> Powers { get; init; }
     public string PowerplayState { get; init; }
     public bool Taxi { get; init; }
     public bool Multicrew { get; init; }

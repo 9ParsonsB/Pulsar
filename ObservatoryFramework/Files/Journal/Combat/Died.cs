@@ -10,5 +10,5 @@ public class Died : JournalBase
     public string KillerName_Localised { get; init; }
     public string KillerShip { get; init; }
     public string KillerRank { get; init; }
-    public IReadOnlyCollection<Killer> Killers { get; init; }
+    public List<Killer> Killers { get; init; }
 }

@@ -1,15 +1,16 @@
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
-using Pulsar.Features;
-using Pulsar.Features.Journal;
 
 Console.WriteLine((string?)null!);
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
 {
-    Args = args, WebRootPath = "static", ContentRootPath = "WebApp", ApplicationName = "Pulsar", EnvironmentName =
+    Args = args, 
+    WebRootPath = "static", 
+    ContentRootPath = "WebApp", 
+    ApplicationName = "Pulsar", 
+    EnvironmentName =
 #if DEBUG
         "Development"
 #else

@@ -8,5 +8,5 @@ public class Cargo : JournalBase
     public override string Event => "Cargo";
     public string Vessel { get; init; }
     public int Count { get; init; }
-    public IReadOnlyCollection<CargoType> Inventory { get; init; }
+    public List<CargoType> Inventory { get; init; }
 }
