@@ -1,72 +1,75 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { statusStore } from "./stores/Status.store";
-  import connection from "./stores/Connection.store";
-  import { FocusStatus, StatusFlags, StatusFlags2 } from "../types/api/enums";
-  import type JournalBase from "../types/api/JournalBase";
-  import { fly, scale, slide } from "svelte/transition";
-  import { getEnumFlags, getEnumNameFromValue, getEnumNamesFromFlag, getEnumPairsFromValue } from "../types/flags";
-  import type Status from "../types/api/Status";
-  import { HubConnectionState } from "@microsoft/signalr";
+import { onMount } from "svelte";
+import { statusStore } from "./stores/Status.store";
+import connection from "./stores/Connection.store";
+import { FocusStatus, StatusFlags, StatusFlags2 } from "../types/api/enums";
+import type JournalBase from "../types/api/JournalBase";
+import { scale } from "svelte/transition";
+import { getEnumNameFromValue, getEnumNamesFromFlag } from "../types/flags";
+import { HubConnectionState } from "@microsoft/signalr";
+import { IsLoadGameEvent } from "../types/api/LoadGame";
 
-  const x: string | null = $state(null);
+const last: number[] = $state([]);
+let maxFuel: number = $state(32);
+let timeToMax = $state(0);
 
-  const last: number[] = $state([]);
-  let timeToMax = $state(0);
+let loading = $state(true);
 
-  let loading = $state(true);
+let alert: JournalBase[] = $state([]);
+let fuelDown = $state(false);
 
-  let alert: JournalBase[] = $state([]);
-  let fuelDown = $state(false);
+onMount(async () => {
+	loading = false;
 
-  onMount(async () => {
-    loading = false;
+	$connection.on("StatusUpdated", (message) => {
+		$statusStore = { ...$statusStore, ...message };
 
-    $connection.on("StatusUpdated", (message) => {
-      $statusStore = { ...$statusStore, ...message };
+		// only 3 in array
+		if (last.length >= 3) {
+			last.shift();
+		}
+		last.push(message.fuel?.fuelMain ?? 0);
 
-      // only 3 in array
-      if (last.length >= 3) {
-        last.shift();
-      }
-      last.push(message.fuel?.fuelMain ?? 0);
+		const change = [];
+		for (let i = last.length - 1; i > 0; i--) {
+			change.push(last[i] - last[i - 1]);
+		}
 
-      const change = [];
-      for (let i = last.length - 1; i > 0; i--) {
-        change.push(last[i] - last[i - 1]);
-      }
+		const avg = change.length
+			? change.reduce((a, b) => a + b, 0) / change.length
+			: 0;
+		const currentEmpty = maxFuel - message.fuel?.fuelMain;
+		if (message.fuel?.fuelMain && !Number.isNaN(avg) && avg) {
+			fuelDown = avg < 0;
+			timeToMax = fuelDown ? message.fuel?.fuelMain / -avg : currentEmpty / avg;
+		}
 
-      const avg = change.length ? change.reduce((a, b) => a + b, 0) / change.length : 0;
-      const max = 32;
-      const currentEmpty = (max - message.fuel?.fuelMain);
-      if (message.fuel?.fuelMain && !Number.isNaN(avg) && avg) {
-        fuelDown = avg < 0;   
-        timeToMax = fuelDown ? (message.fuel?.fuelMain / -avg) : currentEmpty / avg ;
-      }
+		console.log(message);
+	});
 
-      console.log(message); 
-    });
+	$connection.on("JournalUpdated", (message) => {
+		const journals = message as JournalBase[];
+		const targetEvents = ["HullDamage", "UnderAttack"];
+		const events = journals.filter((j) =>
+			targetEvents.find((t) => t.toLowerCase() === j.event.toLowerCase()),
+		);
+		if (events.length) {
+			alert = events;
+		}
+		if (IsLoadGameEvent(message)) {
+			maxFuel = message.fuelCapacity;
+			$statusStore.fuel = { fuelMain: message.fuelLevel, fuelReservoir: 0 };
+		}
+	});
 
-    $connection.on("JournalUpdated", (message) => {
-      const journals = message as JournalBase[];
-      const targetEvents = ["HullDamage", "UnderAttack"];
-      const events = journals.filter((j) =>
-        targetEvents.find((t) => t.toLowerCase() === j.event.toLowerCase())
-      );
-      if (events.length) {
-        alert = events;
-      }
-    });
+	if ($connection.state === HubConnectionState.Disconnected) {
+		await $connection.start();
+	}
 
-    if ($connection.state === HubConnectionState.Disconnected)
-    {
-      await $connection.start();
-    }
-
-    if (!$statusStore.pips) {
-      await $connection.invoke("Status");
-    }
-  });
+	if (!$statusStore.pips) {
+		await $connection.invoke("Status");
+	}
+});
 </script>
 
 <h1>Status</h1>

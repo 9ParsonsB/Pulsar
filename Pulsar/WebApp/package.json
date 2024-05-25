@@ -19,6 +19,7 @@
 		"@sveltestack/svelte-query": "^1.6.0",
 		"@sveltejs/kit": "^2.5.8",
 		"@sveltejs/vite-plugin-svelte": "^3.1.0",
+		"typescript-eslint":"7.10.0",
 		"eslint-plugin-svelte": "^2.39.0",
 		"globals": "^15.2.0",
 		"sass": "^1.77.2",
