@@ -15,7 +15,7 @@ public class LoadGame : JournalBase
     public bool StartLanded { get; init; }
     public bool StartDead { get; init; }
     public string GameMode { get; init; }
-    public string Group { get; init; }
+    public string? Group { get; init; }
     public long Credits { get; init; }
     public long Loan { get; init; }
     public string ShipName { get; init; }

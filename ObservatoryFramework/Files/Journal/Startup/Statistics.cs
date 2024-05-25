@@ -14,7 +14,7 @@ public class Statistics : JournalBase
     public Trading Trading { get; init; }
     public Mining Mining { get; init; }
     public ParameterTypes.Exploration Exploration { get; init; }
-    public Passengers Passengers { get; init; }
+    public ParameterTypes.Passengers Passengers { get; init; }
     [JsonPropertyName("Search_And_Rescue")]
     public ParameterTypes.SearchAndRescue SearchAndRescue { get; init; }
     public Crafting Crafting { get; init; }

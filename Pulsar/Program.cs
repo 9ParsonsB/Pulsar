@@ -1,5 +1,6 @@
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Pulsar.Features;
 using Pulsar.Features.Journal;
@@ -11,8 +12,8 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
     Args = args, WebRootPath = "static", ContentRootPath = "WebApp", ApplicationName = "Pulsar", EnvironmentName =
 #if DEBUG
         "Development"
-    #else
-    "Production"
+#else
+        "Production"
 #endif 
     
 });
@@ -33,6 +34,7 @@ builder.Configuration.AddUserSecrets<Program>();
 
 builder.Services.Configure<PulsarConfiguration>(builder.Configuration.GetSection("Pulsar"));
 
+builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
@@ -60,5 +62,6 @@ app.MapControllers();
 app.MapHub<EventsHub>("api/events");
 app.MapFallbackToFile("index.html").AllowAnonymous();
 
+await app.Services.GetRequiredService<PulsarContext>().Database.EnsureCreatedAsync();
 
 await app.RunAsync();

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using DateTimeOffset = System.DateTimeOffset;
 
@@ -275,6 +276,7 @@ using Travel;
 public abstract class JournalBase
 {
     [JsonPropertyName("timestamp")]
+    [Key]
     public DateTimeOffset Timestamp { get; init; }
 
     /// <summary>

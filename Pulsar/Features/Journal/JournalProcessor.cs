@@ -1,3 +1,5 @@
+using Observatory.Framework.Files.Journal.Startup;
+
 namespace Pulsar.Features.Journal;
 
 using Observatory.Framework;
@@ -6,7 +8,8 @@ using Observatory.Framework.Files.Journal;
 public class JournalProcessor(
     ILogger<JournalProcessor> logger,
     IJournalService journalService,
-    IEventHubContext hub) : IJournalProcessor, IHostedService, IDisposable
+    PulsarContext context,
+    IEventHubContext hub) : IHostedService, IDisposable
 {
     private CancellationTokenSource tokenSource = new();
     
@@ -18,7 +21,7 @@ public class JournalProcessor(
         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
     };
 
-    public async Task HandleFileInner(string filePath, CancellationToken token = new())
+    public async Task<List<JournalBase>> HandleFileInner(string filePath, CancellationToken token = new())
     {
         logger.LogInformation("Processing journal file: '{File}'", filePath);
         var file = await File.ReadAllBytesAsync(filePath, token);
@@ -49,8 +52,20 @@ public class JournalProcessor(
                     continue;
                 }
 
+                if (journal is LoadGame loadGame)
+                {
+                    // if not existing, add
+                    if (context.LoadGames.Any(l => l.Timestamp == loadGame.Timestamp))
+                    {
+                        //return ValueTask.CompletedTask;
+                        continue;
+                    }
+                    await context.LoadGames.AddAsync(loadGame, token);
+                    await context.SaveChangesAsync(token);
+                }
+
                 newJournals.Add(journal);
-            }
+            }   
             catch (JsonException ex)
             {
                 logger.LogError(ex, "Error deserializing journal file: '{File}', line: {Line}", filePath, line);
@@ -59,11 +74,7 @@ public class JournalProcessor(
             //return ValueTask.CompletedTask;
         }
 
-
-        if (newJournals.Any())
-        {
-            await hub.Clients.All.JournalUpdated(newJournals);
-        }
+        return newJournals;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -78,15 +89,36 @@ public class JournalProcessor(
     {
         Task.Run(async () =>
         {
-            while (!tokenSource.Token.IsCancellationRequested)
+            var token = tokenSource.Token;
+            var handled = new List<JournalBase>();
+            while (!token.IsCancellationRequested)
             {
-                if (journalService.TryDequeue(out var file))
+                try
                 {
-                    await HandleFileInner(file, tokenSource.Token);
+                    if (journalService.TryDequeue(out var file))
+                    {
+                        handled.AddRange(await HandleFileInner(file, tokenSource.Token));
+                    }
+                    else if (handled.Count > 0)
+                    {
+                        //get last loadgame
+                        var lastLoadGame = context.LoadGames.OrderByDescending(l => l.Timestamp).FirstOrDefault();
+                        // only emit journals since last loadgame
+                        if (lastLoadGame != null)
+                        {
+                            handled = handled.Where(j => j.Timestamp > lastLoadGame.Timestamp).ToList();
+                        }
+                        await hub.Clients.All.JournalUpdated(handled);
+                        handled.Clear();
+                    }
+                    else
+                    {
+                        await Task.Delay(1000, token);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    await Task.Delay(1000);
+                    logger.LogError(ex, "Error processing journal queue");
                 }
             }
         }, tokenSource.Token);
@@ -102,8 +134,4 @@ public class JournalProcessor(
     {
         tokenSource?.Dispose();
     }
-}
-
-public interface IJournalProcessor
-{
 }

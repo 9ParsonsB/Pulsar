@@ -9,7 +9,7 @@ public class JournalInvalidDoubleConverter : JsonConverter<double>
     {
         var success = reader.TryGetDouble(out var value);
         if (success)
-        return value;
+            return value;
 
         return 0;
     }
