@@ -221,6 +221,7 @@ using Travel;
 [JsonDerivedType(typeof(ModuleSellRemote), "ModuleSellRemote")]
 [JsonDerivedType(typeof(ModuleStore), "ModuleStore")]
 [JsonDerivedType(typeof(ModuleSwap), "ModuleSwap")]
+[JsonDerivedType(typeof(ModuleBuyAndStore), "ModuleBuyAndStore")]
 [JsonDerivedType(typeof(Outfitting), "Outfitting")]
 [JsonDerivedType(typeof(PayBounties), "PayBounties")]
 [JsonDerivedType(typeof(PayFines), "PayFines")]
