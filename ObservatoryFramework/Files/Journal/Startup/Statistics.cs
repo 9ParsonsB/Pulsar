@@ -27,5 +27,5 @@ public class Statistics : JournalBase
     public CQC? CQC { get; init; }
     [JsonPropertyName("FLEETCARRIER")]
     public ParameterTypes.FleetCarrier? FleetCarrier { get; init; }
-    public Exobiology Exobiology { get; init; }
+    public Exobiology? Exobiology { get; init; }
 }

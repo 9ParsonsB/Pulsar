@@ -5,5 +5,5 @@ public class Commander : JournalBase
     public override string Event => "Commander";
     public string Name { get; init; }
 
-    public string FID { get; init; }
+    public string? FID { get; init; }
 }

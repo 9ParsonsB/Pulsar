@@ -102,7 +102,7 @@ public class Botanist : IObservatoryWorker
         switch (journal)
         {
             case LoadGame loadGame:
-                OdysseyLoaded = loadGame.Odyssey;
+                OdysseyLoaded = loadGame.Odyssey ?? false;
                 break;
             case SAASignalsFound signalsFound:
             {
