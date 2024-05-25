@@ -8,5 +8,5 @@ public class SuitModule
     public string ModuleName { get; init; }
     public ulong SuitModuleID { get; init; }
     public int Class { get; init; }
-    public ImmutableList<string> WeaponMods { get; init; }
+    public ICollection<string> WeaponMods { get; init; }
 }

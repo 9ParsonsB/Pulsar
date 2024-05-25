@@ -21,6 +21,6 @@ public class EngineerCraft : JournalBase
     public float Quality { get; init; }
     public string ApplyExperimentalEffect { get; init; }
     [JsonConverter(typeof(MaterialConverter))]
-    public ImmutableList<Material> Ingredients { get; init; }
-    public ImmutableList<Modifier> Modifiers { get; init; }
+    public IReadOnlyCollection<Material> Ingredients { get; init; }
+    public IReadOnlyCollection<Modifier> Modifiers { get; init; }
 }

@@ -4,7 +4,9 @@ using Observatory.Framework.Files.Journal.Odyssey;
 
 public interface IShipLockerService : IJournalHandler<ShipLockerMaterials>;
 
-public class ShipLockerService(ILogger<ShipLockerService> logger, IOptions<PulsarConfiguration> options,
+public class ShipLockerService(
+    ILogger<ShipLockerService> logger, 
+    IOptions<PulsarConfiguration> options,
     IEventHubContext hub)
     : IShipLockerService
 {

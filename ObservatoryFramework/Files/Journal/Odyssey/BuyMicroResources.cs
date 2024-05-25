@@ -15,5 +15,5 @@ public class BuyMicroResources : JournalBase
     public int Price { get; init; }
     public ulong MarketID { get; init; }
     public int TotalCount { get; init; }
-    public ImmutableList<MicroResource> MicroResources { get; init; }
+    public IReadOnlyCollection<MicroResource> MicroResources { get; init; }
 }

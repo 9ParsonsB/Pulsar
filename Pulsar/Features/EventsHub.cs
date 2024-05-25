@@ -1,11 +1,19 @@
+using Pulsar.Features.Journal;
+
 namespace Pulsar.Features;
 
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Odyssey;
 
-public class EventsHub : Hub<IEventsHub>
+public class EventsHub(IJournalService journalService) : Hub<IEventsHub>
 {
+    public override async Task OnConnectedAsync()
+    {
+        await base.OnConnectedAsync();
+        await Clients.Caller.JournalUpdated(await journalService.GetLastStartupEvents());
+    }
+
     public async Task Status([FromServices] IStatusService statusService)
     {
         var status = await statusService.Get();

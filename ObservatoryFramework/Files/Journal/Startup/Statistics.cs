@@ -21,11 +21,11 @@ public class Statistics : JournalBase
     public Crew Crew { get; init; }
     public Multicrew Multicrew { get; init; }
     [JsonPropertyName("TG_ENCOUNTERS")]
-    public Thargoid Thargoid { get; init; }
+    public Thargoid? Thargoid { get; init; }
     [JsonPropertyName("Material_Trader_Stats")]
     public MaterialTrader MaterialTrader { get; init; }
-    public CQC CQC { get; init; }
+    public CQC? CQC { get; init; }
     [JsonPropertyName("FLEETCARRIER")]
-    public ParameterTypes.FleetCarrier FleetCarrier { get; init; }
+    public ParameterTypes.FleetCarrier? FleetCarrier { get; init; }
     public Exobiology Exobiology { get; init; }
 }

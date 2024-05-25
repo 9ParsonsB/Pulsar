@@ -7,8 +7,8 @@ namespace Observatory.Framework.Files.ParameterTypes;
 public class FactionEffect
 {
     public string Faction { get; init; }
-    public ImmutableList<EffectType> Effects { get; init; }
-    public ImmutableList<InfluenceType> Influence { get; init; }
+    public IReadOnlyCollection<EffectType> Effects { get; init; }
+    public IReadOnlyCollection<InfluenceType> Influence { get; init; }
     [JsonConverter(typeof(RepInfConverter))]
     public int Reputation { get; init; }
     [JsonConverter(typeof(JsonStringEnumConverter))]

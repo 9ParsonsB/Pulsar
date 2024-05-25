@@ -22,7 +22,7 @@ public class Scan : ScanBaryCentre
     /// <summary>
     /// List which reflects Frontier's JSON structure for the "Parents" object. Use of Parent property is recommended instead.
     /// </summary>
-    public ImmutableList<Parent> Parents { 
+    public IReadOnlyCollection<Parent> Parents { 
         get => _Parents; 
         init
         {
@@ -43,15 +43,16 @@ public class Scan : ScanBaryCentre
                         ParentList.Add((ParentType.Star, parent.Star.GetValueOrDefault(0)));
                     }
                 }
-                Parent = ParentList.ToImmutableList();
-            }           
+
+                Parent = ParentList;
+        }           
     }
     /// <summary>
     /// "Parents" object rearranged into more intuitive structure for ease of use.
     /// </summary>
     [JsonIgnore]
-    public ImmutableList<(ParentType ParentType, int Body)> Parent { get; init; }
-    private ImmutableList<Parent> _Parents;
+    public IReadOnlyCollection<(ParentType ParentType, int Body)> Parent { get; init; }
+    private IReadOnlyCollection<Parent> _Parents;
     /// <summary>
     /// Body distance from system arrival point in light-seconds.
     /// </summary>
@@ -79,7 +80,7 @@ public class Scan : ScanBaryCentre
     /// <summary>
     /// List containing full breakdown of atmospheric components and their relative percentages.
     /// </summary>
-    public ImmutableList<MaterialComposition> AtmosphereComposition { get; init; }
+    public IReadOnlyCollection<MaterialComposition> AtmosphereComposition { get; init; }
     /// <summary>
     /// Descriptive string for type of volcanism present, or an empty string for none, e.g. "major silicate vapour geysers volcanism".
     /// </summary>
@@ -112,7 +113,7 @@ public class Scan : ScanBaryCentre
     /// List containing full breakdown of prospectable surface materials and their relative percentages.
     /// </summary>
     [JsonConverter(typeof(MaterialCompositionConverter))]
-    public ImmutableList<MaterialComposition> Materials { get; init; }
+    public IReadOnlyCollection<MaterialComposition> Materials { get; init; }
     /// <summary>
     /// Overall composition of body, expressed as percentages of ice, rock, and metal.
     /// </summary>
@@ -129,7 +130,7 @@ public class Scan : ScanBaryCentre
     /// <summary>
     /// List of all planetary or stellar ring systems around the body.
     /// </summary>
-    public ImmutableList<Ring> Rings { get; init; }
+    public IReadOnlyCollection<Ring> Rings { get; init; }
     /// <summary>
     /// Description of the minable material abundance.<br/>Possible values inclue "PristineResources", "MajorResources", "CommonResources", "LowResources", and "DepletedResources". 
     /// </summary>

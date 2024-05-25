@@ -11,7 +11,7 @@ public class FSDJump : JournalBase
     public string StarSystem { get; init; }
     public ulong SystemAddress { get; init; }
     [JsonConverter(typeof(StarPosConverter))]
-    public (double x, double y, double z) StarPos { get; init; }
+    public StarPos StarPos { get; init; }
     public string Body { get; init; }
     public int BodyID { get; init; }
     public string BodyType { get; init; }
@@ -33,9 +33,9 @@ public class FSDJump : JournalBase
     public string SystemSecurity_Localised { get; init; }
     public long Population { get; init; }
     public bool Wanted { get; init; }
-    public ImmutableList<SystemFaction> Factions { get; init; }
-    public ImmutableList<Conflict> Conflicts { get; init; }
-    public ImmutableList<string> Powers { get; init; }
+    public IReadOnlyCollection<SystemFaction> Factions { get; init; }
+    public IReadOnlyCollection<Conflict> Conflicts { get; init; }
+    public ICollection<string> Powers { get; init; }
     public string PowerplayState { get; init; }
     public bool Taxi { get; init; }
     public bool Multicrew { get; init; }

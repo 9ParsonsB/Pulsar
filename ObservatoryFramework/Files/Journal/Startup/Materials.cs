@@ -1,13 +1,13 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Startup;
 
-namespace Observatory.Framework.Files.Journal.Startup;
+using System.Collections.Immutable;
+using ParameterTypes;
 
 public class Materials : JournalBase
 {
     public override string Event => "Materials";
-    public ImmutableList<Material> Raw { get; init; }
-    public ImmutableList<Material> Manufactured { get; init; }
-    public ImmutableList<Material> Encoded { get; init; }
+    public virtual IReadOnlyCollection<Material> Raw { get; init; }
+    public virtual IReadOnlyCollection<Material> Manufactured { get; init; }
+    public virtual IReadOnlyCollection<Material> Encoded { get; init; }
 
 }

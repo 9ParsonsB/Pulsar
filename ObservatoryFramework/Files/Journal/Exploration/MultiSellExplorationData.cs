@@ -12,7 +12,7 @@ public class MultiSellExplorationData : JournalBase
     /// <summary>
     /// List of all sold first discoveries.
     /// </summary>
-    public ImmutableList<Discovered> Discovered { get; init; }
+    public IReadOnlyCollection<Discovered> Discovered { get; init; }
     /// <summary>
     /// Base value of total sold data.
     /// </summary>

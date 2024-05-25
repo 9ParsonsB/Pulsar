@@ -23,9 +23,9 @@ public class MissionCompleted : JournalBase
     [JsonConverter(typeof(StringIntConverter))]
     public int Donation { get; init; }
     public long Donated { get; init; }
-    public ImmutableList<string> PermitsAwarded { get; init; }
-    public ImmutableList<CommodityReward> CommodityReward { get; init; }
-    public ImmutableList<MaterialReward> MaterialsReward { get; init; }
+    public ICollection<string> PermitsAwarded { get; init; }
+    public IReadOnlyCollection<CommodityReward> CommodityReward { get; init; }
+    public IReadOnlyCollection<MaterialReward> MaterialsReward { get; init; }
     public string DestinationSystem { get; init; }
     public string DestinationStation { get; init; }
     public string DestinationSettlement { get; init; }
@@ -33,5 +33,5 @@ public class MissionCompleted : JournalBase
     public string NewDestinationStation { get; init; }
     public int KillCount { get; init; }
     public string TargetFaction { get; init; }
-    public ImmutableList<FactionEffect> FactionEffects { get; init; }
+    public IReadOnlyCollection<FactionEffect> FactionEffects { get; init; }
 }

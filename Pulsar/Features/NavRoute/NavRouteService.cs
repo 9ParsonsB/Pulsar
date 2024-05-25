@@ -4,7 +4,11 @@ using Observatory.Framework.Files;
 
 public interface INavRouteService :  IJournalHandler<NavRouteFile>;
 
-public class NavRouteService(IOptions<PulsarConfiguration> options, ILogger<NavRouteService> logger, IEventHubContext hub) : INavRouteService
+public class NavRouteService(
+    IOptions<PulsarConfiguration> options, 
+    ILogger<NavRouteService> logger, 
+    IEventHubContext hub) 
+    : INavRouteService
 {
     public async Task<NavRouteFile> Get()
     {

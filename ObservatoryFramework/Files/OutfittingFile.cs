@@ -29,5 +29,5 @@ public class OutfittingFile : JournalBase
     /// <summary>
     /// List of all available parts in shipyard.
     /// </summary>
-    public ImmutableList<OutfittingModule> Items { get; init; }
+    public IReadOnlyCollection<OutfittingModule> Items { get; init; }
 }

@@ -71,7 +71,7 @@ public class CodexEntry : JournalBase
     /// <summary>
     /// List of trais of the scanned item.
     /// </summary>
-    public ImmutableList<string> Traits { get; init; }
+    public ICollection<string> Traits { get; init; }
     /// <summary>
     /// Value of the codex entry when sold to Universal Cartographics.
     /// </summary>

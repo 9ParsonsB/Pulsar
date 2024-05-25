@@ -7,5 +7,5 @@ public class Repair : JournalBase
     public override string Event => "Repair";
     public string Item { get; init; }
     public int Cost { get; init; }
-    public ImmutableList<string> Items { get; init; }
+    public ICollection<string> Items { get; init; }
 }

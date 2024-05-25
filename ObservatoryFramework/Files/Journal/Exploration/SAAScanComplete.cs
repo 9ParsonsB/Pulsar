@@ -23,11 +23,11 @@ public class SAAScanComplete : JournalBase
     /// <summary>
     /// This property is indicated with strikethrough in Frontier's documentation and is likely unused.
     /// </summary>
-    public ImmutableList<string> Discoverers { get; init; }
+    public ICollection<string> Discoverers { get; init; }
     /// <summary>
     /// This property is indicated with strikethrough in Frontier's documentation and is likely unused.
     /// </summary>
-    public ImmutableList<string> Mappers { get; init; }
+    public ICollection<string> Mappers { get; init; }
     /// <summary>
     /// Number of probes fired to complete the surface scan.
     /// </summary>

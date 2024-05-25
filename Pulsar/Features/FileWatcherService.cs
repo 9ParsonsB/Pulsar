@@ -19,12 +19,7 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
         Watch(cancellationToken);
 
         // read the journal directory to get the initial files
-#if DEBUG
-        Thread.Sleep(TimeSpan.FromSeconds(2));
         HandleFileChanged(cancellationToken);
-#else
-        HandleFileChanged(cancellationToken);
-#endif
 
 
         return Task.CompletedTask;

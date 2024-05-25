@@ -6,5 +6,5 @@ namespace Observatory.Framework.Files.Journal.Odyssey;
 public class TransferMicroResources : JournalBase
 {
     public override string Event => "TransferMicroResources";
-    public ImmutableList<MicroTransfer> Transfers { get; init; }
+    public IReadOnlyCollection<MicroTransfer> Transfers { get; init; }
 }

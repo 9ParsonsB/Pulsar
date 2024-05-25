@@ -1,18 +1,19 @@
-using Observatory.Framework.Files.Journal.Startup;
+using Observatory.Framework.Files.Journal.StationServices;
 
 namespace Pulsar.Features.Journal;
 
 using Observatory.Framework;
 using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.Journal.Startup;
 
 public class JournalProcessor(
     ILogger<JournalProcessor> logger,
-    IJournalService journalService,
+    IJournalStore journalStore,
     PulsarContext context,
     IEventHubContext hub) : IHostedService, IDisposable
 {
     private CancellationTokenSource tokenSource = new();
-    
+
     readonly JsonSerializerOptions options = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -52,23 +53,73 @@ public class JournalProcessor(
                     continue;
                 }
 
-                if (journal is LoadGame loadGame)
+                switch (journal)
                 {
-                    // if not existing, add
-                    if (context.LoadGames.Any(l => l.Timestamp == loadGame.Timestamp))
-                    {
-                        //return ValueTask.CompletedTask;
+                    case Commander commander when context.Commander.Any(c => c.Timestamp == commander.Timestamp):
                         continue;
-                    }
-                    await context.LoadGames.AddAsync(loadGame, token);
-                    await context.SaveChangesAsync(token);
+                    case Commander commander:
+                        await context.Commander.AddAsync(commander, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    case Materials materials when context.Materials.Any(m => m.Timestamp == materials.Timestamp):
+                        continue;
+                    case Materials materials:
+                        await context.Materials.AddAsync(materials, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    case Rank rank when context.Rank.Any(r => r.Timestamp == rank.Timestamp):
+                        continue;
+                    case Rank rank:
+                        await context.Rank.AddAsync(rank, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    case Progress progress when context.Progress.Any(p => p.Timestamp == progress.Timestamp):
+                        continue;
+                    case Progress progress:
+                        await context.Progress.AddAsync(progress, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    case Reputation reputation when context.Reputation.Any(r => r.Timestamp == reputation.Timestamp):
+                        continue;
+                    case Reputation reputation:
+                        await context.Reputation.AddAsync(reputation, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+
+                    case EngineerProgress engineerProgress
+                        when context.EngineerProgress.Any(e => e.Timestamp == engineerProgress.Timestamp):
+                        continue;
+                    case EngineerProgress engineerProgress:
+                        await context.EngineerProgress.AddAsync(engineerProgress, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    case LoadGame loadGame when context.LoadGames.Any(l => l.Timestamp == loadGame.Timestamp):
+                        continue;
+                    case LoadGame loadGame:
+                        await context.LoadGames.AddAsync(loadGame, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    
+              
+                    case Statistics statistics when context.Statistics.Any(s => s.Timestamp == statistics.Timestamp):
+                        continue;
+                    case Statistics statistics:
+                        await context.Statistics.AddAsync(statistics, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    
                 }
 
                 newJournals.Add(journal);
-            }   
+            }
             catch (JsonException ex)
             {
                 logger.LogError(ex, "Error deserializing journal file: '{File}', line: {Line}", filePath, line);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error processing journal file: '{File}', line# {LineNumber}, line: {Line}",
+                    filePath, index, Encoding.UTF8.GetString(line.ToArray()));
             }
 
             //return ValueTask.CompletedTask;
@@ -95,7 +146,7 @@ public class JournalProcessor(
             {
                 try
                 {
-                    if (journalService.TryDequeue(out var file))
+                    if (journalStore.TryDequeue(out var file))
                     {
                         handled.AddRange(await HandleFileInner(file, tokenSource.Token));
                     }
@@ -108,6 +159,7 @@ public class JournalProcessor(
                         {
                             handled = handled.Where(j => j.Timestamp > lastLoadGame.Timestamp).ToList();
                         }
+
                         await hub.Clients.All.JournalUpdated(handled);
                         handled.Clear();
                     }

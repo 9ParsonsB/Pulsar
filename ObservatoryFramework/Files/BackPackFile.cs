@@ -13,17 +13,17 @@ public class BackpackFile : JournalBase
     /// <summary>
     /// List of all items carried.
     /// </summary>
-    public ImmutableList<BackpackItem> Items { get; init; }
+    public IReadOnlyCollection<BackpackItem> Items { get; init; }
     /// <summary>
     /// List of all components carried.
     /// </summary>
-    public ImmutableList<BackpackItem> Components { get; init; }
+    public IReadOnlyCollection<BackpackItem> Components { get; init; }
     /// <summary>
     /// List of player consumable items carried.
     /// </summary>
-    public ImmutableList<BackpackItem> Consumables { get; init; }
+    public IReadOnlyCollection<BackpackItem> Consumables { get; init; }
     /// <summary>
     /// List of all data currently stored by the player.
     /// </summary>
-    public ImmutableList<BackpackItem> Data { get; init; }
+    public IReadOnlyCollection<BackpackItem> Data { get; init; }
 }

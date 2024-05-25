@@ -29,5 +29,5 @@ public class MarketFile : JournalBase
     /// <summary>
     /// List of all commodities available in the market.
     /// </summary>
-    public ImmutableList<MarketItem> Items { get; init; }
+    public IReadOnlyCollection<MarketItem> Items { get; init; }
 }

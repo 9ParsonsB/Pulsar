@@ -81,7 +81,7 @@ public class Docked : JournalBase
         private get => StationEconomy_Localised;
         init => StationEconomy_Localised = value;
     }
-    public ImmutableList<StationEconomy> StationEconomies { get; init; }
+    public IReadOnlyCollection<StationEconomy> StationEconomies { get; init; }
 
     [Obsolete("StationState is a rundundant property. Use StationEconomy to potentially reduce unnecessary checks.")]
     public string StationState { get; init; }

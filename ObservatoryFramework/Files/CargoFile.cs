@@ -21,5 +21,5 @@ public class CargoFile : JournalBase
     /// <summary>
     /// List of full cargo details.
     /// </summary>
-    public ImmutableList<CargoType> Inventory { get; init; }
+    public IReadOnlyCollection<CargoType> Inventory { get; init; }
 }

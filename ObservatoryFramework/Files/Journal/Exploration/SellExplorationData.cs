@@ -11,11 +11,11 @@ public class SellExplorationData : JournalBase
     /// <summary>
     /// List of systems for which data was sold.
     /// </summary>
-    public ImmutableList<string> Systems { get; init; }
+    public ICollection<string> Systems { get; init; }
     /// <summary>
     /// List of first discovered bodies.
     /// </summary>
-    public ImmutableList<string> Discovered { get; init; }
+    public ICollection<string> Discovered { get; init; }
     /// <summary>
     /// Base value of sold data.
     /// </summary>

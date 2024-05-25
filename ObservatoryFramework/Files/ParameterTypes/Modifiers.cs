@@ -7,30 +7,33 @@ public class Modifiers
 {
     public string Label { get; init; }
 
-    [JsonConverter(typeof(MutableStringDoubleConverter))]
-    public object Value 
-    { 
-        get
-        {
-            if (!string.IsNullOrEmpty(ValueString))
-                return ValueString;
-            return ValueNumeric;
-        }
-
-        init
-        {
-            if (value.GetType() == typeof(string))
-                ValueString = value.ToString();
-            else
-                ValueNumeric = (double)value;
-        }
-    }
-
+    [JsonConverter(typeof(NumberOrStringConverter))]
+    public NumberOrString Value { get; set; } 
+    
     public double OriginalValue { get; init; }
 
     [JsonConverter(typeof(IntBoolConverter))]
     public bool LessIsGood { get; init; }
+}
 
-    private double ValueNumeric;
-    private string ValueString;
+public class NumberOrString
+{
+    public NumberOrString()
+    { }
+    
+    public NumberOrString(string value)
+    {
+        StringValue = value;
+        IsString = true;
+    }
+
+    public NumberOrString(double value)
+    {
+        DoubleValue = value;
+        IsDouble = true;
+    }
+    public string? StringValue { get; init; }
+    public bool IsString { get; init; }
+    public double? DoubleValue { get; init; }
+    public bool IsDouble { get; init; }
 }

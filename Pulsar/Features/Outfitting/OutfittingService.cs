@@ -4,7 +4,11 @@ using Observatory.Framework.Files;
 
 public interface IOutfittingService : IJournalHandler<OutfittingFile>;
 
-public class OutfittingService(IOptions<PulsarConfiguration> options, IEventHubContext hub, ILogger<OutfittingService> logger) : IOutfittingService
+public class OutfittingService(
+    IOptions<PulsarConfiguration> options, 
+    IEventHubContext hub, 
+    ILogger<OutfittingService> logger) 
+    : IOutfittingService
 {
     public async Task<OutfittingFile> Get()
     {

@@ -2,8 +2,11 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.Journal.Odyssey;
 using Observatory.Framework.Files.Journal.Startup;
 using Observatory.Framework.Files.Journal.StationServices;
+using Observatory.Framework.Files.Journal.Travel;
+using Pulsar.Features.ShipLocker;
 
 /// <summary>
 /// An in-memory database context for Pulsar.
@@ -11,26 +14,23 @@ using Observatory.Framework.Files.Journal.StationServices;
 public class PulsarContext : DbContext
 {
     public SqliteConnection Connection { get; private set; }
+
     
-    // Start of game events:
-    /**
-     *  Materials
-        Rank
-        Progress
-        Reputation
-        EngineerProgress
-        LoadGame
-        --Some time later--
-        Statistics
-     */
-    
+    public DbSet<Commander> Commander { get; set; }
     public DbSet<Materials> Materials { get; set; }
-    public DbSet<Rank> Ranks { get; set; }
+    public DbSet<Rank> Rank { get; set; }
     public DbSet<Progress> Progress { get; set; }
-    public DbSet<Reputation> Reputations { get; set; }
+    public DbSet<Reputation> Reputation { get; set; }
     public DbSet<EngineerProgress> EngineerProgress { get; set; }
     public DbSet<LoadGame> LoadGames { get; set; }
     public DbSet<Statistics> Statistics { get; set; }
+    public DbSet<Location> Locations { get; set; }
+    public DbSet<Powerplay> PowerPlay { get; set; }
+    public DbSet<ShipLockerMaterials> ShipLocker { get; set; }
+    public DbSet<Missions> Missions { get; set; }
+    public DbSet<Loadout> Loadout { get; set; }
+    public DbSet<Cargo> Cargo { get; set; }
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
