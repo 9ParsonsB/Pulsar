@@ -2,6 +2,7 @@ namespace Pulsar.Features.Journal;
 
 using Observatory.Framework;
 using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.Journal.Travel;
 using Observatory.Framework.Files.Journal.Startup;
 using Observatory.Framework.Files.Journal.StationServices;
 
@@ -43,9 +44,10 @@ public class JournalProcessor(
                 line = newLine;
             }
 
+            JournalBase? journal = null;
             try
             {
-                var journal = JsonSerializer.Deserialize<JournalBase>(new ReadOnlySpan<byte>(line.ToArray()), options);
+                journal = JsonSerializer.Deserialize<JournalBase>(new ReadOnlySpan<byte>(line.ToArray()), options);
                 if (journal == null)
                 {
                     //return ValueTask.CompletedTask;
@@ -84,7 +86,6 @@ public class JournalProcessor(
                         await context.Reputation.AddAsync(reputation, token);
                         await context.SaveChangesAsync(token);
                         break;
-
                     case EngineerProgress engineerProgress
                         when context.EngineerProgress.Any(e => e.Timestamp == engineerProgress.Timestamp):
                         continue;
@@ -98,15 +99,30 @@ public class JournalProcessor(
                         await context.LoadGames.AddAsync(loadGame, token);
                         await context.SaveChangesAsync(token);
                         break;
-                    
-              
                     case Statistics statistics when context.Statistics.Any(s => s.Timestamp == statistics.Timestamp):
                         continue;
                     case Statistics statistics:
                         await context.Statistics.AddAsync(statistics, token);
                         await context.SaveChangesAsync(token);
                         break;
-                    
+                    case Missions missions when context.Missions.Any(m => m.Timestamp == missions.Timestamp):
+                        continue;
+                    case Missions missions:
+                        await context.Missions.AddAsync(missions, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    case Location location when context.Locations.Any(l => l.Timestamp == location.Timestamp):
+                        continue;
+                    case Location location:
+                        await context.Locations.AddAsync(location, token);
+                        await context.SaveChangesAsync(token);
+                        break;
+                    case Loadout loadout when context.Loadout.Any(l => l.Timestamp == loadout.Timestamp):
+                        continue;
+                    case Loadout loadout:
+                        await context.Loadout.AddAsync(loadout, token);
+                        await context.SaveChangesAsync(token);
+                        break;
                 }
 
                 newJournals.Add(journal);
@@ -115,10 +131,14 @@ public class JournalProcessor(
             {
                 logger.LogError(ex, "Error deserializing journal file: '{File}', line: {Line}", filePath, line);
             }
+            catch (DbUpdateException ex)
+            {
+                logger.LogError(ex, "Error updating database with journal file: '{File}', line: {Line}", filePath, line);
+            }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error processing journal file: '{File}', line# {LineNumber}, line: {Line}",
-                    filePath, index, Encoding.UTF8.GetString(line.ToArray()));
+                logger.LogError(ex, "Error processing journal file: '{File}', line# {LineNumber}, line: {Line}, type?: {Type}",
+                    filePath, index, Encoding.UTF8.GetString(line.ToArray()), journal?.GetType());
             }
 
             //return ValueTask.CompletedTask;

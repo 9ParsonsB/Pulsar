@@ -19,8 +19,8 @@ public class FSDJump : JournalBase
     public double FuelUsed { get; init; }
     public double FuelLevel { get; init; }
     public int BoostUsed { get; init; }
-    [JsonConverter(typeof(LegacyFactionConverter<SystemFaction>))]
-    public SystemFaction SystemFaction { get; init; }
+    [JsonConverter(typeof(LegacyFactionConverter<Faction>))]
+    public Faction SystemFaction { get; init; }
 
     public string SystemAllegiance { get; init; }
     public string SystemEconomy { get; init; }
@@ -33,7 +33,7 @@ public class FSDJump : JournalBase
     public string SystemSecurity_Localised { get; init; }
     public long Population { get; init; }
     public bool Wanted { get; init; }
-    public List<SystemFaction> Factions { get; init; }
+    public List<Faction> Factions { get; init; }
     public List<Conflict> Conflicts { get; init; }
     public IList<string> Powers { get; init; }
     public string PowerplayState { get; init; }

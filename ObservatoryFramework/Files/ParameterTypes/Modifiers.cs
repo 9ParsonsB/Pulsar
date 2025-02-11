@@ -32,6 +32,12 @@ public class NumberOrString
         DoubleValue = value;
         IsDouble = true;
     }
+
+    public override string ToString()
+    {
+        return IsString ? StringValue : DoubleValue.ToString();
+    }
+
     public string? StringValue { get; init; }
     public bool IsString { get; init; }
     public double? DoubleValue { get; init; }
