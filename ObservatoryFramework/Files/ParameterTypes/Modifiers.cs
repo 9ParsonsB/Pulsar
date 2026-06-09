@@ -1,8 +1,10 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Observatory.Framework.Files.Converters;
 
 namespace Observatory.Framework.Files.ParameterTypes;
 
+[Owned]
 public class Modifiers
 {
     public string Label { get; init; }

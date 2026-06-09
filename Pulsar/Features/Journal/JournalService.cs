@@ -153,8 +153,29 @@ public class JournalService(
         var cargo = await context.Cargo
             .Where(x => x.Timestamp > commander.Timestamp)
             .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var fsdJump = await context.FSDJump
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var docked = await context.Docked
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var undocked = await context.Undocked
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var supercruiseEntry = await context.SupercruiseEntry
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var supercruiseExit = await context.SupercruiseExit
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var touchdown = await context.Touchdown
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var liftoff = await context.Liftoff
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
 
-        return new List<JournalBase?> { location, powerplay, shiplocker, missions, loadout, cargo }
+        return new List<JournalBase?> { location, powerplay, shiplocker, missions, loadout, cargo, fsdJump, docked, undocked, supercruiseEntry, supercruiseExit, touchdown, liftoff }
             .Where(x => x != null).Cast<JournalBase>().ToList();
     }
 

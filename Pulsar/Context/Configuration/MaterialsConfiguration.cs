@@ -8,7 +8,6 @@ public class MaterialsConfiguration : IEntityTypeConfiguration<Materials>
 {
     public void Configure(EntityTypeBuilder<Materials> builder)
     {
-        builder.HasKey(x => x.Timestamp);
         builder.OwnsMany(x => x.Raw, b =>
         {
             b.ToJson();

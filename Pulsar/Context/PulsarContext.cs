@@ -6,6 +6,7 @@ using Observatory.Framework.Files.Journal.Odyssey;
 using Observatory.Framework.Files.Journal.Startup;
 using Observatory.Framework.Files.Journal.StationServices;
 using Observatory.Framework.Files.Journal.Travel;
+using Observatory.Framework.Files.Journal.Exploration;
 
 /// <summary>
 /// An in-memory database context for Pulsar.
@@ -28,6 +29,17 @@ public class PulsarContext : DbContext
     public DbSet<Missions> Missions { get; set; }
     public DbSet<Loadout> Loadout { get; set; }
     public DbSet<Cargo> Cargo { get; set; }
+    public DbSet<FSDJump> FSDJump { get; set; }
+    public DbSet<Docked> Docked { get; set; }
+    public DbSet<Undocked> Undocked { get; set; }
+    public DbSet<SupercruiseEntry> SupercruiseEntry { get; set; }
+    public DbSet<SupercruiseExit> SupercruiseExit { get; set; }
+    public DbSet<Touchdown> Touchdown { get; set; }
+    public DbSet<Liftoff> Liftoff { get; set; }
+    public DbSet<Scan> Scans { get; set; }
+    public DbSet<FSSDiscoveryScan> FSSDiscoveryScans { get; set; }
+    public DbSet<FSSBodySignals> FSSBodySignals { get; set; }
+    public DbSet<SAASignalsFound> SAASignalsFound { get; set; }
     
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

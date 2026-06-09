@@ -8,31 +8,22 @@
 </script>
 
 <section>
-  <div>
-    <Status />
-  </div>
-  <div>
-    <Explorer />
-  </div>
-  <div>
-    <JournalLog />
-  </div>
+  <Status />
+  <Explorer />
+  <JournalLog />
+  <Ship />
+  <MissionStack />
 </section>
 
 <style>
-  div {
-    border: 2px solid var(--border-color);
-  }
-
   section {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     gap: 20px;
+    padding: 20px;
   }
 
-  div {
-    flex: 50%;
-    max-width: 100%;
-    height: 100%;
+  section > :global(*) {
+    min-height: 400px;
   }
 </style>

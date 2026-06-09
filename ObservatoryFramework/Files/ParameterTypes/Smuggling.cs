@@ -1,7 +1,9 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Observatory.Framework.Files.ParameterTypes;
 
+[Owned]
 public class Smuggling
 {
     [JsonPropertyName("Black_Markets_Traded_With")]

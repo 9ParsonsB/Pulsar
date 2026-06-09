@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using Microsoft.EntityFrameworkCore;
 using DateTimeOffset = System.DateTimeOffset;
 
 namespace Observatory.Framework.Files.Journal;
@@ -284,6 +285,7 @@ public abstract class JournalBase
     /// As this is used for the JsonPolymorphic attribute, this will not be deserilized.
     /// </summary>
     [JsonPropertyName("event")]
+    [Key]
     public abstract string Event { get; }
     
     [JsonExtensionData]

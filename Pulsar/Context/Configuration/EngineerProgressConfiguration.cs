@@ -8,7 +8,6 @@ public class EngineerProgressConfiguration : IEntityTypeConfiguration<EngineerPr
 {
     public void Configure(EntityTypeBuilder<EngineerProgress> builder)
     {
-        builder.HasKey(x => x.Timestamp);
         builder.OwnsMany(x => x.Engineers, b =>
         {
             b.ToJson();

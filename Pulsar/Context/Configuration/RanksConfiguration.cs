@@ -8,7 +8,5 @@ public class RanksConfiguration : IEntityTypeConfiguration<Rank>
 {
     public void Configure(EntityTypeBuilder<Rank> builder)
     {
-        builder.Ignore(x => x.AdditionalProperties);
-        builder.HasKey(x => x.Timestamp);
     }
 }

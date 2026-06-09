@@ -9,6 +9,8 @@ import { getEnumNameFromValue, getEnumNamesFromFlag } from "../types/flags";
 import { HubConnectionState } from "@microsoft/signalr";
 import { IsLoadGameEvent } from "../types/api/LoadGame";
 
+import type { LoadGame } from "../types/api/LoadGame";
+
 const last: number[] = $state([]);
 let maxFuel: number = $state(32);
 let timeToMax = $state(0);
@@ -17,6 +19,9 @@ let loading = $state(true);
 
 let alert: JournalBase[] = $state([]);
 let fuelDown = $state(false);
+
+let loadGame: Partial<LoadGame> = $state({});
+let location: any = $state({});
 
 onMount(async () => {
 	loading = false;
@@ -56,10 +61,20 @@ onMount(async () => {
 		if (events.length) {
 			alert = events;
 		}
-		if (IsLoadGameEvent(message)) {
-			maxFuel = message.fuelCapacity;
-			$statusStore.fuel = { fuelMain: message.fuelLevel, fuelReservoir: 0 };
-		}
+		
+		journals.forEach(j => {
+			if (IsLoadGameEvent(j)) {
+				maxFuel = j.fuelCapacity;
+				$statusStore.fuel = { fuelMain: j.fuelLevel, fuelReservoir: 0 };
+				loadGame = j;
+			}
+			if (j.event === "Location" || j.event === "FSDJump") {
+				location = j;
+			}
+			if (j.event === "Docked" || j.event === "Undocked") {
+				location = { ...location, ...j };
+			}
+		});
 	});
 
 	if ($connection.state === HubConnectionState.Disconnected) {
@@ -72,94 +87,229 @@ onMount(async () => {
 });
 </script>
 
-<h1>Status</h1>
+<section>
+  <div class="header-row">
+    <h1>Status</h1>
+    <div class="connection-status" class:connected={$connection.state === HubConnectionState.Connected}>
+      {$connection.state}
+    </div>
+  </div>
 
-<br />
+  {#if alert.length}
+    <div class="alerts">
+      <h2>Alerts!</h2>
+      {#each alert as a}
+        <div class="alert-item">{a.event}: {JSON.stringify(a)}</div>
+      {/each}
+      <button onclick={() => (alert = [])}>Clear</button>
+    </div>
+  {/if}
 
-{#if loading}
-  <h1>LOADING ....</h1>
-{/if}
+  <div class="info-grid">
+    <div class="info-item">
+      <span class="label">Commander:</span>
+      <span class="value">{loadGame.commander ?? "---"}</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Ship:</span>
+      <span class="value">{loadGame.ship_Localised ?? loadGame.ship ?? "---"}</span>
+    </div>
+    <div class="info-item">
+      <span class="label">System:</span>
+      <span class="value">{location.StarSystem ?? "---"}</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Body:</span>
+      <span class="value">{location.Body ?? "---"}</span>
+    </div>
+    {#if location.StationName}
+    <div class="info-item">
+      <span class="label">Station:</span>
+      <span class="value">{location.StationName}</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Type:</span>
+      <span class="value">{location.StationType ?? "---"}</span>
+    </div>
+    {/if}
+  </div>
 
-{#if alert.length}
-  <h1>Alert!</h1>
-
-  {#each alert as a}
-    <input readonly value={JSON.stringify(a)} />
-  {/each}
-  <button onclick={() => (alert = [])}>Clear</button>
-{/if}
-
-<div>
-  {#if $statusStore}  
-    <span
-      >Fuel%: {((($statusStore.fuel?.fuelMain ?? 0) / 32) * 100).toFixed(2)}%
-      {#if $statusStore.flags! & StatusFlags.FuelScooping}
-      <span>est{fuelDown ? ' REMAINING' : ' to fill'}: {timeToMax.toFixed(2  )}s</span>
-      {/if}
-    </span>
-    <div class="power">
-      <div class="sys">
-        <div>{$statusStore?.pips?.sys ?? "?"}</div>
-        <div>Sys</div>
-        {#each [...Array($statusStore?.pips?.sys ?? 0)].map((_,i) => i) as sys (sys)}
-          <div class="pip" transition:scale|global  ></div>
-        {/each}
+  <div class="status-details">
+    <div class="fuel-section">
+      <div class="label">Fuel</div>
+      <div class="fuel-bar-container">
+        <div class="fuel-bar" style="width: {(($statusStore.fuel?.fuelMain ?? 0) / maxFuel) * 100}%"></div>
       </div>
-      <div class="eng"> 
-        <div>{$statusStore?.pips?.eng ?? "?"}</div> 
-        <div>Eng</div>
-        {#each [...Array($statusStore?.pips?.eng ?? 0)].map((_,i) => i) as eng (eng)}
-          <div class="pip" transition:scale|global></div>
-        {/each}
-      </div>    
-      <div class="wep"> 
-        <div>{$statusStore?.pips?.wep ?? "?"}</div>
-        <div>Wep</div>  
-        {#each [...Array($statusStore?.pips?.wep ?? 0)].map((_,i) => i) as wep (wep)}
-          <div class="pip" transition:scale|global></div>
-        {/each}
+      <div class="fuel-info">
+        <span>{((($statusStore.fuel?.fuelMain ?? 0) / maxFuel) * 100).toFixed(1)}%</span>
+        {#if $statusStore.flags! & StatusFlags.FuelScooping}
+          <span class="scooping">Scooping: {timeToMax.toFixed(0)}s {fuelDown ? 'rem' : 'to fill'}</span>
+        {/if}
       </div>
     </div>
 
-    <span>dest?: {$statusStore?.destination?.name}</span>
-    <span>gui focus: {getEnumNameFromValue(FocusStatus, $statusStore.guiFocus!)}</span>
-    <span>cargo: {$statusStore.cargo}</span>
-    <span>flag1: {getEnumNamesFromFlag(StatusFlags, $statusStore.flags!)} ({$statusStore.flags})</span>
-    <span>flag2: {getEnumNamesFromFlag(StatusFlags2,  $statusStore.flags2!)} ({$statusStore.flags2})</span>     
-  {:else}
-    <span>No data :(</span>
-  {/if}
-</div>
+    <div class="power">
+      <div class="pip-group sys">
+        <div class="pip-label">SYS</div>
+        <div class="pip-value">{$statusStore?.pips?.sys ?? 0}</div>
+        <div class="pips">
+          {#each [...Array(8)].map((_,i) => i) as i}
+            <div class="pip" class:active={i < ($statusStore?.pips?.sys ?? 0) * 2}></div>
+          {/each}
+        </div>
+      </div>
+      <div class="pip-group eng">
+        <div class="pip-label">ENG</div>
+        <div class="pip-value">{$statusStore?.pips?.eng ?? 0}</div>
+        <div class="pips">
+          {#each [...Array(8)].map((_,i) => i) as i}
+            <div class="pip" class:active={i < ($statusStore?.pips?.eng ?? 0) * 2}></div>
+          {/each}
+        </div>
+      </div>
+      <div class="pip-group wep">
+        <div class="pip-label">WEP</div>
+        <div class="pip-value">{$statusStore?.pips?.wep ?? 0}</div>
+        <div class="pips">
+          {#each [...Array(8)].map((_,i) => i) as i}
+            <div class="pip" class:active={i < ($statusStore?.pips?.wep ?? 0) * 2}></div>
+          {/each}
+        </div>
+      </div>
+    </div>
+
+    <div class="other-info">
+      <div><span class="label">Focus:</span> {getEnumNameFromValue(FocusStatus, $statusStore.guiFocus ?? 0)}</div>
+      <div><span class="label">Cargo:</span> {$statusStore.cargo ?? 0}</div>
+      {#if $statusStore.destination?.name}
+        <div><span class="label">Dest:</span> {$statusStore.destination.name}</div>
+      {/if}
+    </div>
+    
+    <div class="flags">
+        {#each getEnumNamesFromFlag(StatusFlags, $statusStore.flags ?? 0) as flag}
+            <span class="flag">{flag}</span>
+        {/each}
+        {#each getEnumNamesFromFlag(StatusFlags2, $statusStore.flags2 ?? 0) as flag}
+            <span class="flag secondary">{flag}</span>
+        {/each}
+    </div>
+  </div>
+</section>
 
 <style lang="scss">
-  div {
+  section {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    .power {
+    gap: 15px;
+  }
+
+  .header-row {
       display: flex;
-      flex-direction: row;
-      height: 100%;
-      align-items: flex-end;
-      div {
-        display: flex;
-        height: 100%;
-        flex-direction: column-reverse;
-        align-items: center;
-        min-width: 2vw;
-        div.pip {
-          min-width: 2vw;
-          min-height: 1vh;
-          background-color: #d06527;
-          border: 1px solid #96491c;
-        }
+      justify-content: space-between;
+      align-items: center;
+      h1 { border: none; margin: 0; }
+  }
+
+  .connection-status {
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border: 1px solid #444;
+      &.connected { color: #00ff00; border-color: #00ff00; }
+  }
+
+  .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 0.9rem;
+      .info-item {
+          display: flex;
+          gap: 10px;
+          .label { color: #888; }
+          .value { color: #fff; font-weight: bold; }
       }
+  }
+
+  .fuel-section {
+      margin-bottom: 10px;
+      .fuel-bar-container {
+          height: 10px;
+          background: #222;
+          border: 1px solid var(--border-color);
+          margin: 5px 0;
+          .fuel-bar {
+              height: 100%;
+              background: #ff7d00;
+              transition: width 0.3s;
+          }
+      }
+      .fuel-info {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.8rem;
+          .scooping { color: #00ff00; }
+      }
+  }
+
+  .power {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border: 1px solid #333;
+
+    .pip-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        .pip-label { font-size: 0.7rem; color: #888; }
+        .pip-value { font-size: 1.2rem; font-weight: bold; }
+        .pips {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 2px;
+            .pip {
+                width: 20px;
+                height: 4px;
+                background: #222;
+                border: 1px solid #333;
+                &.active {
+                    background: var(--accent-color);
+                    box-shadow: 0 0 5px var(--accent-color);
+                }
+            }
+        }
     }
   }
 
-  input {
-    width: 100%;
-    background-color: transparent;
-    color: white;
+  .other-info {
+      font-size: 0.9rem;
+      .label { color: #888; }
+  }
+
+  .flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      .flag {
+          font-size: 0.7rem;
+          padding: 2px 6px;
+          background: #3c1e05;
+          color: #ff7d00;
+          border: 1px solid #5f3100;
+          &.secondary {
+              color: #00ccff;
+              border-color: #004466;
+          }
+      }
+  }
+
+  .alerts {
+      background: rgba(255, 0, 0, 0.2);
+      border: 1px solid red;
+      padding: 10px;
+      .alert-item { font-size: 0.8rem; margin-bottom: 5px; }
   }
 </style>

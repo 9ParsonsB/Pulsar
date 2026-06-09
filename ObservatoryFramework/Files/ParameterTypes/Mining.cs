@@ -1,7 +1,9 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Observatory.Framework.Files.ParameterTypes;
 
+[Owned]
 public class Mining
 {
     [JsonPropertyName("Mining_Profits")]

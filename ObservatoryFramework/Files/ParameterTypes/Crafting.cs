@@ -1,8 +1,10 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Observatory.Framework.Files.Journal;
 
 namespace Observatory.Framework.Files.ParameterTypes;
 
+[Owned]
 public class Crafting
 {
     [JsonPropertyName("Spent_On_Crafting"), Obsolete(JournalUtilities.ObsoleteMessage)]

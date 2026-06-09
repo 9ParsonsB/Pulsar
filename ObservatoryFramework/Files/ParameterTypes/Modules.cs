@@ -1,5 +1,9 @@
-﻿namespace Observatory.Framework.Files.ParameterTypes;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
+namespace Observatory.Framework.Files.ParameterTypes;
+
+[Owned]
 public class Modules
 {
     public string Slot { get; init; }
@@ -18,5 +22,8 @@ public class Modules
 
     public int? AmmoInHopper { get; init; }
 
-    public Engineering Engineering { get; init; }
+    public Engineering? Engineering { get; init; }
 }
+
+
+

@@ -10,7 +10,6 @@ public class StatisticsConfiguration : IEntityTypeConfiguration<Statistics>
 {
     public void Configure(EntityTypeBuilder<Statistics> builder)
     {
-        builder.HasKey(x => x.Timestamp);
         builder.OwnsOne(x => x.BankAccount, b =>
         {
             b.ToJson();

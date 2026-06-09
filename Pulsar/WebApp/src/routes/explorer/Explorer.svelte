@@ -13,13 +13,50 @@
   let scans = $state([] as Scan[]);
   let signals = $state([] as FSSBodySignals[]);
 
-  const filterImportantScans = (scans: Scan[], signals: FSSBodySignals[]) => {
-    return [] as Scan[];
+  const isHighValue = (body: Scan) => {
+    if (body.starType) return false; // stars are usually low value unless rare, but sticking to planets
+    const highValueClasses = [
+      "Earthlike world",
+      "Water world",
+      "Ammonia world",
+      "High metal content body",
+      "Metal rich body"
+    ];
+    if (body.planetClass && highValueClasses.includes(body.planetClass)) {
+        if (body.terraformState && body.terraformState !== "") return true;
+        if (body.planetClass === "Earthlike world" || body.planetClass === "Ammonia world" || body.planetClass === "Water world") return true;
+    }
+    return false;
   };
 
-  const importantScans = $derived(filterImportantScans(scans, signals));
+  const getScanValue = (body: Scan) => {
+    // Very simplified Elite Dangerous scan value formula
+    // Base values (approximate)
+    let baseValue = 0;
+    if (body.starType) {
+        baseValue = 1200;
+    } else {
+        switch (body.planetClass) {
+            case "Earthlike world": baseValue = 64831; break;
+            case "Ammonia world": baseValue = 33268; break;
+            case "Water world": baseValue = 15557; break;
+            case "High metal content body": baseValue = 14000; break;
+            case "Metal rich body": baseValue = 30000; break;
+            default: baseValue = 300; break;
+        }
+    }
 
-  const targetEvents = ["Scan", "FSSScanBaryCenter", "FSSDiscoveryScan"];
+    let modifier = 1;
+    if (body.terraformState && body.terraformState !== "") modifier = 5;
+    
+    return Math.round(baseValue * modifier);
+  };
+
+  const totalSystemValue = $derived(scans.reduce((sum, body) => sum + getScanValue(body), 0));
+
+  const highValueBodies = $derived(scans.filter(isHighValue));
+
+  const targetEvents = ["Scan", "FSSScanBaryCenter", "FSSDiscoveryScan", "FSSAllBodiesFound"];
 
   $connection.on("JournalUpdated", (messages: JournalBase[]) => {
     const filtered = messages.filter((message) =>
@@ -85,148 +122,102 @@
 </script>
 
 <section>
-  <div class="title">
+  <div class="header">
     <h1>Explorer</h1>
+    <div class="stats">
+      <span class="system">{currentSystem || "No System Data"}</span>
+      <span class="count">Scanned: {scans.length} / {totalBodies}</span>
+      <span class="value">Est. Value: {totalSystemValue.toLocaleString()} Cr</span>
+    </div>
   </div>
-  Current System: {currentSystem}
-  <!-- summary & high value targets -->
-  <h1>Bodies</h1>
-  Scan:&nbsp;<span>{scans.length}</span>/<span>{totalBodies}</span>
-  <div class="title">High Value (>500kcr)</div>
-  <ol>
-    <li>example</li>
-    {#each scans as body}
-      <li>
-        [HMC/WW/ELT/ELN] {toShortPlanetClass(body.planetClass)}
-        {body.bodyName} - 0cr
-      </li>
-    {/each}
-  </ol>
-  <br />
-  <br />
-  <!-- Full system data -->
-  <div class="box">
-    {#each data as row}
-      <div class="group">
-        <div class="summary">
-          <span>Body Name: Farseer Inc</span>
-          <div>
-            <span>Signals: 1</span>
-            <span>Base Value: 11111</span>
-          </div>
-        </div>
 
-        <table class="details">
-          <thead>
-            <tr>
-              <th>Flags</th>
-              <th>Genus</th>
-              <th>Species</th>
-              <th>Seen</th>
-              <th>Samples</th>
-              <th>Type</th>
-              <th>Possible Variants</th>
-              <th>Base Value</th>
-              <th>Distance</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each data as row}
-              <tr>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>500m</td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
+  {#if highValueBodies.length > 0}
+    <div class="high-value">
+      <h2>High Value Targets</h2>
+      <div class="body-list">
+        {#each highValueBodies as body}
+          <div class="body-item high">
+            <span class="type">{toShortPlanetClass(body.planetClass)}</span>
+            <span class="name">{body.bodyName}</span>
+            <span class="dist">{(body.distanceFromArrivalLS ?? 0).toFixed(0)} Ls</span>
+            <span class="cr">{getScanValue(body).toLocaleString()} Cr</span>
+            {#if body.terraformState}
+              <span class="terraform">Terraformable</span>
+            {/if}
+          </div>
+        {/each}
       </div>
-    {/each}
+    </div>
+  {/if}
+
+  <div class="all-bodies">
+    <h2>All Scanned Bodies</h2>
+    <div class="body-list">
+      {#each scans as body}
+        <div class="body-item">
+          <span class="type">{body.starType ?? toShortPlanetClass(body.planetClass)}</span>
+          <span class="name">{body.bodyName}</span>
+          <span class="dist">{(body.distanceFromArrivalLS ?? 0).toFixed(0)} Ls</span>
+        </div>
+      {/each}
+    </div>
   </div>
 </section>
 
 <style lang="scss">
   section {
-    margin-top: 5px;
-    max-height: 300px;
-    overflow-y: scroll;
-  }
-
-  .title {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .box {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    max-height: 500px;
+    overflow-y: auto;
   }
 
-  .summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 50px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    background-color: #c06400;
-    color: var(--font-color-2);
-    font-weight: bold;
-    span {
-      padding-left: 5px;
-    }
-    div {
+  .header {
       display: flex;
-      gap: 20px;
-    }
+      justify-content: space-between;
+      align-items: flex-start;
+      h1 { border: none; margin: 0; }
   }
 
-  .details {
-    border-collapse: collapse;
-    border: none;
-    table-layout: auto;
-    width: 100%;
+  .stats {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      .system { font-weight: bold; color: #fff; }
+      .count { font-size: 0.8rem; color: #888; }
   }
 
-  thead {
-    background-color: #c06400;
+  h2 {
+      font-size: 1rem;
+      border-bottom: 1px solid #333;
+      margin-bottom: 8px;
+      color: #888;
   }
 
-  tbody {
-    tr:nth-child(even) {
-      background-color: #301900;
-      color: #cccccc;
-    }
-    tr:nth-child(odd) {
-      background-color: #170c00;
-      color: #cccccc;
-    }
-    tr:hover td {
-      background-color: rgba(79, 42, 0, 0.85);
-    }
-    th {
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 5px;
-      padding-right: 5px;
-      text-wrap: wrap;
-      text-align: left;
-      color: var(--font-color-2);
-    }
+  .body-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
   }
 
-  th:not(:first-child) {
-    text-align: center;
-  }
+  .body-item {
+      display: grid;
+      grid-template-columns: 60px 1fr 100px 100px;
+      gap: 10px;
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+      align-items: center;
 
-  td:not(:first-child) {
-    text-align: center;
+      &.high {
+          background: rgba(255, 125, 0, 0.15);
+          border-left: 3px solid var(--accent-color);
+      }
+
+      .type { color: #888; font-size: 0.8rem; }
+      .name { font-weight: bold; }
+      .dist { color: #666; font-size: 0.8rem; text-align: right; }
+      .terraform { color: #00ff00; font-size: 0.7rem; text-transform: uppercase; }
   }
 </style>

@@ -17,50 +17,95 @@
 </script>
 
 <section>
-  <div class="title">
+  <div class="header">
     <h1>Live Journals</h1>
+    <button
+      onclick={() => {
+        fetch("http://localhost:5000/api/journal");
+      }}
+    >
+      Clear & Refresh
+    </button>
   </div>
-  <button
-    onclick={() => {
-      fetch("http://localhost:5000/api/journal");
-    }}
-  >
-    Fetch All (debug)
-  </button>
-  <ul>
+  
+  <div class="log-container">
     {#each values as value (value.timestamp + value.event)}
-      <li>
-        <span class="time">{value.timestamp}</span>
-        <span class="event">{value.event}</span>
-        <input readonly value={JSON.stringify(value)} />
-      </li>
+      <div class="log-entry">
+        <div class="meta">
+          <span class="time">{new Date(value.timestamp).toLocaleTimeString()}</span>
+          <span class="event">{value.event}</span>
+        </div>
+        <div class="details">
+            {#if value.event === "FSSDiscoveryScan"}
+                Bodies: {value.bodyCount}
+            {:else if value.event === "Scan"}
+                {value.bodyName} ({value.planetClass ?? value.starType})
+            {:else if value.event === "FSDJump"}
+                Jumped to {value.StarSystem}
+            {:else}
+                {JSON.stringify(value)}
+            {/if}
+        </div>
+      </div>
     {/each}
-  </ul>
+  </div>
 </section>
 
 <style lang="scss">
   section {
-    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     height: 500px;
-    overflow-y: scroll;
   }
 
-  .title {
-    padding-left: 5px;
-    padding-right: 5px;
-    width: 50%;
-    display: inline-block;
+  .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      h1 { border: none; margin: 0; }
+  }
+
+  .log-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid #333;
+    padding: 5px;
+  }
+
+  .log-entry {
+      padding: 4px 8px;
+      border-bottom: 1px solid #222;
+      font-size: 0.85rem;
+      
+      &:hover { background: rgba(255, 125, 0, 0.05); }
+
+      .meta {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 2px;
+          .time { color: #666; font-size: 0.75rem; }
+          .event { color: var(--accent-color); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
+      }
+      
+      .details {
+          color: #ccc;
+          word-break: break-all;
+          font-family: monospace;
+      }
   }
 
   button {
-    position: relative;
-    display: inline-block;
-    margin-left: 40%;
-  }
-
-  input {
-    width: 100%;
-    background-color: transparent;
-    color: white;
+    background: #3c1e05;
+    color: var(--accent-color);
+    border: 1px solid var(--border-color);
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    &:hover { background: var(--accent-color); color: #000; }
   }
 </style>

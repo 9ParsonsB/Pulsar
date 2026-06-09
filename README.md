@@ -11,23 +11,23 @@ A Cross Platform Fork of Elite Observatory Core.
 
  - [x] Read & Parse the Journals
    - [x] Read Extra Files
- - [ ] Show Journal information ( Current Ship, Station, etc. )
-   - [ ] Current Ship/Station/NavRoute/Jumps
+ - [x] Show Journal information ( Current Ship, Station, etc. )
+   - [x] Current Ship/Station/NavRoute/Jumps
    - [x] Realtime API (Events)
-   - [ ] Extended Updates API (include relevant data with events)
+   - [x] Extended Updates API (include relevant data with events)
  - [x] Realtime Journal Updates
  - [ ] Multiple Commanders
- - [ ] Cached Journal Data (in-memory SQL, enabled extended updates)
+ - [x] Cached Journal Data (SQLite, enabled extended updates)
  - [ ] !System Exploration Value
    - [ ] Custom Criteria (e.g. "Has Water World", "more than 400Kcr Scan value")
- - [ ] !System Exobiology Value 
-   - [ ] !Exobiology Scan info (+[Show Req. Distance](https://github.com/EDCD/EDDI/blob/e28ef64a1d41c1e39485863aa362d207e8d36834/Utilities/Functions.cs#L128C1-L152C10) for next scan)
+ - [x] !System Exobiology Value 
+   - [x] !Exobiology Scan info (+[Show Req. Distance](https://github.com/EDCD/EDDI/blob/e28ef64a1d41c1e39485863aa362d207e8d36834/Utilities/Functions.cs#L128C1-L152C10) for next scan)
    - [ ] Custom Criteria (e.g. "Stratum Tectonicas", "less than 500m distance per scan", "more than 1Mcr Scan value")
  - [ ] !Fuel/Jump Warning
    - [x] Fuel Scoop Estimate Time Remaining
  - [ ] Material Tracking (Flag planets with materials, set goals (Mat#, not modules), closest trader) [e.g.](https://github.com/jixxed/ed-odyssey-materials-helper)
  - [ ] Custom Sounds (on user-defined Events)
- - [ ] Mission Targets [Mission Stack Viewer](https://github.com/kaivalagi/EDMissionStackViewer)
+ - [x] Mission Targets [Mission Stack Viewer](https://github.com/kaivalagi/EDMissionStackViewer)
  - [ ] Commodities Targets/Alerts (Commodity Above/Below value at current station)
  - [ ] !Outfitting Targets (does this station have wanted parts for a build)
  - [ ] Export to EDSY/Coriolis

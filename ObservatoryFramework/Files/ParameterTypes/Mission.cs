@@ -1,5 +1,8 @@
-﻿namespace Observatory.Framework.Files.ParameterTypes;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace Observatory.Framework.Files.ParameterTypes;
+
+[Owned]
 public class Mission
 {
     public ulong MissionID { get; init; }

@@ -8,6 +8,5 @@ public class ReputationConfiguration : IEntityTypeConfiguration<Reputation>
 {
     public void Configure(EntityTypeBuilder<Reputation> builder)
     {
-        builder.HasKey(x => x.Timestamp);
     }
 }

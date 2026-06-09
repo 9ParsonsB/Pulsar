@@ -8,6 +8,5 @@ public class LoadGameConfiguration : IEntityTypeConfiguration<LoadGame>
 {
     public void Configure(EntityTypeBuilder<LoadGame> builder)
     {
-        builder.HasKey(j => j.Timestamp);
     }
 }
