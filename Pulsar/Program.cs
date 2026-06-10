@@ -34,6 +34,8 @@ builder.Configuration.AddJsonFile(currentDirFileProvider,
 builder.Configuration.AddUserSecrets<Program>();
 
 builder.Services.Configure<PulsarConfiguration>(builder.Configuration.GetSection("Pulsar"));
+builder.Services.Configure<Pulsar.Features.Overlay.OverlayConfiguration>(
+    builder.Configuration.GetSection("Pulsar:Overlay"));
 
 var aiConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"] ??
                          builder.Configuration["ApplicationInsights:ConnectionString"];
@@ -52,8 +54,10 @@ builder.Services.Configure<JsonOptions>(options =>
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 // builder.Services.AddOpenApiDocument(config => config.DocumentName = "v1");
 builder.Services.AddHttpForwarder();
+builder.Services.AddSingleton<Pulsar.Features.Overlay.IOverlayStateService, Pulsar.Features.Overlay.OverlayStateService>();
 builder.Services.AddHostedService<FileWatcherService>();
 builder.Services.AddHostedService<JournalProcessor>();
+builder.Services.AddHostedService<Pulsar.Features.Overlay.LinuxOverlayClientService>();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) app.UseHsts();

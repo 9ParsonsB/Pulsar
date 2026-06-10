@@ -10,7 +10,8 @@ public class StatusService(
     ILogger<StatusService> logger,
     IOptions<PulsarConfiguration> options,
     IEventHubContext hub,
-    PulsarContext context
+    PulsarContext context,
+    Overlay.IOverlayStateService overlayStateService
 ) : IStatusService
 {
     public string FileName => FileHandlerService.StatusFileName;
@@ -35,6 +36,7 @@ public class StatusService(
             return;
         }
 
+        overlayStateService.ApplyStatus(status);
         await hub.Clients.All.StatusUpdated(status);
     }
 

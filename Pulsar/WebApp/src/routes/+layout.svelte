@@ -2,27 +2,37 @@
     import Fuel from "$lib/Fuel.svelte";
     import {onMount} from "svelte";
     import connection from "$lib/stores/Connection.store";
+    import {page} from "$app/state";
 
     onMount(() => {
         connection.connect();
     });
+
+    $: if (typeof document !== "undefined") {
+        document.body.classList.toggle("overlay-route", page.url.pathname === "/overlay");
+    }
 </script>
 
-<header>
-    <nav>
-        <ul>
-            <li><a href="/">Dashboard</a></li>
-            <li><a href="/ship">Ship</a></li>
-            <li><a href="/explorer">Explorer</a></li>
-            <li><a href="/botany">Botany</a></li>
-        </ul>
-    </nav>
-    <Fuel/>
-</header>
-
-<main>
+{#if page.url.pathname === "/overlay"}
     <slot/>
-</main>
+{:else}
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/ship">Ship</a></li>
+                <li><a href="/explorer">Explorer</a></li>
+                <li><a href="/botany">Botany</a></li>
+                <li><a href="/overlay">Overlay</a></li>
+            </ul>
+        </nav>
+        <Fuel/>
+    </header>
+
+    <main>
+        <slot/>
+    </main>
+{/if}
 
 <style>
     :root {
@@ -50,6 +60,12 @@
         margin: 0px;
         line-height: 1.6;
         min-height: 100vh;
+    }
+
+    :global(body.overlay-route) {
+        background: transparent;
+        background-image: none;
+        color: #d6f2ff;
     }
 
     :global(h1, h2, h3) {

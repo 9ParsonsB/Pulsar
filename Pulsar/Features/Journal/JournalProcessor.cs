@@ -14,7 +14,8 @@ public class JournalProcessor(
     ILogger<JournalProcessor> logger,
     IJournalStore journalStore,
     IServiceScopeFactory scopeFactory,
-    IEventHubContext hub) : IHostedService, IDisposable
+    IEventHubContext hub,
+    Overlay.IOverlayStateService overlayStateService) : IHostedService, IDisposable
 {
     private readonly JsonSerializerOptions options = new()
     {
@@ -250,6 +251,7 @@ public class JournalProcessor(
                     if (lastLoadGame != null)
                         handled = handled.Where(j => j.Timestamp > lastLoadGame.Timestamp).ToList();
 
+                    overlayStateService.ApplyJournals(handled);
                     await hub.Clients.All.JournalUpdated(handled);
                     handled.Clear();
                 }
