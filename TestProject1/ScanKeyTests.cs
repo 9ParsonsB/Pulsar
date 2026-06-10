@@ -8,6 +8,7 @@ using NSubstitute;
 using Pulsar.Context;
 using Pulsar.Features;
 using Pulsar.Features.Journal;
+using Pulsar.Features.Overlay;
 
 public class ScanKeyTests
 {
@@ -46,7 +47,8 @@ public class ScanKeyTests
             NullLogger<JournalProcessor>.Instance,
             _journalStore,
             _scopeFactory,
-            _hubContext
+            _hubContext,
+            Substitute.For<IOverlayStateService>()
         );
     }
 

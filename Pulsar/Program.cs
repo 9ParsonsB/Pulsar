@@ -57,7 +57,7 @@ builder.Services.AddHttpForwarder();
 builder.Services.AddSingleton<Pulsar.Features.Overlay.IOverlayStateService, Pulsar.Features.Overlay.OverlayStateService>();
 builder.Services.AddHostedService<FileWatcherService>();
 builder.Services.AddHostedService<JournalProcessor>();
-builder.Services.AddHostedService<Pulsar.Features.Overlay.LinuxOverlayClientService>();
+builder.Services.AddHostedService<Pulsar.Features.Overlay.Native.NativeOverlayService>();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) app.UseHsts();

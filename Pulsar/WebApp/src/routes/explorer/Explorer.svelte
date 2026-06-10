@@ -4,77 +4,122 @@
     import type {FSSDiscoveryScan} from "../../types/api/FSSDiscoveryScan";
     import type {Scan} from "../../types/api/Scan";
     import type JournalBase from "../../types/api/JournalBase";
-    import type {FSSBodySignals} from "../../types/api/Signals";
+    import {
+        getBodyValueLabel,
+        getExplorationValue,
+        isTerraformable,
+        isValuableExplorerBody
+    } from "$lib/explorationValue";
 
     const targetEvents = ["Scan", "FSSScanBaryCenter", "FSSDiscoveryScan", "FSSAllBodiesFound"];
 
-    const data: Partial<Scan>[] = [{}, {}, {}, {}];
+    const planetClassOptions = [
+        "Earthlike body",
+        "Water world",
+        "Ammonia world",
+        "High metal content body",
+        "Metal rich body",
+        "Rocky body",
+        "Icy body",
+        "Rocky ice world",
+        "Sudarsky class I gas giant",
+        "Sudarsky class II gas giant",
+        "Sudarsky class III gas giant",
+        "Sudarsky class IV gas giant",
+        "Sudarsky class V gas giant",
+        "Helium gas giant",
+        "Water giant",
+        "Water giant with life",
+        "Gas giant with water based life",
+        "Gas giant with ammonia based life",
+        "Class I gas giant",
+        "Class II gas giant",
+        "Class III gas giant",
+        "Class IV gas giant",
+        "Class V gas giant"
+    ];
+
+    const defaultCriteriaClasses = [
+        "Earthlike body",
+        "Water world",
+        "Ammonia world",
+        "High metal content body",
+        "Metal rich body"
+    ];
     // total bodies in the current system (FSSDiscovery event)
     let totalBodies = $state(0);
     let currentSystem = $state("");
     // accumulated list of bodies in the current system (Scan events)
     let scans = $state([] as Scan[]);
-    let signals = $state([] as FSSBodySignals[]);
+    let minimumSystemValue = $state(400000);
+    let selectedPlanetClasses = $state([...defaultCriteriaClasses]);
+    let includeTerraformable = $state(true);
+
+    const criteriaClasses = $derived(selectedPlanetClasses);
 
     const isHighValue = (body: Scan) => {
-        if (body.starType) return false; // stars are usually low value unless rare, but sticking to planets
-        const highValueClasses = [
-            "Earthlike world",
-            "Water world",
-            "Ammonia world",
-            "High metal content body",
-            "Metal rich body"
-        ];
-        if (body.planetClass && highValueClasses.includes(body.planetClass)) {
-            if (body.terraformState && body.terraformState !== "") return true;
-            if (body.planetClass === "Earthlike world" || body.planetClass === "Ammonia world" || body.planetClass === "Water world") return true;
-        }
-        return false;
+        if (body.starType) return false;
+        if (includeTerraformable && isTerraformable(body)) return true;
+        if (!body.planetClass || !criteriaClasses.includes(body.planetClass)) return false;
+        return isValuableExplorerBody(body, minimumSystemValue);
     };
 
-    const getScanValue = (body: Scan) => {
-        // Very simplified Elite Dangerous scan value formula
-        // Base values (approximate)
-        let baseValue = 0;
-        if (body.starType) {
-            baseValue = 1200;
-        } else {
-            switch (body.planetClass) {
-                case "Earthlike world":
-                    baseValue = 64831;
-                    break;
-                case "Ammonia world":
-                    baseValue = 33268;
-                    break;
-                case "Water world":
-                    baseValue = 15557;
-                    break;
-                case "High metal content body":
-                    baseValue = 14000;
-                    break;
-                case "Metal rich body":
-                    baseValue = 30000;
-                    break;
-                default:
-                    baseValue = 300;
-                    break;
-            }
-        }
+    const totalSystemValue = $derived(scans.reduce((sum, body) => sum + getExplorationValue(body).scan, 0));
+    const maxSystemValue = $derived(scans.reduce((sum, body) => sum + getExplorationValue(body).mapped, 0));
 
-        let modifier = 1;
-        if (body.terraformState && body.terraformState !== "") modifier = 5;
+    const isHighSystemValue = $derived(maxSystemValue >= minimumSystemValue);
 
-        return Math.round(baseValue * modifier);
-    };
+    const highValueBodies = $derived(scans
+        .filter(isHighValue)
+        .sort((left, right) => getExplorationValue(right).mapped - getExplorationValue(left).mapped));
 
-    const totalSystemValue = $derived(scans.reduce((sum, body) => sum + getScanValue(body), 0));
+    function saveCriteria() {
+        if (typeof localStorage === "undefined") return;
 
-    const explorationValueRequirement = 400000;
-    const isHighSystemValue = $derived(totalSystemValue >= explorationValueRequirement);
+        localStorage.setItem("pulsar.explorer.criteria", JSON.stringify({
+            minimumSystemValue,
+            selectedPlanetClasses,
+            includeTerraformable
+        }));
+    }
 
-    const highValueBodies = $derived(scans.filter(isHighValue));
+    function togglePlanetClass(planetClass: string, selected: boolean) {
+        selectedPlanetClasses = selected
+            ? [...new Set([...selectedPlanetClasses, planetClass])]
+            : selectedPlanetClasses.filter((value) => value !== planetClass);
+        saveCriteria();
+    }
+
+    function selectDefaultPlanetClasses() {
+        selectedPlanetClasses = [...defaultCriteriaClasses];
+        saveCriteria();
+    }
+
+    function normalizePlanetClasses(classes?: string[]) {
+        const normalized = classes
+            ? classes
+            .map((value) => value === "Earthlike world" ? "Earthlike body" : value)
+            .filter((value) => planetClassOptions.includes(value))
+            : [];
+        return normalized.length ? normalized : undefined;
+    }
 
     onMount(() => {
+        const storedCriteria = localStorage.getItem("pulsar.explorer.criteria");
+        if (storedCriteria) {
+            const parsed = JSON.parse(storedCriteria) as Partial<{
+                minimumSystemValue: number;
+                criteriaClassesText: string;
+                selectedPlanetClasses: string[];
+                includeTerraformable: boolean;
+            }>;
+            minimumSystemValue = parsed.minimumSystemValue ?? minimumSystemValue;
+            selectedPlanetClasses = normalizePlanetClasses(parsed.selectedPlanetClasses)
+                ?? normalizePlanetClasses(parsed.criteriaClassesText?.split(",").map((value) => value.trim()))
+                ?? selectedPlanetClasses;
+            includeTerraformable = parsed.includeTerraformable ?? includeTerraformable;
+        }
+
         const handler = (messages: unknown) => {
             const journals = messages as JournalBase[];
             const filtered = journals.filter((message) =>
@@ -151,9 +196,55 @@
         <div class="stats">
             <span class="system">{currentSystem || "No System Data"}</span>
             <span class="count">Scanned: {scans.length} / {totalBodies}</span>
-            <span class="value" class:high={isHighSystemValue}>Est. Value: {totalSystemValue.toLocaleString()} Cr</span>
+            <span class="value" class:high={isHighSystemValue}>Scan: {totalSystemValue.toLocaleString()} Cr</span>
+            <span class="value" class:high={isHighSystemValue}>Mapped: {maxSystemValue.toLocaleString()} Cr</span>
         </div>
     </div>
+
+    <details class="criteria">
+        <summary>Custom Criteria</summary>
+        <label>
+            <span>Mapped body value target</span>
+            <input
+                    min="0"
+                    type="number"
+                    value={minimumSystemValue}
+                    onchange={(event) => {
+                        minimumSystemValue = Number(event.currentTarget.value) || 0;
+                        saveCriteria();
+                    }}
+            />
+        </label>
+        <div class="class-picker">
+            <div class="label-row">
+                <span>High-value planet classes</span>
+                <button type="button" onclick={selectDefaultPlanetClasses}>Defaults</button>
+            </div>
+            <div class="class-grid">
+                {#each planetClassOptions as planetClass}
+                    <label class="checkbox">
+                        <input
+                                checked={selectedPlanetClasses.includes(planetClass)}
+                                type="checkbox"
+                                onchange={(event) => togglePlanetClass(planetClass, event.currentTarget.checked)}
+                        />
+                        <span>{planetClass}</span>
+                    </label>
+                {/each}
+            </div>
+        </div>
+        <label class="checkbox">
+            <input
+                    checked={includeTerraformable}
+                    type="checkbox"
+                    onchange={(event) => {
+                        includeTerraformable = event.currentTarget.checked;
+                        saveCriteria();
+                    }}
+            />
+            <span>Always flag terraformable bodies matching the selected classes</span>
+        </label>
+    </details>
 
     {#if highValueBodies.length > 0}
         <div class="high-value">
@@ -164,10 +255,13 @@
                         <span class="type">{toShortPlanetClass(body.planetClass)}</span>
                         <span class="name">{body.bodyName}</span>
                         <span class="dist">{(body.distanceFromArrivalLS ?? 0).toFixed(0)} Ls</span>
-                        <span class="cr">{getScanValue(body).toLocaleString()} Cr</span>
-                        {#if body.terraformState}
-                            <span class="terraform">Terraformable</span>
-                        {/if}
+                        <span class="cr">{getBodyValueLabel(getExplorationValue(body))}</span>
+                        <span class="tags">
+                            {#if isTerraformable(body)}<span>Terraformable</span>{/if}
+                            {#if body.wasDiscovered}<span>Discovered</span>{/if}
+                            {#if body.wasMapped}<span>Mapped</span>{/if}
+                            {#if body.scanType === "NavBeaconDetail"}<span>Nav beacon</span>{/if}
+                        </span>
                     </div>
                 {/each}
             </div>
@@ -182,6 +276,7 @@
                     <span class="type">{body.starType ?? toShortPlanetClass(body.planetClass)}</span>
                     <span class="name">{body.bodyName}</span>
                     <span class="dist">{(body.distanceFromArrivalLS ?? 0).toFixed(0)} Ls</span>
+                    <span class="cr">{getExplorationValue(body).scan.toLocaleString()} Cr</span>
                 </div>
             {/each}
         </div>
@@ -236,6 +331,74 @@
     color: #888;
   }
 
+  .criteria {
+    border: 1px solid var(--border-color);
+    background: rgba(255, 125, 0, 0.08);
+    padding: 8px 10px;
+
+    summary {
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 10px;
+      color: #bbb;
+      font-size: 0.8rem;
+    }
+
+    input[type="number"] {
+      border: 1px solid var(--border-color);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--font-color-1);
+      padding: 6px;
+      font: inherit;
+    }
+
+    .class-picker {
+      margin-top: 10px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: #bbb;
+      font-size: 0.8rem;
+
+      button {
+        border: 1px solid var(--border-color);
+        background: rgba(255, 125, 0, 0.12);
+        color: var(--font-color-1);
+        cursor: pointer;
+        padding: 3px 8px;
+        text-transform: uppercase;
+      }
+    }
+
+    .class-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 4px 10px;
+      margin-top: 6px;
+      max-height: 160px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .checkbox {
+      flex-direction: row;
+      align-items: center;
+      margin-top: 4px;
+    }
+  }
+
   .body-list {
     display: flex;
     flex-direction: column;
@@ -244,7 +407,7 @@
 
   .body-item {
     display: grid;
-    grid-template-columns: 60px 1fr 100px 100px;
+    grid-template-columns: 70px 1fr 100px 150px 170px;
     gap: 10px;
     padding: 4px 8px;
     background: rgba(255, 255, 255, 0.05);
@@ -271,7 +434,17 @@
       text-align: right;
     }
 
-    .terraform {
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    .tags span {
+      border: 1px solid rgba(0, 255, 0, 0.35);
+      border-radius: 999px;
+      padding: 1px 6px;
       color: #00ff00;
       font-size: 0.7rem;
       text-transform: uppercase;

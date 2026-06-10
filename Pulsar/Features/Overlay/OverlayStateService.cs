@@ -22,6 +22,7 @@ public interface IOverlayStateService
 
 public class OverlayStateService : IOverlayStateService
 {
+    private const long ValuableBodyMinimum = 400_000;
     private readonly Lock gate = new();
     private readonly OverlaySnapshot snapshot = new();
     private readonly Dictionary<int, OverlayBodyTarget> scannedBodies = [];
@@ -250,19 +251,20 @@ public class OverlayStateService : IOverlayStateService
         if (!string.Equals(snapshot.CurrentSystemScan, scan.StarSystem, StringComparison.Ordinal))
             ResetSystemScan(scan.StarSystem);
 
+        var value = ExplorationValueCalculator.Calculate(scan);
         scannedBodies[scan.BodyID] = new OverlayBodyTarget
         {
             Name = scan.BodyName,
             Class = scan.StarType ?? scan.PlanetClass,
             DistanceFromArrivalLs = Convert.ToDecimal(scan.DistanceFromArrivalLS),
-            EstimatedValue = GetScanValue(scan),
-            Terraformable = !string.IsNullOrWhiteSpace(scan.TerraformState)
+            EstimatedValue = value.Mapped > 0 ? value.Mapped : value.Scan,
+            Terraformable = ExplorationValueCalculator.IsTerraformable(scan)
         };
 
         snapshot.BodiesScanned = scannedBodies.Count;
         snapshot.EstimatedSystemValue = scannedBodies.Values.Sum(body => body.EstimatedValue);
         snapshot.HighValueBodies = scannedBodies.Values
-            .Where(body => body.EstimatedValue >= 14000 || body.Terraformable)
+            .Where(body => body.EstimatedValue >= ValuableBodyMinimum || body.Terraformable)
             .OrderByDescending(body => body.EstimatedValue)
             .Take(5)
             .Select(CloneBody)
@@ -297,25 +299,6 @@ public class OverlayStateService : IOverlayStateService
             EstimatedValue = body.EstimatedValue,
             Terraformable = body.Terraformable
         };
-    }
-
-    private static long GetScanValue(Scan body)
-    {
-        if (!string.IsNullOrWhiteSpace(body.StarType))
-            return 1200;
-
-        var baseValue = body.PlanetClass switch
-        {
-            "Earthlike world" => 64831,
-            "Ammonia world" => 33268,
-            "Water world" => 15557,
-            "High metal content body" => 14000,
-            "Metal rich body" => 30000,
-            _ => 300
-        };
-
-        var modifier = string.IsNullOrWhiteSpace(body.TerraformState) ? 1 : 5;
-        return baseValue * modifier;
     }
 
     private void ApplyOrganicScan(ScanOrganic scanOrganic)

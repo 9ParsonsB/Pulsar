@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Observatory.Framework.Files.Journal.Startup;
 using Pulsar.Context;
+using Pulsar.Features.Overlay;
 using Pulsar.Features.Journal;
 using IEventHubContext =
     Microsoft.AspNetCore.SignalR.IHubContext<Pulsar.Features.EventsHub, Pulsar.Features.IEventsHub>;
@@ -45,7 +46,8 @@ public class JournalProcessingTests
             NullLogger<JournalProcessor>.Instance,
             _journalStore,
             _scopeFactory,
-            _hubContext
+            _hubContext,
+            Substitute.For<IOverlayStateService>()
         );
     }
 
@@ -129,7 +131,8 @@ public class JournalProcessingTests
                 NullLogger<JournalProcessor>.Instance,
                 Substitute.For<IJournalStore>(),
                 scopeFactory,
-                Substitute.For<IEventHubContext>()
+                Substitute.For<IEventHubContext>(),
+                Substitute.For<IOverlayStateService>()
             );
 
             try

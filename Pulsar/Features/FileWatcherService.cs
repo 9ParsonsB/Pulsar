@@ -60,7 +60,7 @@ public class FileWatcherService(
                 var journals = files.Where(f => f.Name.StartsWith(FileHandlerService.JournalLogFileNameStart)).ToList();
                 if (journals.Count > 0)
                 {
-                    var latestJournals = journals.TakeLast(2).ToList();
+                    var latestJournals = journals.TakeLast(10).ToList();
                     var journalsToSkip = journals
                         .Where(j => j.PhysicalPath != null && !latestJournals.Contains(j) &&
                                     !FileDates.ContainsKey(j.PhysicalPath)).ToList();
@@ -68,7 +68,7 @@ public class FileWatcherService(
                     foreach (var journal in journalsToSkip)
                         if (journal.PhysicalPath != null)
                             FileDates.TryAdd(journal.PhysicalPath, journal.LastModified);
-                    files.RemoveAll(f => journalsToSkip.Contains(f));
+                    files.RemoveAll(journalsToSkip.Contains);
                 }
             }
 

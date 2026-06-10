@@ -8,6 +8,7 @@ using Observatory.Framework.Files.Journal.Other;
 using Observatory.Framework.Files.Journal.Startup;
 using Pulsar;
 using Pulsar.Context;
+using Pulsar.Features.Overlay;
 using Pulsar.Features.Status;
 using IEventHubContext =
     Microsoft.AspNetCore.SignalR.IHubContext<Pulsar.Features.EventsHub, Pulsar.Features.IEventsHub>;
@@ -72,7 +73,8 @@ public class StatusServiceTests
             NullLogger<StatusService>.Instance,
             Options.Create(new PulsarConfiguration { JournalDirectory = _tempDir }),
             Substitute.For<IEventHubContext>(),
-            _context);
+            _context,
+            Substitute.For<IOverlayStateService>());
 
         var status = await service.Get();
 
