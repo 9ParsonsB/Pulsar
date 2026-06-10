@@ -6,7 +6,16 @@
     import connection from "./stores/Connection.store";
     import {onMount} from "svelte";
 
-    let values: JournalBase[] = $state([]);
+    type JournalEntry = {
+        key: string;
+        fingerprint: string;
+        value: JournalBase;
+    };
+
+    const MAX_ENTRIES = 100;
+
+    let values: JournalEntry[] = $state([]);
+    let nextKey = 0;
 
     function isFSSDiscoveryScan(value: JournalBase): value is FSSDiscoveryScan {
         return value.event === "FSSDiscoveryScan";
@@ -48,23 +57,69 @@
         }
 
         return values.some((value) =>
-            value.event === "SupercruiseEntry" &&
-            value.timestamp === candidate.timestamp &&
-            getKeyField(value, "SystemAddress") === getKeyField(candidate, "SystemAddress") &&
-            getKeyField(value, "StarSystem") === getKeyField(candidate, "StarSystem"),
+            value.value.event === "SupercruiseEntry" &&
+            value.value.timestamp === candidate.timestamp &&
+            getKeyField(value.value, "SystemAddress") === getKeyField(candidate, "SystemAddress") &&
+            getKeyField(value.value, "StarSystem") === getKeyField(candidate, "StarSystem"),
         );
     }
 
-    function journalKey(value: JournalBase, index: number): string {
-        const identity =
-            getKeyField(value, "SystemAddress") ??
-            getKeyField(value, "BodyID") ??
-            getKeyField(value, "SystemBody") ??
-            getKeyField(value, "BodyName") ??
-            getKeyField(value, "StarSystem") ??
-            index;
+    function stableSerialize(value: unknown): string {
+        if (value === null || typeof value !== "object") {
+            return JSON.stringify(value);
+        }
 
-        return `${value.timestamp}|${value.event}|${identity}`;
+        if (Array.isArray(value)) {
+            return `[${value.map(stableSerialize).join(",")}]`;
+        }
+
+        const entries = Object.entries(value as Record<string, unknown>)
+            .sort(([left], [right]) => left.localeCompare(right))
+            .map(([key, nested]) => `${JSON.stringify(key)}:${stableSerialize(nested)}`);
+
+        return `{${entries.join(",")}}`;
+    }
+
+    function journalFingerprint(value: JournalBase): string {
+        return stableSerialize(value);
+    }
+
+    function appendJournals(journals: JournalBase[]): void {
+        const seen = new Set(values.map((entry) => entry.fingerprint));
+        const additions: JournalEntry[] = [];
+
+        for (const journal of journals) {
+            if (isDuplicateSupercruiseEntry(journal)) {
+                continue;
+            }
+
+            const fingerprint = journalFingerprint(journal);
+            if (seen.has(fingerprint)) {
+                continue;
+            }
+
+            seen.add(fingerprint);
+            additions.push({
+                key: `journal-${nextKey++}`,
+                fingerprint,
+                value: journal,
+            });
+        }
+
+        if (additions.length === 0) {
+            return;
+        }
+
+        values.push(...additions);
+        values.sort((a, b) => {
+            if (a.value.timestamp < b.value.timestamp) return 1;
+            if (a.value.timestamp > b.value.timestamp) return -1;
+            return 0;
+        });
+
+        if (values.length > MAX_ENTRIES) {
+            values = values.slice(0, MAX_ENTRIES);
+        }
     }
 
     function formatSignal(signal: Signal): string {
@@ -111,18 +166,7 @@
 
     onMount(() => {
         const handler = (journals: unknown) => {
-            console.log(journals);
-            const nextValues = (journals as JournalBase[]).filter((journal) => !isDuplicateSupercruiseEntry(journal));
-            values.push(...nextValues);
-            values.sort((a, b) => {
-                // sort based on timestamp
-                if (a.timestamp < b.timestamp) return 1;
-                if (a.timestamp > b.timestamp) return -1;
-                return 0;
-            });
-            if (values.length > 100) {
-                values = values.slice(0, 100);
-            }
+            appendJournals(journals as JournalBase[]);
         };
 
         $connection.on("JournalUpdated", handler);
@@ -146,27 +190,27 @@
     </div>
 
     <div class="log-container">
-        {#each values as value, index (journalKey(value, index))}
+        {#each values as entry (entry.key)}
             <div class="log-entry">
                 <div class="meta">
-                    <span class="time">{new Date(value.timestamp).toLocaleTimeString()}</span>
-                    <span class="event">{value.event}</span>
+                    <span class="time">{new Date(entry.value.timestamp).toLocaleTimeString()}</span>
+                    <span class="event">{entry.value.event}</span>
                 </div>
                 <div class="details">
-                    {#if value.event === "FSSDiscoveryScan"}
-                        {#if isFSSDiscoveryScan(value)}{value.systemName}: {value.bodyCount} bodies, {value.nonBodyCount} signals, {(value.progress * 100).toFixed(0)}%{/if}
-                    {:else if value.event === "FSSAllBodiesFound"}
-                        {#if isFSSAllBodiesFound(value)}{getKeyField(value, "SystemName")}: all {getKeyField(value, "Count")} bodies identified{/if}
-                    {:else if value.event === "FSSBodySignals" || value.event === "SAASignalsFound"}
-                        {#if isBodySignals(value)}{formatBodySignals(value)}{/if}
-                    {:else if value.event === "FSSSignalDiscovered"}
-                        {#if isFSSSignalDiscovered(value)}{formatFSSSignalDiscovered(value)}{/if}
-                    {:else if value.event === "Scan"}
-                        {#if isScan(value)}{formatScan(value)}{/if}
-                    {:else if value.event === "FSDJump"}
-                        {#if isFSDJump(value)}Jumped to {value.StarSystem}{/if}
+                    {#if entry.value.event === "FSSDiscoveryScan"}
+                        {#if isFSSDiscoveryScan(entry.value)}{entry.value.systemName}: {entry.value.bodyCount} bodies, {entry.value.nonBodyCount} signals, {(entry.value.progress * 100).toFixed(0)}%{/if}
+                    {:else if entry.value.event === "FSSAllBodiesFound"}
+                        {#if isFSSAllBodiesFound(entry.value)}{getKeyField(entry.value, "SystemName")}: all {getKeyField(entry.value, "Count")} bodies identified{/if}
+                    {:else if entry.value.event === "FSSBodySignals" || entry.value.event === "SAASignalsFound"}
+                        {#if isBodySignals(entry.value)}{formatBodySignals(entry.value)}{/if}
+                    {:else if entry.value.event === "FSSSignalDiscovered"}
+                        {#if isFSSSignalDiscovered(entry.value)}{formatFSSSignalDiscovered(entry.value)}{/if}
+                    {:else if entry.value.event === "Scan"}
+                        {#if isScan(entry.value)}{formatScan(entry.value)}{/if}
+                    {:else if entry.value.event === "FSDJump"}
+                        {#if isFSDJump(entry.value)}Jumped to {entry.value.StarSystem}{/if}
                     {:else}
-                        {JSON.stringify(value)}
+                        {JSON.stringify(entry.value)}
                     {/if}
                 </div>
             </div>

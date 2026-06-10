@@ -56,6 +56,8 @@ export enum StatusFlags2 {
     TelepresenceMulticrew = 1 << 17,
     PhysicalMulticrew = 1 << 18,
     FsdHyperdriveCharging = 1 << 19,
+    SuperCruiseOverdriveActive = 1 << 20,
+    SuperCruiseAssistActive = 1 << 21,
 }
 
 export type LegalStatus =

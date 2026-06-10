@@ -2,7 +2,7 @@
     import {onMount} from "svelte";
     import {statusStore} from "./stores/Status.store";
     import connection from "./stores/Connection.store";
-    import {StatusFlags} from "../types/api/enums";
+    import {StatusFlags, StatusFlags2} from "../types/api/enums";
     import type JournalBase from "../types/api/JournalBase";
     import type Status from "../types/api/Status";
     import {IsLoadGameEvent} from "../types/api/LoadGame";
@@ -11,13 +11,57 @@
     const last: number[] = $state([]);
     let timeToMax = $state(0);
     let fuelDown = $state(false);
+    let fuelDeltaPercent = $state<number | null>(null);
+    let fuelDeltaVisible = $state(false);
+    let fuelDeltaPositive = $state(false);
+    let fuelDeltaTimer: ReturnType<typeof setTimeout> | undefined;
+
+    function formatFuelTime(seconds: number): string {
+        if (!Number.isFinite(seconds) || seconds <= 0) {
+            return "00:00";
+        }
+
+        const totalSeconds = Math.round(seconds);
+        const minutes = Math.floor(totalSeconds / 60);
+        const remainingSeconds = totalSeconds % 60;
+
+        return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+    }
 
     onMount(() => {
         const statusHandler = (message: Partial<Status>) => {
+            const previousFuel = last.at(-1);
+
             if (last.length >= 3) {
                 last.shift();
             }
-            last.push(message.fuel?.fuelMain ?? 0);
+
+            const fuelMain = message.fuel?.fuelMain ?? 0;
+            last.push(fuelMain);
+
+            if (maxFuel && previousFuel !== undefined) {
+                const fuelDelta = fuelMain - previousFuel;
+                if (fuelDelta !== 0) {
+                    fuelDeltaPercent = (fuelDelta / maxFuel) * 100;
+                    fuelDeltaPositive = fuelDelta > 0;
+                    fuelDeltaVisible = false;
+                    if (fuelDeltaTimer) {
+                        clearTimeout(fuelDeltaTimer);
+                    }
+
+                    requestAnimationFrame(() => {
+                        fuelDeltaVisible = true;
+                    });
+
+                    fuelDeltaTimer = setTimeout(() => {
+                        fuelDeltaVisible = false;
+                        fuelDeltaTimer = setTimeout(() => {
+                            fuelDeltaPercent = null;
+                            fuelDeltaTimer = undefined;
+                        }, 320);
+                    }, 1400);
+                }
+            }
 
             const change = [];
             for (let i = last.length - 1; i > 0; i--) {
@@ -28,7 +72,6 @@
                 ? change.reduce((a, b) => a + b, 0) / change.length
                 : 0;
 
-            const fuelMain = message.fuel?.fuelMain ?? 0;
             const currentEmpty = (maxFuel ?? fuelMain) - fuelMain;
             if (maxFuel && fuelMain && !Number.isNaN(avg) && avg) {
                 fuelDown = avg < 0;
@@ -49,6 +92,10 @@
         connection.hub.on("JournalUpdated", journalHandler);
 
         return () => {
+            if (fuelDeltaTimer) {
+                clearTimeout(fuelDeltaTimer);
+            }
+
             connection.hub.off("StatusUpdated", statusHandler);
             connection.hub.off("JournalUpdated", journalHandler);
         };
@@ -62,6 +109,8 @@
         return (($statusStore.fuel?.fuelMain ?? 0) / maxFuel) * 100;
     });
     const isLowFuel = $derived($statusStore.flags !== undefined && ($statusStore.flags & StatusFlags.LowFuel) !== 0);
+    const isScoActive = $derived($statusStore.flags2 !== undefined && ($statusStore.flags2 & StatusFlags2.SuperCruiseOverdriveActive) !== 0);
+    const isFuelScooping = $derived($statusStore.flags !== undefined && ($statusStore.flags & StatusFlags.FuelScooping) !== 0);
 </script>
 
 <div class="fuel-container" class:low={isLowFuel}>
@@ -74,9 +123,21 @@
         ></div>
     </div>
     <div class="fuel-info">
-        <span class:warning={isLowFuel}>{fuelPercent !== undefined ? `${fuelPercent.toFixed(1)}%` : "--"}</span>
-        {#if maxFuel && ($statusStore.flags! & StatusFlags.FuelScooping)}
-            <span class="scooping">Scooping: {timeToMax.toFixed(0)}s {fuelDown ? 'rem' : 'to fill'}</span>
+        <div class="fuel-percent">
+            <span class:warning={isLowFuel}>{fuelPercent !== undefined ? `${fuelPercent.toFixed(1)}%` : "--"}</span>
+            {#if fuelDeltaPercent !== null}
+                <span
+                        class="fuel-delta"
+                        class:visible={fuelDeltaVisible}
+                        class:positive={fuelDeltaPositive}
+                        class:negative={!fuelDeltaPositive}
+                >
+                    {fuelDeltaPositive ? "+" : ""}{fuelDeltaPercent.toFixed(1)}%
+                </span>
+            {/if}
+        </div>
+        {#if maxFuel && (isFuelScooping || isScoActive)}
+            <span class="scooping">{isScoActive ? 'Super Cruise Overdrive' : 'Scooping'}: {formatFuelTime(timeToMax)} {fuelDown ? 'till Empty' : 'to fill'}</span>
         {/if}
         {#if isLowFuel}
             <span class="warning-text">LOW FUEL WARNING</span>
@@ -125,8 +186,39 @@
   .fuel-info {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     font-size: 0.8rem;
     font-weight: bold;
+
+    .fuel-percent {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 4.5rem;
+    }
+
+    .fuel-delta {
+      margin-top: 0.15rem;
+      font-size: 0.72rem;
+      line-height: 1;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 180ms ease, transform 320ms ease;
+
+      &.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      &.positive {
+        color: #00ff90;
+      }
+
+      &.negative {
+        color: #ff7d7d;
+      }
+    }
 
     .scooping {
       color: #00ff00;

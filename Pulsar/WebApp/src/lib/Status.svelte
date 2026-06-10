@@ -41,6 +41,14 @@
     function activePips(value: number | undefined): number {
         return Math.max(0, Math.min(8, Math.floor(value ?? 0)));
     }
+    
+    function getFlagLabel(flag: string, isSecondary = false): string {
+        if (isSecondary && flag === "SuperCruiseOverdriveActive") {
+            return `SCO`;
+        }
+
+        return flag;
+    }
 
     onMount(() => {
         loading = false;
@@ -203,10 +211,10 @@
 
         <div class="flags">
             {#each getEnumNamesFromFlag(StatusFlags, $statusStore.flags ?? 0) as flag}
-                <span class="flag">{flag}</span>
+                <span class="flag">{getFlagLabel(flag)}</span>
             {/each}
             {#each getEnumNamesFromFlag(StatusFlags2, $statusStore.flags2 ?? 0) as flag}
-                <span class="flag secondary">{flag}</span>
+                <span class="flag secondary">{getFlagLabel(flag, true)}</span>
             {/each}
         </div>
     </div>
