@@ -1,33 +1,34 @@
 <Solution>
-    <Project Path="Botanist/Botanist.csproj"/>
-    <Project Path="ObservatoryFramework/ObservatoryFramework.csproj"/>
-    <Project Path="Pulsar/Pulsar.csproj"/>
-    <Project Path="TestProject1/TestProject1.csproj"/>
+    <Project Path="Botanist/Botanist.csproj" />
+    <Project Path="ObservatoryFramework/ObservatoryFramework.csproj" />
+    <Project Path="Pulsar/Pulsar.csproj" />
+    <Project Path="TestProject1/TestProject1.csproj" />
     <Folder Name="/Solution Items/">
-        <File Path=".gitignore"/>
-        <File Path="README.md"/>
+        <File Path=".github\workflows\dotnet.yml" />
+        <File Path=".gitignore" />
+        <File Path="README.md" />
     </Folder>
     <Folder Name="/elite-api-docs/">
-        <File Path="elite-api-docs\build.js"/>
-        <File Path="elite-api-docs\docs\Appendix.md"/>
-        <File Path="elite-api-docs\docs\Combat.md"/>
-        <File Path="elite-api-docs\docs\Exploration.md"/>
-        <File Path="elite-api-docs\docs\File Format.md"/>
-        <File Path="elite-api-docs\docs\Fleet Carriers.md"/>
-        <File Path="elite-api-docs\docs\index.md"/>
-        <File Path="elite-api-docs\docs\New in Odyssey.md"/>
-        <File Path="elite-api-docs\docs\Other Events.md"/>
-        <File Path="elite-api-docs\docs\Powerplay.md"/>
-        <File Path="elite-api-docs\docs\Squadrons.md"/>
-        <File Path="elite-api-docs\docs\Startup.md"/>
-        <File Path="elite-api-docs\docs\Station Services.md"/>
-        <File Path="elite-api-docs\docs\Status File.md"/>
-        <File Path="elite-api-docs\docs\Trade.md"/>
-        <File Path="elite-api-docs\docs\Travel.md"/>
-        <File Path="elite-api-docs\package-lock.json"/>
-        <File Path="elite-api-docs\package.json"/>
-        <File Path="elite-api-docs\parse-html.html"/>
-        <File Path="elite-api-docs\README.md"/>
+        <File Path="elite-api-docs\build.js" />
+        <File Path="elite-api-docs\docs\Appendix.md" />
+        <File Path="elite-api-docs\docs\Combat.md" />
+        <File Path="elite-api-docs\docs\Exploration.md" />
+        <File Path="elite-api-docs\docs\File Format.md" />
+        <File Path="elite-api-docs\docs\Fleet Carriers.md" />
+        <File Path="elite-api-docs\docs\index.md" />
+        <File Path="elite-api-docs\docs\New in Odyssey.md" />
+        <File Path="elite-api-docs\docs\Other Events.md" />
+        <File Path="elite-api-docs\docs\Powerplay.md" />
+        <File Path="elite-api-docs\docs\Squadrons.md" />
+        <File Path="elite-api-docs\docs\Startup.md" />
+        <File Path="elite-api-docs\docs\Station Services.md" />
+        <File Path="elite-api-docs\docs\Status File.md" />
+        <File Path="elite-api-docs\docs\Trade.md" />
+        <File Path="elite-api-docs\docs\Travel.md" />
+        <File Path="elite-api-docs\package-lock.json" />
+        <File Path="elite-api-docs\package.json" />
+        <File Path="elite-api-docs\parse-html.html" />
+        <File Path="elite-api-docs\README.md" />
 
     </Folder>
 </Solution>

@@ -25,11 +25,13 @@ jobs:
       
     - name: Build Backend
       run: dotnet build --no-restore
+    
+    - uses: oven-sh/setup-bun@v2
       
     - name: Restore Frontend
       working-directory: 'Pulsar/WebApp'
-      run: npm ci 
+      run: bun install --frozen-lockfile
       
     - name: Build Frontend
       working-directory: 'Pulsar/WebApp'
-      run: npm run build
+      run: bun run build
