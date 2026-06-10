@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Converters;
 
-namespace Observatory.Framework.Files.Converters;
+using ParameterTypes;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class StationServiceConverter : JsonConverter<StationService>
 {
@@ -11,12 +11,9 @@ public class StationServiceConverter : JsonConverter<StationService>
         var services = StationService.None;
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
-        {
             services |= (StationService)Enum.Parse(typeof(StationService), reader.GetString(), true);
-        }
 
         return services;
-
     }
 
     public override void Write(Utf8JsonWriter writer, StationService value, JsonSerializerOptions options)

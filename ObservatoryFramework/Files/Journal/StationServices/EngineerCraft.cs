@@ -1,13 +1,14 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+using Converters;
+using ParameterTypes;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Converters;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal.StationServices;
-
+/// <summary>
+///     Written when requesting an engineer upgrade.
+/// </summary>
 public class EngineerCraft : JournalBase
 {
-    public override string Event => "EngineerCraft";
     public string Engineer { get; init; }
     public ulong EngineerID { get; init; }
     public string Blueprint { get; init; }
@@ -20,7 +21,9 @@ public class EngineerCraft : JournalBase
     public int Level { get; init; }
     public float Quality { get; init; }
     public string ApplyExperimentalEffect { get; init; }
+
     [JsonConverter(typeof(MaterialConverter))]
     public List<Material> Ingredients { get; init; }
+
     public List<Modifier> Modifiers { get; init; }
 }

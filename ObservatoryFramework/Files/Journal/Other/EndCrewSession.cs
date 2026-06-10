@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Other;
 
+/// <summary>
+///     Written when the captain in multicrew disbands the crew.
+/// </summary>
 public class EndCrewSession : JournalBase
 {
-    public override string Event => "EndCrewSession";
     public bool OnCrime { get; init; }
     public bool Telepresence { get; init; }
 }

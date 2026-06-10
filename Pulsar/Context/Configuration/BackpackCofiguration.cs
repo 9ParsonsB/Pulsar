@@ -1,9 +1,7 @@
-using JasperFx.Core;
-using Microsoft.EntityFrameworkCore;
+namespace Pulsar.Context.Configuration;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Observatory.Framework.Files;
-
-namespace Pulsar.Context.Configuration;
 
 public class BackpackCofiguration : IEntityTypeConfiguration<BackpackFile>
 {

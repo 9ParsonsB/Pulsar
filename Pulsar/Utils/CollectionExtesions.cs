@@ -16,22 +16,17 @@ public static class CollectionExtensions
     {
         List<T> list = new();
         foreach (var v in source)
-        {
             if (v.Equals(target))
             {
                 yield return list;
-                list = new();
+                list = new List<T>();
             }
             else
             {
                 list.Add(v);
             }
-        }
 
-        if (list.Any())
-        {
-            yield return list;
-        }
+        if (list.Any()) yield return list;
     }
 
     public static IEnumerable<List<T>> Split<T>(this ICollection<T> source, T[] target) where T : struct
@@ -40,7 +35,7 @@ public static class CollectionExtensions
         var i = 0;
         var done = false;
         using var enumerator = source.GetEnumerator();
-        while ((i + target.Length) < source.Count)
+        while (i + target.Length < source.Count)
         {
             if (!enumerator.MoveNext())
             {
@@ -51,26 +46,18 @@ public static class CollectionExtensions
             list.Add(enumerator.Current);
 
             if (list.Count >= target.Length)
-            {
                 if (list.TakeLast(target.Length).SequenceEqual(target))
                 {
                     yield return list;
-                    list = new();
+                    list = new List<T>();
                 }
-            }
 
             i++;
         }
 
-        while (!done && enumerator.MoveNext())
-        {
-            list.Add(enumerator.Current);
-        }
+        while (!done && enumerator.MoveNext()) list.Add(enumerator.Current);
 
-        if (list.Any())
-        {
-            yield return list;
-        }
+        if (list.Any()) yield return list;
     }
 
     public static bool Contains<T>(this IEnumerable<T> source, T[] target) where T : struct
@@ -84,12 +71,8 @@ public static class CollectionExtensions
             list.Add(enumerator.Current);
 
             if (list.Count >= target.Length)
-            {
                 if (list.TakeLast(target.Length).SequenceEqual(target))
-                {
                     return true;
-                }
-            }
 
             i++;
         }
@@ -97,10 +80,13 @@ public static class CollectionExtensions
         return false;
     }
 
-    public static List<byte> Replace(this IEnumerable<byte> source, ReadOnlySpan<byte> target, ReadOnlySpan<byte> replacement) 
+    public static List<byte> Replace(
+        this IEnumerable<byte> source,
+        ReadOnlySpan<byte> target,
+        ReadOnlySpan<byte> replacement)
     {
         List<byte> result = new();
-        List<byte> buffer = new (20);
+        List<byte> buffer = new(20);
         var done = false;
         using var enumerator = source.GetEnumerator();
         var targetArray = target.ToArray();
@@ -109,7 +95,7 @@ public static class CollectionExtensions
             buffer.Add(enumerator.Current);
 
             if (buffer.Count < target.Length) continue;
-            
+
             if (buffer.TakeLast(target.Length).SequenceEqual(targetArray))
             {
                 result.AddRange(replacement.ToArray());
@@ -126,10 +112,7 @@ public static class CollectionExtensions
 
         result.AddRange(buffer);
 
-        while (done && enumerator.MoveNext())
-        {
-            result.Add(enumerator.Current);
-        }
+        while (done && enumerator.MoveNext()) result.Add(enumerator.Current);
 
         return result;
     }

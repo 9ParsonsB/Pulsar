@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when a mission has been abandoned.
+/// </summary>
 public class MissionAbandoned : JournalBase
 {
-    public override string Event => "MissionAbandoned";
     public string Name { get; init; }
     public ulong MissionID { get; init; }
     public long Fine { get; init; }

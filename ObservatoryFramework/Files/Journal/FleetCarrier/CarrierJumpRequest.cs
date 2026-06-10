@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
+/// <summary>
+///     Written when a fleet carrier jump is requested.
+/// </summary>
 public class CarrierJumpRequest : JournalBase
 {
-    public override string Event => "CarrierJumpRequest";
     public string Body { get; init; }
     public int BodyID { get; init; }
     public ulong SystemAddress { get; init; }

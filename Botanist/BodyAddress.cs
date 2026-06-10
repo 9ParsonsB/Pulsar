@@ -1,6 +1,6 @@
 namespace Botanist;
 
-class BodyAddress
+internal class BodyAddress
 {
     public ulong SystemAddress { get; set; }
     public int BodyID { get; set; }
@@ -16,10 +16,7 @@ class BodyAddress
         //   http://go.microsoft.com/fwlink/?LinkId=85238
         //
 
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
+        if (obj == null || GetType() != obj.GetType()) return false;
 
         var other = (BodyAddress)obj;
         return other.SystemAddress == SystemAddress

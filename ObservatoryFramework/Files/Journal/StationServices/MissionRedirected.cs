@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when a mission is updated with a new destination.
+/// </summary>
 public class MissionRedirected : JournalBase
 {
-    public override string Event => "MissionRedirected";
     public string Name { get; init; }
     public string Name_Localised { get; init; }
     public ulong MissionID { get; init; }

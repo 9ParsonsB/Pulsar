@@ -4,19 +4,18 @@ using Microsoft.Extensions.FileProviders;
 
 Console.WriteLine((string?)null!);
 
-var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
-    Args = args, 
-    WebRootPath = "static", 
-    ContentRootPath = "WebApp", 
-    ApplicationName = "Pulsar", 
+    Args = args,
+    WebRootPath = "static",
+    ContentRootPath = "WebApp",
+    ApplicationName = "Pulsar",
     EnvironmentName =
 #if DEBUG
         "Development"
 #else
         "Production"
-#endif 
-    
+#endif
 });
 
 var currentDirFileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
@@ -28,19 +27,22 @@ builder.Host.UseLamar((_, registry) => registry.Scan(scan =>
     scan.LookForRegistries();
 }));
 
-builder.Configuration.AddJsonFile(currentDirFileProvider,"appsettings.json", optional: false, reloadOnChange: true);
-builder.Configuration.AddJsonFile(currentDirFileProvider, $"appsettings.{builder.Environment.EnvironmentName.ToLowerInvariant()}.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile(currentDirFileProvider, "appsettings.json", false, true);
+builder.Configuration.AddJsonFile(currentDirFileProvider,
+    $"appsettings.{builder.Environment.EnvironmentName.ToLowerInvariant()}.json", true, true);
 
 builder.Configuration.AddUserSecrets<Program>();
 
 builder.Services.Configure<PulsarConfiguration>(builder.Configuration.GetSection("Pulsar"));
 
-builder.Services.AddApplicationInsightsTelemetry();
+var aiConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"] ??
+                         builder.Configuration["ApplicationInsights:ConnectionString"];
+if (!string.IsNullOrWhiteSpace(aiConnectionString)) builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(new CorsPolicy()
-        { Origins = { "http://172.31.0.222:5000", "http://localhost:5000" }, Headers = { "*" }, Methods = { "*" } });
+    options.AddDefaultPolicy(new CorsPolicy
+        { Origins = { "*" }, Headers = { "*" }, Methods = { "*" } });
 });
 builder.Services.AddSignalR().AddJsonProtocol(options =>
     options.PayloadSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
@@ -54,13 +56,14 @@ builder.Services.AddHostedService<FileWatcherService>();
 builder.Services.AddHostedService<JournalProcessor>();
 
 var app = builder.Build();
+if (!app.Environment.IsDevelopment()) app.UseHsts();
+
+app.UseHttpsRedirection();
+app.UseRouting();
 app.UseWebSockets();
-// app.UseOpenApi();
-// app.UseSwaggerUi();
-app.UseRouting();   
-app.MapReverseProxy();
 app.MapControllers();
 app.MapHub<EventsHub>("api/events");
+app.MapReverseProxy();
 app.MapFallbackToFile("index.html").AllowAnonymous();
 
 await app.Services.GetRequiredService<PulsarContext>().Database.EnsureCreatedAsync();

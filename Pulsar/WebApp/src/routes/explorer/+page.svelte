@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Explorer from "./Explorer.svelte";
+    import Explorer from "./Explorer.svelte";
 </script>
 
 <div class="page">
-    <Explorer />
+    <Explorer/>
 </div>
 
 <style>

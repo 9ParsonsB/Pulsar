@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when delivering items to a Search and Rescue contact.
+/// </summary>
 public class SearchAndRescue : JournalBase
 {
-    public override string Event => "SearchAndRescue";
     public ulong MarketID { get; init; }
     public string Name { get; init; }
     public string Name_Localised { get; init; }

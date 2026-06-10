@@ -1,27 +1,52 @@
 <script lang="ts">
-    import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
+    import {onMount} from "svelte";
 
-    const queryClient = useQueryClient();
+    type ModuleInfo = {
+        item?: string;
+        item_Localised?: string;
+        power?: number;
+        priority?: number;
+        slot: string;
+    };
 
-    const getData = async () => {
-        const response = await fetch(
-            "http://localhost:5000/api/modulesinfo/",
-        );
+    type ModulesInfoResponse = {
+        modules: ModuleInfo[];
+    };
+
+    let data: ModulesInfoResponse | null = null;
+    let isLoading = true;
+    let error: string | null = null;
+
+    const getData = async (): Promise<ModulesInfoResponse> => {
+        const response = await fetch("/api/modulesinfo");
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+        }
         return response.json();
     };
 
-    const query = useQuery("modulesinfo", getData, { staleTime: Number.POSITIVE_INFINITY });
+    onMount(() => {
+        void (async () => {
+            try {
+                data = await getData();
+            } catch (cause) {
+                error = cause instanceof Error ? cause.message : "Unknown error";
+            } finally {
+                isLoading = false;
+            }
+        })();
+    });
 </script>
 
 <h1>Ship Modules</h1>
 
-{#if $query.isLoading}
+{#if isLoading}
     <div class="loading">Loading...</div>
-{:else if $query.error}
-    <div class="error">An error has occurred: {$query.error}</div>
+{:else if error}
+    <div class="error">An error has occurred: {error}</div>
 {:else}
     <div class="module-list">
-        {#each $query.data.modules as row}
+        {#each data?.modules ?? [] as row}
             <div class="module-item">
                 <div class="slot">{row.slot}</div>
                 <div class="item-name">{row.item_Localised ?? row.item}</div>
@@ -53,16 +78,34 @@
         border-bottom: 1px solid #222;
     }
 
-    .slot { font-size: 0.75rem; color: #888; text-transform: uppercase; }
-    .item-name { font-weight: bold; color: #eee; }
+    .slot {
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+    }
+
+    .item-name {
+        font-weight: bold;
+        color: #eee;
+    }
+
     .stats {
         display: flex;
         justify-content: flex-end;
         gap: 15px;
         font-size: 0.85rem;
     }
-    .prio { color: var(--accent-color); }
-    .power { color: #aaa; }
 
-    .loading, .error { padding: 20px; text-align: center; }
+    .prio {
+        color: var(--accent-color);
+    }
+
+    .power {
+        color: #aaa;
+    }
+
+    .loading, .error {
+        padding: 20px;
+        text-align: center;
+    }
 </style>

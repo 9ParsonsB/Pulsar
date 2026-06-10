@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when paying off bounties.
+/// </summary>
 public class PayBounties : JournalBase
 {
-    public override string Event => "PayBounties";
     public long Amount { get; init; }
     public float BrokerPercentage { get; init; }
     public bool AllFines { get; init; }

@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when storing a module in Outfitting.
+/// </summary>
 public class ModuleStore : JournalBase
 {
-    public override string Event => "ModuleStore";
     public ulong MarketID { get; init; }
     public string Slot { get; init; }
     public string Ship { get; init; }
@@ -13,8 +15,10 @@ public class ModuleStore : JournalBase
     public string EngineerModifications { get; init; }
     public int Level { get; init; }
     public float Quality { get; init; }
+
     [Obsolete(JournalUtilities.UnusedMessage)]
     public string ReplacementItem { get; init; }
+
     [Obsolete(JournalUtilities.UnusedMessage)]
     public int Cost { get; init; }
 }

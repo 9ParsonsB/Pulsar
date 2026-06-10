@@ -1,10 +1,11 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Other;
 
-namespace Observatory.Framework.Files.Journal.Other;
+using ParameterTypes;
 
+/// <summary>
+///     Written when cargo is transferred between the ship, SRV, or fleet carrier.
+/// </summary>
 public class CargoTransfer : JournalBase
 {
-    public override string Event => "CargoTransfer";
     public List<CargoTransferDetail> Transfers { get; init; }
 }

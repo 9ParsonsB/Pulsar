@@ -1,17 +1,20 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.FleetCarrier;
+
+using ParameterTypes;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal.FleetCarrier;
-
+/// <summary>
+///     Written when viewing fleet carrier stats.
+/// </summary>
 public class CarrierStats : JournalBase
 {
-    public override string Event => "CarrierStats";
     public ulong CarrierID { get; init; }
     public string Callsign { get; init; }
     public string Name { get; init; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CarrierDockingAccess DockingAccess { get; init; }
+
     public bool AllowNotorious { get; init; }
     public int FuelLevel { get; init; }
     public float JumpRangeCurr { get; init; }

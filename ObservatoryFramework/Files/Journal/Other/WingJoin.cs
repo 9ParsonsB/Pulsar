@@ -1,9 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.Other;
 
-namespace Observatory.Framework.Files.Journal.Other;
-
+/// <summary>
+///     Written when this player has joined a wing.
+/// </summary>
 public class WingJoin : JournalBase
 {
-    public override string Event => "WingJoin";
     public IList<string> Others { get; init; }
 }

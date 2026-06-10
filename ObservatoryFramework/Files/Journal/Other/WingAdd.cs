@@ -1,7 +1,9 @@
 ﻿namespace Observatory.Framework.Files.Journal.Other;
 
+/// <summary>
+///     Written when another player has joined the wing.
+/// </summary>
 public class WingAdd : JournalBase
 {
-    public override string Event => "WingAdd";
     public string Name { get; init; }
 }

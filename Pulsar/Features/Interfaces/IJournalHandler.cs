@@ -1,7 +1,7 @@
 namespace Pulsar.Features;
 
 /// <summary>
-/// Interface for Handling Journal Files.
+///     Interface for Handling Journal Files.
 /// </summary>
 public interface IJournalHandler : IFileHandler
 {
@@ -9,8 +9,8 @@ public interface IJournalHandler : IFileHandler
 }
 
 /// <summary>
-/// Interface for Getting Journal Files.
-/// Only used for Controllers
+///     Interface for Getting Journal Files.
+///     Only used for Controllers
 /// </summary>
 public interface IJournalHandler<T> : IJournalHandler
 {

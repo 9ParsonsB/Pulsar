@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when switching to another ship already stored at this station.
+/// </summary>
 public class ShipyardSwap : JournalBase
 {
-    public override string Event => "ShipyardSwap";
     public ulong MarketID { get; init; }
     public string ShipType { get; init; }
     public string ShipType_Localised { get; init; }

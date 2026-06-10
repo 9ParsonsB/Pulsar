@@ -1,11 +1,16 @@
-﻿using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Travel;
 
-namespace Observatory.Framework.Files.Journal.Travel;
+using ParameterTypes;
+using System.Text.Json.Serialization;
 
+/// <summary>
+///     Written when a station denies a docking request.
+/// </summary>
 public class DockingDenied : DockingCancelled
 {
-    public override string Event => "DockingDenied";
+    /// <summary>
+    ///     Reason the docking request was denied.
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Reason Reason { get; init; }
 }

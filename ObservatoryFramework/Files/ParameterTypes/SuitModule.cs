@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
 public class SuitModule
 {

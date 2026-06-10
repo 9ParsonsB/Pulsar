@@ -1,5 +1,4 @@
-
 export default interface Fuel {
-    fuelMain:      number;
+    fuelMain: number;
     fuelReservoir: number;
 }

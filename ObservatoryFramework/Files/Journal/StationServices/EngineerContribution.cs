@@ -1,15 +1,19 @@
-﻿using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
-namespace Observatory.Framework.Files.Journal.StationServices;
+using ParameterTypes;
+using System.Text.Json.Serialization;
 
+/// <summary>
+///     Written when offering items cash or bounties to an Engineer to gain access.
+/// </summary>
 public class EngineerContribution : JournalBase
 {
-    public override string Event => "EngineerContribution";
     public string Engineer { get; init; }
     public ulong EngineerID { get; init; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ContributionType Type { get; init; }
+
     public string Commodity { get; init; }
     public string Commodity_Localised { get; init; }
     public string Material { get; init; }

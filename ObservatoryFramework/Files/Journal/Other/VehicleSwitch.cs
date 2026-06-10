@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Other;
 
-namespace Observatory.Framework.Files.Journal.Other;
+using ParameterTypes;
+using System.Text.Json.Serialization;
 
+/// <summary>
+///     Written when switching control between the main ship and a fighter.
+/// </summary>
 public class VehicleSwitch : JournalBase
 {
-    public override string Event => "VehicleSwitch";
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public VehicleSwitchTo To { get; init; }
 }

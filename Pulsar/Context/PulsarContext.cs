@@ -2,19 +2,30 @@ namespace Pulsar.Context;
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.Journal.Exploration;
 using Observatory.Framework.Files.Journal.Odyssey;
+using Observatory.Framework.Files.Journal.Other;
 using Observatory.Framework.Files.Journal.Startup;
 using Observatory.Framework.Files.Journal.StationServices;
 using Observatory.Framework.Files.Journal.Travel;
-using Observatory.Framework.Files.Journal.Exploration;
 
 /// <summary>
-/// An in-memory database context for Pulsar.
+///     An in-memory database context for Pulsar.
 /// </summary>
 public class PulsarContext : DbContext
 {
+    public PulsarContext()
+    {
+    }
+
+    public PulsarContext(DbContextOptions<PulsarContext> options)
+        : base(options)
+    {
+    }
+
     public SqliteConnection Connection { get; private set; }
-    
+
     public DbSet<Commander> Commander { get; set; }
     public DbSet<Materials> Materials { get; set; }
     public DbSet<Rank> Rank { get; set; }
@@ -40,18 +51,38 @@ public class PulsarContext : DbContext
     public DbSet<FSSDiscoveryScan> FSSDiscoveryScans { get; set; }
     public DbSet<FSSBodySignals> FSSBodySignals { get; set; }
     public DbSet<SAASignalsFound> SAASignalsFound { get; set; }
-    
+    public DbSet<ReservoirReplenished> ReservoirReplenished { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        Connection = new SqliteConnection("Data Source=Journals.sqlite");
-        optionsBuilder.UseSqlite(Connection);
+        if (!optionsBuilder.IsConfigured)
+        {
+            Connection = new SqliteConnection("Data Source=Journals.sqlite");
+            optionsBuilder.UseSqlite(Connection);
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PulsarContext).Assembly);
         base.OnModelCreating(modelBuilder);
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            if (typeof(JournalBase).IsAssignableFrom(entityType.ClrType))
+            {
+                if (entityType.ClrType.BaseType != null &&
+                    typeof(JournalBase).IsAssignableFrom(entityType.ClrType.BaseType) &&
+                    entityType.ClrType.BaseType != typeof(JournalBase))
+                    // If the base type is an entity, skip (TPH)
+                    if (modelBuilder.Model.FindEntityType(entityType.ClrType.BaseType) != null)
+                        continue;
+
+                if (entityType.FindPrimaryKey() != null) continue;
+
+                modelBuilder.Entity(entityType.ClrType).Property<int>("Id").ValueGeneratedOnAdd();
+                modelBuilder.Entity(entityType.ClrType).HasKey("Id");
+            }
 
         if (Database.ProviderName != "Microsoft.EntityFrameworkCore.Sqlite") return;
         // SQLite does not have proper support for DateTimeOffset via Entity Framework Core, see the limitations
@@ -63,20 +94,19 @@ public class PulsarContext : DbContext
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(DateTimeOffset)
-                                                                           || p.PropertyType == typeof(DateTimeOffset?));
+                                                                           || p.PropertyType ==
+                                                                           typeof(DateTimeOffset?));
             foreach (var property in properties)
-            {
                 modelBuilder
                     .Entity(entityType.Name)
                     .Property(property.Name)
                     .HasConversion(new DateTimeOffsetToBinaryConverter());
-            }
         }
     }
 
     public override void Dispose()
     {
-        Connection.Dispose();
+        Connection?.Dispose();
         base.Dispose();
     }
 }

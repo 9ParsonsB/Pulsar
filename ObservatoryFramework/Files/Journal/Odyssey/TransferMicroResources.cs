@@ -1,10 +1,11 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
 
-namespace Observatory.Framework.Files.Journal.Odyssey;
+using ParameterTypes;
 
+/// <summary>
+///     Written when microresources are transferred between the backpack and ship locker.
+/// </summary>
 public class TransferMicroResources : JournalBase
 {
-    public override string Event => "TransferMicroResources";
     public List<MicroTransfer> Transfers { get; init; }
 }

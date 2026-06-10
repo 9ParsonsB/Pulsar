@@ -1,11 +1,14 @@
-﻿using System.Text.Json;
+﻿namespace Observatory.Framework.Files.Converters;
+
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Observatory.Framework.Files.Converters;
-
-class PipConverter : JsonConverter<(int Sys, int Eng, int Wep)>
+internal class PipConverter : JsonConverter<(int Sys, int Eng, int Wep)>
 {
-    public override (int Sys, int Eng, int Wep) Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override (int Sys, int Eng, int Wep) Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options)
     {
         var values = JsonSerializer.Deserialize<int[]>(ref reader);
 
@@ -14,6 +17,6 @@ class PipConverter : JsonConverter<(int Sys, int Eng, int Wep)>
 
     public override void Write(Utf8JsonWriter writer, (int Sys, int Eng, int Wep) value, JsonSerializerOptions options)
     {
-        JsonSerializer.Serialize(writer, new {value.Sys, value.Eng, value.Wep}, options);
+        JsonSerializer.Serialize(writer, new { value.Sys, value.Eng, value.Wep }, options);
     }
 }

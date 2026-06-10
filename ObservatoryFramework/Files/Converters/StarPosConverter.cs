@@ -1,11 +1,11 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Journal.Travel;
+﻿namespace Observatory.Framework.Files.Converters;
 
-namespace Observatory.Framework.Files.Converters;
+using Journal.Travel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 /// <summary>
-/// Converting the ordered array of coordinates from the journal to a named tuple for clarity.
+///     Converting the ordered array of coordinates from the journal to a named tuple for clarity.
 /// </summary>
 public class StarPosConverter : JsonConverter<StarPos>
 {

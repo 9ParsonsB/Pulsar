@@ -4,16 +4,16 @@ using Observatory.Framework.Files;
 
 public interface IBackpackService : IJournalHandler<BackpackFile>;
 
-public class BackpackService(IOptions<PulsarConfiguration> options, IEventHubContext hub, ILogger<BackpackService> logger) : IBackpackService
+public class BackpackService(
+    IOptions<PulsarConfiguration> options,
+    IEventHubContext hub,
+    ILogger<BackpackService> logger) : IBackpackService
 {
     public async Task<BackpackFile> Get()
     {
         var filePath = Path.Combine(options.Value.JournalDirectory, FileName);
 
-        if (!FileHelper.ValidateFile(filePath))
-        {
-            return new BackpackFile();
-        }
+        if (!FileHelper.ValidateFile(filePath)) return new BackpackFile();
 
         await using var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var backpack = await JsonSerializer.DeserializeAsync<BackpackFile>(file);
@@ -23,14 +23,11 @@ public class BackpackService(IOptions<PulsarConfiguration> options, IEventHubCon
         return new BackpackFile();
     }
 
-    public async Task HandleFile(string path, CancellationToken token = new ())
+    public async Task HandleFile(string path, CancellationToken token = new())
     {
-        if (!FileHelper.ValidateFile(path))
-        {
-            return;
-        }
+        if (!FileHelper.ValidateFile(path)) return;
 
-        var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        await using var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var backpack = await JsonSerializer.DeserializeAsync<BackpackFile>(file, cancellationToken: token);
 
         if (backpack == null)

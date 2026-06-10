@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when requesting a module is transferred from storage at another station.
+/// </summary>
 public class FetchRemoteModule : JournalBase
 {
-    public override string Event => "FetchRemoteModule";
     public ulong ShipID { get; init; }
     public int StorageSlot { get; init; }
     public string StoredItem { get; init; }

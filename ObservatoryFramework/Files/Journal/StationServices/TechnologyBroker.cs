@@ -1,11 +1,12 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
-namespace Observatory.Framework.Files.Journal.StationServices;
+using ParameterTypes;
 
+/// <summary>
+///     Written when using the Technology Broker to unlock new purchasable technology.
+/// </summary>
 public class TechnologyBroker : JournalBase
 {
-    public override string Event => "TechnologyBroker";
     public string BrokerType { get; init; }
     public ulong MarketID { get; init; }
     public List<ItemName> ItemsUnlocked { get; init; }

@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Combat;
 
+/// <summary>
+///     Written when player has (attempted to) interdict another player or npc.
+/// </summary>
 public class Interdiction : JournalBase
 {
-    public override string Event => "Interdiction";
     public bool Success { get; init; }
     public string Interdictor { get; init; }
     public bool IsPlayer { get; init; }

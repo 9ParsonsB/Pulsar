@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when buying a new ship in the shipyard.
+/// </summary>
 public class ShipyardBuy : JournalBase
 {
-    public override string Event => "ShipyardBuy";
     public ulong MarketID { get; init; }
     public string ShipType { get; init; }
     public string ShipType_Localised { get; init; }

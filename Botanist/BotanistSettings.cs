@@ -1,8 +1,8 @@
-﻿using Observatory.Framework;
+﻿namespace Botanist;
 
-namespace Botanist;
+using Observatory.Framework;
 
-class BotanistSettings
+internal class BotanistSettings
 {
     [SettingDisplayName("Enable Sampler Status Overlay")]
     public bool OverlayEnabled { get; set; }

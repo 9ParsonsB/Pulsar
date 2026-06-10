@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
+/// <summary>
+///     Written when a fleet carrier trade order is created, updated, or cancelled.
+/// </summary>
 public class CarrierTradeOrder : JournalBase
 {
-    public override string Event => "CarrierTradeOrder";
     public ulong CarrierID { get; init; }
     public bool BlackMarket { get; init; }
     public string Commodity { get; init; }

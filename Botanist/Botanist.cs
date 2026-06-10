@@ -9,12 +9,9 @@ using Observatory.Framework.Files.Journal.Startup;
 using Observatory.Framework.Files.Journal.Travel;
 using Observatory.Framework.Files.ParameterTypes;
 
-
 public class Botanist : IObservatoryWorker
 {
-    private IObservatoryCore Core;
-    private bool OdysseyLoaded;
-    private Dictionary<BodyAddress, BioPlanetDetail> BioPlanets;
+    private const int DEFAULT_COLONY_DISTANCE = 100;
 
     // To make this journal locale agnostic, use the genus identifier and map to English names used in notifications.
     // Note: Values here are also used in the lookup for colony distance, so we also use this to resolve misspellings and Frontier bugs.
@@ -46,11 +43,11 @@ public class Botanist : IObservatoryWorker
         { "$Codex_Ent_Sphere_Name;", "Anemone" },
         { "$Codex_Ent_Tube_Name;", "Sinuous Tubers" },
         { "$Codex_Ent_Vents_Name;", "Amphora Plant" },
-        { "$Codex_Ent_Cone_Name;", "Bark Mounds" },
+        { "$Codex_Ent_Cone_Name;", "Bark Mounds" }
     };
 
     // Note: Some Horizons bios may be missing, but they'll get localized genus name and default colony distance
-    public static readonly IReadOnlyDictionary<string, int> ColonyDistancesByGenus = new Dictionary<string, int>()
+    public static readonly IReadOnlyDictionary<string, int> ColonyDistancesByGenus = new Dictionary<string, int>
     {
         { "Aleoida", 150 },
         { "Bacterium", 500 },
@@ -72,30 +69,33 @@ public class Botanist : IObservatoryWorker
         { "Anemone", DEFAULT_COLONY_DISTANCE },
         { "Sinuous Tubers", DEFAULT_COLONY_DISTANCE },
         { "Amphora Plant", DEFAULT_COLONY_DISTANCE },
-        { "Bark Mounds", DEFAULT_COLONY_DISTANCE },
+        { "Bark Mounds", DEFAULT_COLONY_DISTANCE }
     };
 
-    private const int DEFAULT_COLONY_DISTANCE = 100;
-
-    private Guid? samplerStatusNotification;
+    private Dictionary<BodyAddress, BioPlanetDetail> BioPlanets;
 
     private BotanistSettings botanistSettings = new()
     {
         OverlayEnabled = true,
-        OverlayIsSticky = true,
+        OverlayIsSticky = true
     };
 
-    public string Name => "Observatory Botanist";
+    private IObservatoryCore Core;
+    private bool OdysseyLoaded;
 
-    public string ShortName => "Botanist";
-
-    public string Version => typeof(Botanist).Assembly.GetName().Version.ToString();
+    private Guid? samplerStatusNotification;
 
     public object Settings
     {
         get => botanistSettings;
         set => botanistSettings = (BotanistSettings)value;
     }
+
+    public string Name => "Observatory Botanist";
+
+    public string ShortName => "Botanist";
+
+    public string Version => typeof(Botanist).Assembly.GetName().Version.ToString();
 
     public void JournalEvent<TJournal>(TJournal journal) where TJournal : JournalBase
     {
@@ -118,17 +118,15 @@ public class Botanist : IObservatoryWorker
                         select signal;
 
                     if (bioSignals.Any())
-                    {
                         BioPlanets.Add(
                             systemBodyId,
-                            new()
+                            new BioPlanetDetail
                             {
                                 BodyName = signalsFound.BodyName,
                                 BioTotal = bioSignals.First().Count,
-                                SpeciesFound = new()
+                                SpeciesFound = new Dictionary<string, BioSampleDetail>()
                             }
                         );
-                    }
                 }
             }
                 break;
@@ -143,14 +141,14 @@ public class Botanist : IObservatoryWorker
                 {
                     // Unlikely to ever end up in here, but just in case create a new planet entry.
                     Dictionary<string, BioSampleDetail> bioSampleDetails = new();
-                    bioSampleDetails.Add(scanOrganic.Species_Localised, new()
+                    bioSampleDetails.Add(scanOrganic.Species_Localised, new BioSampleDetail
                     {
                         Genus = EnglishGenusByIdentifier.GetValueOrDefault(scanOrganic.Genus,
                             scanOrganic.Genus_Localised),
                         Analysed = false
                     });
 
-                    BioPlanets.Add(systemBodyId, new()
+                    BioPlanets.Add(systemBodyId, new BioPlanetDetail
                     {
                         BodyName = string.Empty,
                         BioTotal = 0,
@@ -175,8 +173,8 @@ public class Botanist : IObservatoryWorker
                                     Detail =
                                         $"Sample {sampleNum} of 3{Environment.NewLine}Colony distance: {colonyDistance} m",
                                     Rendering = NotificationRendering.NativeVisual,
-                                    Timeout = (botanistSettings.OverlayIsSticky ? 0 : -1),
-                                    Sender = ShortName,
+                                    Timeout = botanistSettings.OverlayIsSticky ? 0 : -1,
+                                    Sender = ShortName
                                 };
                                 if (samplerStatusNotification == null)
                                 {
@@ -191,21 +189,17 @@ public class Botanist : IObservatoryWorker
                             }
 
                             if (!bioPlanet.SpeciesFound.ContainsKey(scanOrganic.Species_Localised))
-                            {
-                                bioPlanet.SpeciesFound.Add(scanOrganic.Species_Localised, new()
+                                bioPlanet.SpeciesFound.Add(scanOrganic.Species_Localised, new BioSampleDetail
                                 {
                                     Genus = EnglishGenusByIdentifier.GetValueOrDefault(scanOrganic.Genus,
                                         scanOrganic.Genus_Localised),
                                     Analysed = false
                                 });
-                            }
 
                             break;
                         case ScanOrganicType.Analyse:
                             if (!bioPlanet.SpeciesFound[scanOrganic.Species_Localised].Analysed)
-                            {
                                 bioPlanet.SpeciesFound[scanOrganic.Species_Localised].Analysed = true;
-                            }
 
                             MaybeCloseSamplerStatusNotification();
                             break;
@@ -224,6 +218,13 @@ public class Botanist : IObservatoryWorker
         }
     }
 
+    public void Load(IObservatoryCore observatoryCore)
+    {
+        BioPlanets = new Dictionary<BodyAddress, BioPlanetDetail>();
+
+        Core = observatoryCore;
+    }
+
     private object GetColonyDistance(ScanOrganic scan)
     {
         // Map the Genus to a Genus name then lookup colony distance.
@@ -238,12 +239,5 @@ public class Botanist : IObservatoryWorker
             Core.CancelNotification(samplerStatusNotification.Value);
             samplerStatusNotification = null;
         }
-    }
-
-    public void Load(IObservatoryCore observatoryCore)
-    {
-        BioPlanets = new();
-
-        Core = observatoryCore;
     }
 }

@@ -1,7 +1,9 @@
 ﻿namespace Observatory.Framework.Files.Journal.Startup;
 
+/// <summary>
+///     Written when Creating a new commander.
+/// </summary>
 public class NewCommander : Commander
 {
-    public override string Event => "NewCommander";
     public string Package { get; init; }
 }

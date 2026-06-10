@@ -1,33 +1,36 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.Journal;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files;
 
-namespace Observatory.Framework.Files;
+using Journal;
+using ParameterTypes;
 
 /// <summary>
-/// Elite Dangerous outfitting.json file. Contains data about ship modules available for purchase at the current station.
+///     Elite Dangerous outfitting.json file. Contains data about ship modules available for purchase at the current
+///     station.
 /// </summary>
 public class OutfittingFile : JournalBase
 {
-    public override string Event => "Outfitting";
     /// <summary>
-    /// Unique ID of current market.
+    ///     Unique ID of current market.
     /// </summary>
     public ulong MarketID { get; init; }
+
     /// <summary>
-    /// Name of the station where the market is located.
+    ///     Name of the station where the market is located.
     /// </summary>
     public string StationName { get; init; }
+
     /// <summary>
-    /// Name of the star system where the market is located.
+    ///     Name of the star system where the market is located.
     /// </summary>
     public string StarSystem { get; init; }
+
     /// <summary>
-    /// Indicator if the player has access to Horizons content.
+    ///     Indicator if the player has access to Horizons content.
     /// </summary>
     public bool Horizons { get; init; }
+
     /// <summary>
-    /// List of all available parts in shipyard.
+    ///     List of all available parts in shipyard.
     /// </summary>
     public List<OutfittingModule> Items { get; init; }
 }

@@ -1,4 +1,4 @@
 export default interface JournalBase {
-	event: string;
-	timestamp: Date | string;
+    event: string;
+    timestamp: Date | string;
 }

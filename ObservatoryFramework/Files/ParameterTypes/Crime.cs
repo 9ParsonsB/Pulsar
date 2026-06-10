@@ -1,7 +1,7 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 [Owned]
 public class Crime
@@ -21,12 +21,12 @@ public class Crime
 
     [JsonPropertyName("Highest_Bounty")]
     public decimal HighestBounty { get; init; }
-        
+
     [JsonPropertyName("Citizens_Murdered")]
     public int CitizensMurdered { get; init; }
 
     [JsonPropertyName("Data_Stolen")]
-    public int DataStolen {  get; init; }
+    public int DataStolen { get; init; }
 
     [JsonPropertyName("Goods_Stolen")]
     public int GoodsStolen { get; init; }
@@ -44,7 +44,7 @@ public class Crime
     public int ProductionSabotage { get; init; }
 
     [JsonPropertyName("Production_Theft")]
-    public int ProductionTheft {  get; init; }
+    public int ProductionTheft { get; init; }
 
     [JsonPropertyName("Profiles_Cloned")]
     public int ProfilesCloned { get; init; }

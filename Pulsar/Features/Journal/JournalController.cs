@@ -1,7 +1,7 @@
 namespace Pulsar.Features.Journal;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/journal")]
 public class JournalController(IJournalService journalService) : ControllerBase
 {
     [HttpGet]

@@ -1,14 +1,18 @@
-﻿using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
-namespace Observatory.Framework.Files.Journal.StationServices;
+using ParameterTypes;
+using System.Text.Json.Serialization;
 
+/// <summary>
+///     Written when collecting or delivering cargo for a wing mission, or if a wing member updates progress.
+/// </summary>
 public class CargoDepot : JournalBase
 {
-    public override string Event => "CargoDepot";
     public ulong MissionID { get; init; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public UpdateType UpdateType { get; init; }
+
     public string CargoType { get; init; }
     public string CargoType_Localised { get; init; }
     public int Count { get; init; }

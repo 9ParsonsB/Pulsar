@@ -1,10 +1,12 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Startup;
 
-namespace Observatory.Framework.Files.Journal.Startup;
+using ParameterTypes;
 
+/// <summary>
+///     Written at startup.
+/// </summary>
 public class Rank : JournalBase
 {
-    public override string Event => "Rank";
     public RankCombat Combat { get; init; }
     public RankTrade Trade { get; init; }
     public RankExploration Explore { get; init; }

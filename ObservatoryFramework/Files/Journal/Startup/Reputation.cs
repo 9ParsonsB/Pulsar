@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Startup;
 
+/// <summary>
+///     Written at startup (after Rank and Progress).
+/// </summary>
 public class Reputation : JournalBase
 {
-    public override string Event => "Reputation";
     public float Empire { get; init; }
 
     public float Federation { get; init; }
@@ -13,35 +15,35 @@ public class Reputation : JournalBase
 
     public string EmpireText()
     {
-            return GetReputationText(Empire);
-        }
+        return GetReputationText(Empire);
+    }
 
     public string FederationText()
     {
-            return GetReputationText(Federation);
-        }
+        return GetReputationText(Federation);
+    }
 
     public string IndependentText()
     {
-            return GetReputationText(Independent);
-        }
+        return GetReputationText(Independent);
+    }
 
     public string AllianceText()
     {
-            return GetReputationText(Alliance);
-        }
+        return GetReputationText(Alliance);
+    }
 
     private string GetReputationText(float rep)
     {
-            var text = rep switch
-            {
-                float r when r > 90 => "allied",
-                float r when r > 35 => "friendly",
-                float r when r > 4 => "cordial",
-                float r when r > -35 => "neutral",
-                float r when r > -90 => "unfriendly",
-                _ => "hostile",
-            };
-            return text; 
-        }
+        var text = rep switch
+        {
+            float r when r > 90 => "allied",
+            float r when r > 35 => "friendly",
+            float r when r > 4 => "cordial",
+            float r when r > -35 => "neutral",
+            float r when r > -90 => "unfriendly",
+            _ => "hostile"
+        };
+        return text;
+    }
 }

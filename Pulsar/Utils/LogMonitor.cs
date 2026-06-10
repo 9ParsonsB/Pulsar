@@ -1,13 +1,12 @@
-using System.Diagnostics;
+namespace Pulsar.Utils;
+
 using Observatory.Framework;
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
-
-namespace Pulsar.Utils;
-
+using System.Diagnostics;
 using JournalEvent = (Exception ex, string file, JsonObject line);
 
-class LogMonitor
+internal class LogMonitor
 {
     #region Singleton Instantiation
 
@@ -22,7 +21,7 @@ class LogMonitor
 
     private LogMonitor()
     {
-        currentLine = new();
+        currentLine = new Dictionary<string, int>();
         InitializeWatchers(string.Empty);
         SetLogMonitorState(LogMonitorState.Idle);
     }
@@ -31,7 +30,7 @@ class LogMonitor
 
     #region Public properties
 
-    public LogMonitorState CurrentState => currentState;
+    public LogMonitorState CurrentState { get; private set; } = LogMonitorState.Idle;
 
     public Status Status { get; private set; }
 
@@ -70,20 +69,20 @@ class LogMonitor
 
     public bool IsMonitoring()
     {
-        return currentState.HasFlag(LogMonitorState.Realtime);
+        return CurrentState.HasFlag(LogMonitorState.Realtime);
     }
 
     // TODO(fredjk_gh): Remove?
     public bool ReadAllInProgress()
     {
-        return LogMonitorStateChangedEventArgs.IsBatchRead(currentState);
+        return LogMonitorStateChangedEventArgs.IsBatchRead(CurrentState);
     }
 
     public Func<IEnumerable<string>> ReadAllGenerator(out int fileCount)
     {
         // Prevent pre-reading when starting monitoring after reading all.
         firstStartMonitor = false;
-        SetLogMonitorState(currentState | LogMonitorState.BatchProcessing);
+        SetLogMonitorState(CurrentState | LogMonitorState.BatchProcessing);
 
         var logDirectory = GetJournalFolder();
         var files = GetJournalFilesOrdered(logDirectory);
@@ -99,7 +98,7 @@ class LogMonitor
             }
 
             ReportErrors(readErrors);
-            SetLogMonitorState(currentState & ~LogMonitorState.BatchProcessing);
+            SetLogMonitorState(CurrentState & ~LogMonitorState.BatchProcessing);
         }
 
         ;
@@ -109,7 +108,7 @@ class LogMonitor
 
     public void PrereadJournals()
     {
-        SetLogMonitorState(currentState | LogMonitorState.Init);
+        SetLogMonitorState(CurrentState | LogMonitorState.Init);
 
         var logDirectory = GetJournalFolder();
         var files = GetJournalFilesOrdered(logDirectory).ToList();
@@ -127,9 +126,9 @@ class LogMonitor
             foreach (var line in lines)
             {
                 var eventType = JournalUtilities.GetEventType(line);
-                if (eventType == "FSDJump" || eventType == "CarrierJump" &&
-                    ((line["Docked"]?.GetValue<bool>() ?? false) ||
-                     (line["OnFoot"]?.GetValue<bool>() ?? false)))
+                if (eventType == "FSDJump" || (eventType == "CarrierJump" &&
+                                               ((line["Docked"]?.GetValue<bool>() ?? false) ||
+                                                (line["OnFoot"]?.GetValue<bool>() ?? false))))
                 {
                     // Reset, start collecting again.
                     lastSystemLines.Clear();
@@ -162,16 +161,13 @@ class LogMonitor
         {
             // If we saw any relevant header lines, insert them as well. This ensures odyssey biologicials are properly
             // counted/presented, current Commander name is present, etc.
-            if (fileHeaderLines.Count > 0)
-            {
-                lastSystemLines.InsertRange(0, fileHeaderLines);
-            }
+            if (fileHeaderLines.Count > 0) lastSystemLines.InsertRange(0, fileHeaderLines);
 
             linesToRead = lastSystemLines;
         }
 
         ReportErrors(ProcessJournal(linesToRead, "Pre-read"));
-        SetLogMonitorState(currentState & ~LogMonitorState.Init);
+        SetLogMonitorState(CurrentState & ~LogMonitorState.Init);
     }
 
     #endregion
@@ -192,7 +188,6 @@ class LogMonitor
     private FileSystemWatcher? statusWatcher;
     private readonly Dictionary<string, Type> journalTypes;
     private readonly Dictionary<string, int> currentLine;
-    private LogMonitorState currentState = LogMonitorState.Idle; // Change via #SetLogMonitorState
     private bool firstStartMonitor = true;
 
     private readonly string[] EventsWithAncillaryFile =
@@ -214,8 +209,8 @@ class LogMonitor
 
     private void SetLogMonitorState(LogMonitorState newState)
     {
-        var oldState = currentState;
-        currentState = newState;
+        var oldState = CurrentState;
+        CurrentState = newState;
         LogMonitorStateChanged?.Invoke(this, new LogMonitorStateChangedEventArgs
         {
             PreviousState = oldState,
@@ -254,7 +249,6 @@ class LogMonitor
     {
         var readErrors = new List<(Exception ex, string file, JsonObject line)>();
         foreach (var line in lines)
-        {
             try
             {
                 DeserializeAndInvoke(line);
@@ -263,7 +257,6 @@ class LogMonitor
             {
                 readErrors.Add(ex, file, line);
             }
-        }
 
         return readErrors;
     }
@@ -278,10 +271,8 @@ class LogMonitor
         JournalEntry?.Invoke(this, journalEvent);
 
         // Files are only valid if realtime, otherwise they will be stale or empty.
-        if (!currentState.HasFlag(LogMonitorState.BatchProcessing) && EventsWithAncillaryFile.Contains(eventType))
-        {
+        if (!CurrentState.HasFlag(LogMonitorState.BatchProcessing) && EventsWithAncillaryFile.Contains(eventType))
             HandleModuleInfoFile(eventType);
-        }
     }
 
     private async Task HandleModuleInfoFile(string eventType)
@@ -324,13 +315,9 @@ class LogMonitor
             {
                 string message;
                 if (error.ex.InnerException == null)
-                {
                     message = error.ex.Message;
-                }
                 else
-                {
                     message = error.ex.InnerException.Message;
-                }
 
                 return ($"Error reading file {error.file}: {message}", error.line);
             });
@@ -343,13 +330,9 @@ class LogMonitor
     {
         var fileContent = ReadByLines(eventArgs.FullPath);
 
-        if (!currentLine.ContainsKey(eventArgs.FullPath))
-        {
-            currentLine.Add(eventArgs.FullPath, fileContent.Count() - 1);
-        }
+        if (!currentLine.ContainsKey(eventArgs.FullPath)) currentLine.Add(eventArgs.FullPath, fileContent.Count() - 1);
 
         foreach (var line in fileContent.Skip(currentLine[eventArgs.FullPath]))
-        {
             try
             {
                 DeserializeAndInvoke(line);
@@ -358,7 +341,6 @@ class LogMonitor
             {
                 ReportErrors([(ex, eventArgs.Name ?? string.Empty, line)]);
             }
-        }
 
         currentLine[eventArgs.FullPath] = fileContent.Count();
     }
@@ -370,9 +352,7 @@ class LogMonitor
         using var reader = new StreamReader(file, Encoding.UTF8, true, bufferSize);
         while (reader.ReadLine() is { } line
                && JsonNode.Parse(line) is { } parsed)
-        {
             yield return parsed.AsObject();
-        }
     }
 
     private static JsonObject? ReadFile(string path)
@@ -400,8 +380,8 @@ class LogMonitor
     }
 
     /// <summary>
-    /// Touches most recent journal file once every 250ms while LogMonitor is monitoring.
-    /// Forces pending file writes to flush to disk and fires change events for new journal lines.
+    ///     Touches most recent journal file once every 250ms while LogMonitor is monitoring.
+    ///     Forces pending file writes to flush to disk and fires change events for new journal lines.
     /// </summary>
     private async void JournalPoke()
     {

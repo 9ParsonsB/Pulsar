@@ -1,21 +1,26 @@
-﻿using System.Globalization;
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+using Converters;
+using ParameterTypes;
+using System.Globalization;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Converters;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal.StationServices;
-
+/// <summary>
+///     Written when starting a mission.
+/// </summary>
 public class MissionAccepted : JournalBase
 {
-    public override string Event => "MissionAccepted";
     public string Name { get; init; }
     public string LocalisedName { get; init; }
     public string Faction { get; init; }
     public ulong MissionID { get; init; }
+
     [JsonConverter(typeof(MissionEffectConverter))]
     public MissionEffect Influence { get; init; }
+
     [JsonConverter(typeof(MissionEffectConverter))]
     public MissionEffect Reputation { get; init; }
+
     public long Reward { get; init; }
     public string Commodity { get; init; }
     public string Commodity_Localised { get; init; }
@@ -29,18 +34,18 @@ public class MissionAccepted : JournalBase
     public string TargetFaction { get; init; }
     public int KillCount { get; init; }
     public string Expiry { get; init; }
+
     public DateTime ExpiryDateTime
     {
         get
         {
-            if (DateTime.TryParseExact(Expiry, "yyyy-MM-ddTHH:mm:ssZ", null, DateTimeStyles.AssumeUniversal, out var expiryDateTime))
-            {
-                return expiryDateTime;
-            }
+            if (DateTime.TryParseExact(Expiry, "yyyy-MM-ddTHH:mm:ssZ", null, DateTimeStyles.AssumeUniversal,
+                    out var expiryDateTime)) return expiryDateTime;
 
             return new DateTime();
         }
     }
+
     public string DestinationSystem { get; init; }
     public string DestinationStation { get; init; }
     public string DestinationSettlement { get; init; }

@@ -1,13 +1,14 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+using Converters;
+using ParameterTypes;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Converters;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal.Other;
-
+/// <summary>
+///     Written when approaching a planetary settlement.
+/// </summary>
 public class ApproachSettlement : JournalBase
 {
-    public override string Event => "ApproachSettlement";
     public ulong SystemAddress { get; init; }
     public string Name { get; init; }
     public string Name_Localised { get; init; }
@@ -22,6 +23,7 @@ public class ApproachSettlement : JournalBase
     public Faction StationFaction { get; init; }
     public string StationGovernment { get; init; }
     public string StationGovernment_Localised { get; init; }
+
     [JsonConverter(typeof(StationServiceConverter))]
     public StationService StationServices { get; init; }
 }

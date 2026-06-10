@@ -311,8 +311,19 @@ public enum Reason
 
 public enum ScanOrganicType
 {
+    /// <summary>
+    ///     First Scan
+    /// </summary>
     Log,
-    Sample, 
+
+    /// <summary>
+    ///     Second Scan
+    /// </summary>
+    Sample,
+
+    /// <summary>
+    ///     Third Scan
+    /// </summary>
     Analyse
 }
 
@@ -371,7 +382,9 @@ public enum StationService : ulong
     VistaGenomics = 1L << 37,
     PioneerSupplies = 1L << 38,
     ApexInterstellar = 1L << 39,
-    FrontlineSolutions = 1L << 40
+    FrontlineSolutions = 1L << 40,
+    RegisteringColonisation = 1L << 41,
+    ColonisationContribution = 1L << 42
 }
 
 public enum TextChannel
@@ -453,8 +466,9 @@ public enum StatusFlags : uint
     SRV = 1 << 26,
     AnalysisHUD = 1 << 27,
     NightVision = 1 << 28,
+
     /// <summary>
-    /// Altitude above average radius (sea level) when set. Altitude raycast to ground when unset.
+    ///     Altitude above average radius (sea level) when set. Altitude raycast to ground when unset.
     /// </summary>
     RadialAltitude = 1 << 29,
     FSDJump = 1 << 30,
@@ -483,7 +497,17 @@ public enum StatusFlags2 : uint
     BreathableAtmosphere = 1 << 16,
     TelepresenceMulticrew = 1 << 17,
     PhysicalMulticrew = 1 << 18,
-    FsdHyperdriveCharging = 1 << 19
+    FsdHyperdriveCharging = 1 << 19,
+
+    /// <summary>
+    ///     SCO
+    /// </summary>
+    SuperCruiseOverdriveActive = 1 << 20,
+
+    /// <summary>
+    ///     SCA active (aligned and throttle in blue zone)
+    /// </summary>
+    SuperCruiseAssistActive = 1 << 21
 }
 
 public enum LegalStatus

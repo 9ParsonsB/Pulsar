@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Combat;
 
+/// <summary>
+///     Written when the current player selects a new target.
+/// </summary>
 public class ShipTargeted : JournalBase
 {
-    public override string Event => "ShipTargeted";
     public bool TargetLocked { get; init; }
     public string Ship { get; init; }
     public string Ship_Localised { get; init; }

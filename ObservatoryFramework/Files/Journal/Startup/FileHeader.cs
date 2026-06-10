@@ -1,10 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Observatory.Framework.Files.Journal.Startup;
 
-namespace Observatory.Framework.Files.Journal.Startup;
+using System.Text.Json.Serialization;
 
+/// <summary>
+///     Written at the start of each journal file as the header event.
+/// </summary>
 public class FileHeader : JournalBase
 {
-    public override string Event => "FileHeader";
     [JsonPropertyName("part")]
     public int Part { get; init; }
 
@@ -16,5 +18,6 @@ public class FileHeader : JournalBase
 
     [JsonPropertyName("build")]
     public string Build { get; init; }
+
     public bool Odyssey { get; init; }
 }

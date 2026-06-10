@@ -5,29 +5,30 @@ using Observatory.Framework.Files.Journal;
 public interface IJournalService : IJournalHandler<List<JournalBase>>
 {
     /// <summary>
-    /// Gets the Latest of the following (start of game) events:
-    /// Commander
-    /// Materials
-    /// Rank
-    /// Progress
-    /// Reputation
-    /// EngineerProgress
-    /// LoadGame
-    /// Statistics
+    ///     Gets the Latest of the following (start of game) events:
+    ///     Commander
+    ///     Materials
+    ///     Rank
+    ///     Progress
+    ///     Reputation
+    ///     EngineerProgress
+    ///     LoadGame
+    ///     Statistics
     /// </summary>
     /// <returns></returns>
     Task<List<JournalBase>> GetLastStartupEvents();
 
     /// <summary>
-    /// Get the Latest of the following events: 
-    /// <p>
-    /// Location<br/>
-    /// Powerplay<br/>
-    /// Music<br/>
-    /// ShipLocker<br/>
-    /// Missions<br/>
-    /// Loadout</p>
-    /// <p>When there are none of an event since the last game start, no event will be given.</p>
+    ///     Get the Latest of the following events:
+    ///     <p>
+    ///         Location<br />
+    ///         Powerplay<br />
+    ///         Music<br />
+    ///         ShipLocker<br />
+    ///         Missions<br />
+    ///         Loadout
+    ///     </p>
+    ///     <p>When there are none of an event since the last game start, no event will be given.</p>
     /// </summary>
     /// <returns></returns>
     Task<List<JournalBase>> GetLatestState();
@@ -43,10 +44,7 @@ public class JournalService(
 
     public Task HandleFile(string filePath, CancellationToken token = new())
     {
-        if (!FileHelper.ValidateFile(filePath))
-        {
-            return Task.CompletedTask;
-        }
+        if (!FileHelper.ValidateFile(filePath)) return Task.CompletedTask;
 
         store.EnqueueFile(filePath);
         return Task.CompletedTask;
@@ -54,22 +52,23 @@ public class JournalService(
 
 
     // Start of game events/order:
-    /** Commander
-     *  Materials
-        Rank
-        Progress
-        Reputation
-        EngineerProgress
-        LoadGame
-        --Some time later--
-        Statistics
-        -- Game Events (e.g. FSSSignalDiscovered) --
-        Location
-        Powerplay
-        ShipLocker
-        Missions
-        Loadout
-        Cargo
+    /**
+     * Commander
+     * *  Materials
+     * Rank
+     * Progress
+     * Reputation
+     * EngineerProgress
+     * LoadGame
+     * --Some time later--
+     * Statistics
+     * -- Game Events (e.g. FSSSignalDiscovered) --
+     * Location
+     * Powerplay
+     * ShipLocker
+     * Missions
+     * Loadout
+     * Cargo
      */
 
     // StartupEvents:
@@ -97,9 +96,7 @@ public class JournalService(
         // if any null, return empty list
         if (materials == null || rank == null || progress == null || reputation == null || engineerProgress == null ||
             loadGame == null || statistics == null || commander == null)
-        {
             return [];
-        }
 
         // dont check the time of statistics as it may occur a few moments after
         if (commander.Timestamp > materials.Timestamp ||
@@ -110,22 +107,20 @@ public class JournalService(
             commander.Timestamp > engineerProgress.Timestamp ||
             commander.Timestamp > loadGame.Timestamp ||
             commander.Timestamp > statistics.Timestamp)
-        {
             throw new InvalidOperationException("Timestamps are invalid");
-        }
 
         return [commander, materials, rank, progress, reputation, engineerProgress, loadGame, statistics];
     }
 
     /// <summary>
-    /// StateEvents:
-    /// Location
-    /// Powerplay
-    /// Music
-    /// ShipLocker
-    /// Missions
-    /// Loadout
-    /// Cargo
+    ///     StateEvents:
+    ///     Location
+    ///     Powerplay
+    ///     Music
+    ///     ShipLocker
+    ///     Missions
+    ///     Loadout
+    ///     Cargo
     /// </summary>
     /// <returns></returns>
     public async Task<List<JournalBase>> GetLatestState()
@@ -134,7 +129,7 @@ public class JournalService(
         var commander = await context.Commander.OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
 
         if (commander == null) return [];
-        
+
         var location = await context.Locations
             .Where(x => x.Timestamp > commander.Timestamp)
             .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
@@ -175,7 +170,11 @@ public class JournalService(
             .Where(x => x.Timestamp > commander.Timestamp)
             .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
 
-        return new List<JournalBase?> { location, powerplay, shiplocker, missions, loadout, cargo, fsdJump, docked, undocked, supercruiseEntry, supercruiseExit, touchdown, liftoff }
+        return new List<JournalBase?>
+            {
+                location, powerplay, shiplocker, missions, loadout, cargo, fsdJump, docked, undocked, supercruiseEntry,
+                supercruiseExit, touchdown, liftoff
+            }
             .Where(x => x != null).Cast<JournalBase>().ToList();
     }
 

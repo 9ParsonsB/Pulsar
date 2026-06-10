@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when moving a module to a different slot on the ship.
+/// </summary>
 public class ModuleSwap : JournalBase
 {
-    public override string Event => "ModuleSwap";
     public ulong MarketID { get; init; }
     public string FromSlot { get; init; }
     public string ToSlot { get; init; }

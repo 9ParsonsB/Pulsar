@@ -1,21 +1,21 @@
-using Observatory.Framework.Files;
-
 namespace Pulsar.Features.Shipyard;
+
+using Observatory.Framework.Files;
 
 public interface IShipyardService : IJournalHandler<ShipyardFile>;
 
-public class ShipyardService(ILogger<ShipyardService> logger, IOptions<PulsarConfiguration> options,
+public class ShipyardService(
+    ILogger<ShipyardService> logger,
+    IOptions<PulsarConfiguration> options,
     IEventHubContext hub) : IShipyardService
 {
     public string FileName => FileHandlerService.ShipyardFileName;
-    public async Task<ShipyardFile> Get()   
+
+    public async Task<ShipyardFile> Get()
     {
         var shipyardFile = Path.Combine(options.Value.JournalDirectory, FileName);
 
-        if (!FileHelper.ValidateFile(shipyardFile))
-        {
-            return new ShipyardFile();
-        }
+        if (!FileHelper.ValidateFile(shipyardFile)) return new ShipyardFile();
 
         await using var file = File.Open(shipyardFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var shipyard = await JsonSerializer.DeserializeAsync<ShipyardFile>(file);
@@ -27,12 +27,9 @@ public class ShipyardService(ILogger<ShipyardService> logger, IOptions<PulsarCon
 
     public async Task HandleFile(string path, CancellationToken token = new())
     {
-        if (!FileHelper.ValidateFile(path))
-        {
-            return;
-        }
+        if (!FileHelper.ValidateFile(path)) return;
 
-        var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        await using var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var shipyard = await JsonSerializer.DeserializeAsync<ShipyardFile>(file, cancellationToken: token);
 
         if (shipyard == null)
@@ -43,5 +40,4 @@ public class ShipyardService(ILogger<ShipyardService> logger, IOptions<PulsarCon
 
         await hub.Clients.All.ShipyardUpdated(shipyard);
     }
-
 }

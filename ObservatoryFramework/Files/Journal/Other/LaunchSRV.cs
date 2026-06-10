@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Other;
 
+/// <summary>
+///     Written when deploying the SRV from a ship onto planet surface.
+/// </summary>
 public class LaunchSRV : JournalBase
 {
-    public override string Event => "LaunchSRV";
     public string Loadout { get; init; }
     public ulong ID { get; init; }
     public bool PlayerControlled { get; init; }

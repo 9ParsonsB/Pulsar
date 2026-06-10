@@ -1,8 +1,10 @@
-﻿using Observatory.Framework.Files.Journal.Startup;
+﻿namespace Observatory.Framework.Files.Journal.Other;
 
-namespace Observatory.Framework.Files.Journal.Other;
+using Startup;
 
+/// <summary>
+///     Written when the player's rank increases.
+/// </summary>
 public class Promotion : Rank
 {
-    public override string Event => "Promotion";
 }

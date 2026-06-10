@@ -1,7 +1,9 @@
 ﻿namespace Observatory.Framework.Files.Journal.Trade;
 
+/// <summary>
+///     Written when the player has broken up a 'Motherlode' asteroid for mining.
+/// </summary>
 public class AsteroidCracked : JournalBase
 {
-    public override string Event => "AsteroidCracked";
     public string Body { get; init; }
 }

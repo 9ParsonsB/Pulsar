@@ -1,6 +1,6 @@
 namespace Botanist;
 
-class BioSampleDetail
+internal class BioSampleDetail
 {
     public string Genus { get; set; }
     public bool Analysed { get; set; }

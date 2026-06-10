@@ -1,11 +1,13 @@
 <script>
     import Fuel from "$lib/Fuel.svelte";
-    import { QueryClient, QueryClientProvider } from "@sveltestack/svelte-query";
+    import {onMount} from "svelte";
+    import connection from "$lib/stores/Connection.store";
 
-    const queryClient = new QueryClient();
+    onMount(() => {
+        connection.connect();
+    });
 </script>
 
-<QueryClientProvider client={queryClient}>
 <header>
     <nav>
         <ul>
@@ -15,13 +17,12 @@
             <li><a href="/botany">Botany</a></li>
         </ul>
     </nav>
-    <Fuel />
+    <Fuel/>
 </header>
 
 <main>
-    <slot />
+    <slot/>
 </main>
-</QueryClientProvider>
 
 <style>
     :root {
@@ -63,13 +64,18 @@
         margin-top: 10px;
         margin-bottom: 20px;
         padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        max-width: 1600px;
+        margin: 10px auto 20px auto;
     }
 
     nav {
         border-bottom: 3px solid var(--accent-color);
         border-top: 3px solid var(--accent-color);
-        max-width: 1600px;
-        margin: 0 auto;
+        flex-grow: 1;
+        margin-right: 20px;
         background-color: var(--panel-bg);
     }
 

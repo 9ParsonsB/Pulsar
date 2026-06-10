@@ -1,11 +1,12 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Combat;
 
-namespace Observatory.Framework.Files.Journal.Combat;
+using ParameterTypes;
 
+/// <summary>
+///     Written when player is awarded a bounty for a kill.
+/// </summary>
 public class Bounty : JournalBase
 {
-    public override string Event => "Bounty";
     public List<Rewards> Rewards { get; init; }
     public string PilotName { get; set; }
     public string PilotName_Localised { get; set; }

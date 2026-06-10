@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using Microsoft.EntityFrameworkCore;
 
 [Owned]
 public class Modules
@@ -24,6 +23,3 @@ public class Modules
 
     public Engineering? Engineering { get; init; }
 }
-
-
-

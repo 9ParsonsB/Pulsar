@@ -1,9 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Startup;
 
+/// <summary>
+///     Written at startup, if player has pledged to a power.
+/// </summary>
 public class Powerplay : JournalBase
 {
-    public override string Event => "Powerplay";
-    
     public string Power { get; init; }
 
     public int Rank { get; init; }

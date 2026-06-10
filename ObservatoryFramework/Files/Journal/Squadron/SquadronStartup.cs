@@ -1,7 +1,9 @@
 ﻿namespace Observatory.Framework.Files.Journal.Squadron;
 
+/// <summary>
+///     Written at startup with squadron state information.
+/// </summary>
 public class SquadronStartup : SquadronCreated
 {
-    public override string Event => "SquadronStartup";
     public int CurrentRank { get; init; }
 }

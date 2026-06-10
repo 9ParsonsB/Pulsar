@@ -1,8 +1,8 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
-using Observatory.Framework.Files.Converters;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using Converters;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 [Owned]
 public class FleetCarrier

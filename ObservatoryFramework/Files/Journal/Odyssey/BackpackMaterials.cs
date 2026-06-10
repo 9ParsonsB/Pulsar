@@ -1,11 +1,12 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
 
-namespace Observatory.Framework.Files.Journal.Odyssey;
+using ParameterTypes;
 
+/// <summary>
+///     Written at startup or when the backpack inventory changes.
+/// </summary>
 public class BackpackMaterials : JournalBase
 {
-    public override string Event => "BackpackMaterials";
     public List<BackpackItem> Items { get; init; }
     public List<BackpackItem> Components { get; init; }
     public List<BackpackItem> Consumables { get; init; }

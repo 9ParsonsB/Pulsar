@@ -1,11 +1,12 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
 
-namespace Observatory.Framework.Files.Journal.Odyssey;
+using ParameterTypes;
 
+/// <summary>
+///     Written when the backpack inventory changes.
+/// </summary>
 public class BackpackChange : JournalBase
 {
-    public override string Event => "BackpackChange";
     public List<BackpackItemChange> Added { get; init; }
     public List<BackpackItemChange> Removed { get; init; }
 }

@@ -1,7 +1,9 @@
 ﻿namespace Observatory.Framework.Files.Journal.Odyssey;
 
+/// <summary>
+///     Written when an Apex taxi booking is cancelled.
+/// </summary>
 public class CancelTaxi : JournalBase
 {
-    public override string Event => "CancelTaxi";
     public int Refund { get; init; }
 }

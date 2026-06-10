@@ -17,5 +17,4 @@ public class CurrentGoal
     public bool PlayerInTopRank { get; init; }
     public string TierReached { get; init; }
     public long Bonus { get; init; }
-
 }

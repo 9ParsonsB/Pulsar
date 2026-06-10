@@ -1,33 +1,33 @@
 {
-	"name": "pulsar-web",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"test": "playwright test",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "biomejs ."
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.7.3",
-		"@microsoft/signalr": "^8.0.0",
-		"@playwright/test": "^1.44.0",
-		"@sveltejs/adapter-static": "^3.0.1",
-		"@sveltestack/svelte-query": "^1.6.0",
-		"@sveltejs/kit": "^2.5.8",
-		"@sveltejs/vite-plugin-svelte": "^3.1.0",
-		"typescript-eslint":"7.10.0",
-		"eslint-plugin-svelte": "^2.39.0",
-		"globals": "^15.2.0",
-		"sass": "^1.77.2",
-		"svelte": "^5.0.0-next.141",
-		"svelte-check": "^3.7.1",
-		"tslib": "^2.6.2",
-		"typescript": "^5.4.5",
-		"vite": "^5.2.11"
-	},
-	"type": "module"
+  "name": "pulsar-web",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "bun@1.2.21",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "playwright test",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "lint": "biome lint ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "@microsoft/signalr": "^10.0.0",
+    "@playwright/test": "^1.60.0",
+    "@sveltejs/adapter-static": "next",
+    "@sveltejs/kit": "next",
+    "@sveltejs/vite-plugin-svelte": "latest",
+    "eslint-plugin-svelte": "latest",
+    "globals": "latest",
+    "sass": "latest",
+    "svelte": "latest",
+    "svelte-check": "latest",
+    "tslib": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest",
+    "vite": "latest"
+  },
+  "type": "module"
 }

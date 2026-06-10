@@ -10,13 +10,13 @@ public interface IJournalStore
 
 public class JournalStore : IJournalStore
 {
-    private readonly ConcurrentQueue<string> JournalFileQueue = new();  
-    
+    private readonly ConcurrentQueue<string> JournalFileQueue = new();
+
     public void EnqueueFile(string filePath)
     {
         JournalFileQueue.Enqueue(filePath);
     }
-    
+
     public bool TryDequeue(out string filePath)
     {
         return JournalFileQueue.TryDequeue(out filePath);

@@ -1,8 +1,8 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
-using Observatory.Framework.Files.Converters;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using Converters;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 [Owned]
 public class Modifiers
@@ -10,8 +10,8 @@ public class Modifiers
     public string Label { get; init; }
 
     [JsonConverter(typeof(NumberOrStringConverter))]
-    public NumberOrString Value { get; set; } 
-    
+    public NumberOrString Value { get; set; }
+
     public double OriginalValue { get; init; }
 
     [JsonConverter(typeof(IntBoolConverter))]
@@ -21,8 +21,9 @@ public class Modifiers
 public class NumberOrString
 {
     public NumberOrString()
-    { }
-    
+    {
+    }
+
     public NumberOrString(string value)
     {
         StringValue = value;
@@ -35,13 +36,13 @@ public class NumberOrString
         IsDouble = true;
     }
 
-    public override string ToString()
-    {
-        return IsString ? StringValue : DoubleValue.ToString();
-    }
-
     public string? StringValue { get; init; }
     public bool IsString { get; init; }
     public double? DoubleValue { get; init; }
     public bool IsDouble { get; init; }
+
+    public override string ToString()
+    {
+        return IsString ? StringValue : DoubleValue.ToString();
+    }
 }

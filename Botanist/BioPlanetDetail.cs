@@ -1,6 +1,6 @@
 namespace Botanist;
 
-class BioPlanetDetail
+internal class BioPlanetDetail
 {
     public string BodyName { get; set; }
     public int BioTotal { get; set; }

@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when selling a module in outfitting.
+/// </summary>
 public class ModuleSell : JournalBase
 {
-    public override string Event => "ModuleSell";
     public ulong MarketID { get; init; }
     public string Slot { get; init; }
     public string SellItem { get; init; }

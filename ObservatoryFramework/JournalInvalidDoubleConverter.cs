@@ -1,7 +1,7 @@
+namespace Observatory.Framework;
+
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
-namespace Observatory.Framework;
 
 public class JournalInvalidDoubleConverter : JsonConverter<double>
 {

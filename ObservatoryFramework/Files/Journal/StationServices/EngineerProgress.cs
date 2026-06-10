@@ -1,12 +1,13 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+using ParameterTypes;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal.StationServices;
-
+/// <summary>
+///     Written when a player increases their access to an engineer.
+/// </summary>
 public class EngineerProgress : JournalBase
 {
-    public override string Event => "EngineerProgress";
     public string? Engineer { get; set; }
     public ulong? EngineerID { get; set; }
     public int? Rank { get; set; }

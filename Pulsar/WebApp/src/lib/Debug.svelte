@@ -1,27 +1,41 @@
 <script lang="ts">
-    import { useQuery, useQueryClient } from "@sveltestack/svelte-query";
+    import {onMount} from "svelte";
+    import type JournalBase from "../types/api/JournalBase";
 
-    const queryClient = useQueryClient();
+    let data: JournalBase[] = [];
+    let isLoading = true;
+    let error: string | null = null;
 
-    const getData = async () => {
-        const response = await fetch(
-            "http://localhost:5000/api/journal/",
-        );
-        return response.json()
+    const getData = async (): Promise<JournalBase[]> => {
+        const response = await fetch("/api/journal");
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+        }
+        return response.json();
     };
 
-    const query = useQuery("journal", getData, { staleTime: Infinity });
+    onMount(() => {
+        void (async () => {
+            try {
+                data = await getData();
+            } catch (cause) {
+                error = cause instanceof Error ? cause.message : "Unknown error";
+            } finally {
+                isLoading = false;
+            }
+        })();
+    });
 </script>
 
 <h1>Debug</h1>
 
-{#if $query.isLoading}
+{#if isLoading}
     <span>Loading...</span>
-{:else if $query.error}
-    <span>An error has occurred: {$query.error}</span>
+{:else if error}
+    <span>An error has occurred: {error}</span>
 {:else}
 
-    {#each $query.data as row}
+    {#each data as row}
         {#if row.event == 'FSSDiscoveryScan'}
             <textarea value={JSON.stringify(row, null, 2)}/>
         {/if}
@@ -65,4 +79,3 @@
         /* height: 100px; */
     }
 </style>
-

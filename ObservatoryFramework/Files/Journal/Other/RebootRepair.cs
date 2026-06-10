@@ -1,9 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.Other;
 
-namespace Observatory.Framework.Files.Journal.Other;
-
+/// <summary>
+///     Written when the 'reboot repair' function is used.
+/// </summary>
 public class RebootRepair : JournalBase
 {
-    public override string Event => "RebootRepair";
     public IList<string> Modules { get; init; }
 }

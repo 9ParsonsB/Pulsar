@@ -1,10 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Observatory.Framework.Files.Journal.Startup;
 
-namespace Observatory.Framework.Files.Journal.Startup;
+using System.Text.Json.Serialization;
 
+/// <summary>
+///     Written at startup, when loading from main menu into game.
+/// </summary>
 public class LoadGame : JournalBase
 {
-    public override string Event => "LoadGame";
     public string Commander { get; init; }
     public string? FID { get; init; }
     public bool? Horizons { get; init; }
@@ -22,10 +24,13 @@ public class LoadGame : JournalBase
     public string? ShipIdent { get; init; }
     public double FuelLevel { get; init; }
     public double FuelCapacity { get; init; }
+
     [JsonPropertyName("language")]
     public string? Language { get; init; }
+
     [JsonPropertyName("gameversion")]
     public string? GameVersion { get; init; }
+
     [JsonPropertyName("build")]
     public string? Build { get; init; }
 }

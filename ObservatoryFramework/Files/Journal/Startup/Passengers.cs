@@ -1,11 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Observatory.Framework.Files.Journal.Startup;
 
-namespace Observatory.Framework.Files.Journal.Startup;
+using System.Text.Json.Serialization;
 
+/// <summary>
+///     Written at startup, when loading the saved game file.
+/// </summary>
 public class Passengers : JournalBase
 {
-    public override string Event => "Passengers";
-    
     [JsonPropertyName("Passengers_Missions_Accepted")]
     public int PassengersMissionsAccepted { get; init; }
 

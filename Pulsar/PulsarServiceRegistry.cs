@@ -1,17 +1,15 @@
 namespace Pulsar;
 
-using System.Diagnostics.CodeAnalysis;
-using Lamar;
-using Features;
 using Features.Backpack;
 using Features.Cargo;
-using Features.ModulesInfo;
-using Features.Journal;
 using Features.Market;
+using Features.ModulesInfo;
 using Features.NavRoute;
 using Features.Outfitting;
 using Features.ShipLocker;
 using Features.Shipyard;
+using Lamar;
+using System.Diagnostics.CodeAnalysis;
 
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
 public class PulsarServiceRegistry : ServiceRegistry

@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Odyssey;
 
+/// <summary>
+///     Written when the player upgrades a hand weapon.
+/// </summary>
 public class UpgradeWeapon : JournalBase
 {
-    public override string Event => "UpgradeWeapon";
     public string Name { get; init; }
     public string Name_Localised { get; init; }
     public ulong SuitModuleID { get; init; }

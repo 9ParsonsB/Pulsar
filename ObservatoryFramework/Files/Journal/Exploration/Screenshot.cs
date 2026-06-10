@@ -1,46 +1,53 @@
 ﻿namespace Observatory.Framework.Files.Journal.Exploration;
 
 /// <summary>
-/// Event generated when the player takes a screenshot.
+///     Event generated when the player takes a screenshot.
 /// </summary>
 public class Screenshot : JournalBase
 {
-    public override string Event => "Screenshot";
     /// <summary>
-    /// <para>Filename of the screenshot taken in the form of "\\ED Pictures\\filename"</para>
-    /// <para>"\\ED Pictures\\" corresponds to "%userprofile%\Pictures\Frontier Developments\Elite Dangerous\"</para>
+    ///     <para>Filename of the screenshot taken in the form of "\\ED Pictures\\filename"</para>
+    ///     <para>"\\ED Pictures\\" corresponds to "%userprofile%\Pictures\Frontier Developments\Elite Dangerous\"</para>
     /// </summary>
     public string Filename { get; init; }
+
     /// <summary>
-    /// Pixel width of the saved image.
+    ///     Pixel width of the saved image.
     /// </summary>
     public int Width { get; init; }
+
     /// <summary>
-    /// Pixel height of the saved image.
+    ///     Pixel height of the saved image.
     /// </summary>
     public int Height { get; init; }
+
     /// <summary>
-    /// System name of the current system.
+    ///     System name of the current system.
     /// </summary>
     public string System { get; init; }
+
     /// <summary>
-    /// Body name of the current location.
+    ///     Body name of the current location.
     /// </summary>
     public string Body { get; init; }
+
     /// <summary>
-    /// Current latitude if applicable.
+    ///     Current latitude if applicable.
     /// </summary>
     public float Latitude { get; init; }
+
     /// <summary>
-    /// Current longitude if applicable.
+    ///     Current longitude if applicable.
     /// </summary>
     public float Longitude { get; init; }
+
     /// <summary>
-    /// Current altitude if applicable.
+    ///     Current altitude if applicable.
     /// </summary>
     public float Altitude { get; init; }
+
     /// <summary>
-    /// Current heading if applicable.
+    ///     Current heading if applicable.
     /// </summary>
     public int Heading { get; init; }
 }

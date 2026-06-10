@@ -1,7 +1,7 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 [Owned]
 public class CQC

@@ -1,49 +1,53 @@
 namespace Pulsar.Features;
 
+using Backpack;
+using Cargo;
+using Market;
+using ModulesInfo;
+using NavRoute;
 using Observatory.Framework.Files;
 using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Odyssey;
-                
-public class EventsHub(IJournalService journalService) : Hub<IEventsHub>
+using Outfitting;
+using ShipLocker;
+using Shipyard;
+
+public class EventsHub(
+    IJournalService journalService,
+    IStatusService statusService,
+    IOutfittingService outfittingService,
+    IShipyardService shipyardService,
+    INavRouteService navRouteService,
+    IMarketService marketService,
+    IModulesInfoService modulesInfoService,
+    ICargoService cargoService,
+    IBackpackService backpackService,
+    IShipLockerService shipLockerService) : Hub<IEventsHub>
 {
     public override async Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
+
+        await Clients.Caller.StatusUpdated(await statusService.Get());
+        await Clients.Caller.OutfittingUpdated(await outfittingService.Get());
+        await Clients.Caller.ShipyardUpdated(await shipyardService.Get());
+        await Clients.Caller.NavRouteUpdated(await navRouteService.Get());
+        await Clients.Caller.MarketUpdated(await marketService.Get());
+        await Clients.Caller.ModuleInfoUpdated(await modulesInfoService.Get());
+        await Clients.Caller.CargoUpdated(await cargoService.Get());
+        await Clients.Caller.BackpackUpdated(await backpackService.Get());
+        await Clients.Caller.ShipLockerUpdated(await shipLockerService.Get());
+
         await Clients.Caller.JournalUpdated(await journalService.GetLastStartupEvents());
         var state = await journalService.GetLatestState();
-        if (state.Any())
-        {
-            await Clients.Caller.JournalUpdated(state);
-        }
+        if (state.Any()) await Clients.Caller.JournalUpdated(state);
     }
 
-    public async Task Status([FromServices] IStatusService statusService)
+    public async Task Status()
     {
         var status = await statusService.Get();
         await Clients.Caller.StatusUpdated(status);
     }
-    
-    public async Task StatusUpdated(Observatory.Framework.Files.Status status) => await Clients.All.StatusUpdated(status);
-
-    public async Task OutfittingUpdated(OutfittingFile outfitting) => await Clients.All.OutfittingUpdated(outfitting);
-
-    public async Task ShipyardUpdated(ShipyardFile shipyard) => await Clients.All.ShipyardUpdated(shipyard);
-
-    public async Task NavRouteUpdated(NavRouteFile navRoute) => await Clients.All.NavRouteUpdated(navRoute);
-
-    public async Task MarketUpdated(MarketFile market) => await Clients.All.MarketUpdated(market);
-
-    public async Task JournalUpdated(List<JournalBase> journals) => await Clients.All.JournalUpdated(journals);
-
-    public async Task ModuleInfoUpdated(ModuleInfoFile moduleInfo) => await Clients.All.ModuleInfoUpdated(moduleInfo);
-
-    public async Task FleetCarrierUpdated(FCMaterialsFile fleetCarrier) => await Clients.All.FleetCarrierUpdated(fleetCarrier);
-            
-    public async Task CargoUpdated(CargoFile cargo) => await Clients.All.CargoUpdated(cargo);
-
-    public async Task BackpackUpdated(BackpackFile backpack) => await Clients.All.BackpackUpdated(backpack);
-    
-    public async Task ShipLockerUpdated(ShipLockerMaterials shipLocker) => await Clients.All.ShipLockerUpdated(shipLocker);
 }
 
 public interface IEventsHub
@@ -67,6 +71,6 @@ public interface IEventsHub
     Task CargoUpdated(CargoFile cargo);
 
     Task BackpackUpdated(BackpackFile backpack);
-    
+
     Task ShipLockerUpdated(ShipLockerMaterials shipLocker);
 }

@@ -1,7 +1,9 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when changing the task assignment of a member of crew.
+/// </summary>
 public class CrewAssign : CrewFire
 {
-    public override string Event => "CrewAssign";
     public string Role { get; init; }
 }

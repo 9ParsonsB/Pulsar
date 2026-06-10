@@ -1,13 +1,14 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
-using Observatory.Framework.Files.Journal;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using Journal;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 [Owned]
 public class Crafting
 {
-    [JsonPropertyName("Spent_On_Crafting"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Spent_On_Crafting")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public long SpentOnCrafting { get; init; }
 
     [JsonPropertyName("Count_Of_Used_Engineers")]
@@ -33,7 +34,7 @@ public class Crafting
 
     [JsonPropertyName("Suit_Mods_Applied")]
     public int SuitModsApplied { get; init; }
-        
+
     [JsonPropertyName("Suit_Mods_Applied_Full")]
     public int SuitModsAppliedFull { get; init; }
 
@@ -55,24 +56,31 @@ public class Crafting
     [JsonPropertyName("Weapons_Upgraded_Full")]
     public int WeaponsUpgradedFull { get; init; }
 
-    [JsonPropertyName("Recipes_Applied"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Recipes_Applied")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int RecipesApplied { get; init; }
 
-    [JsonPropertyName("Recipes_Applied_Rank_1"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Recipes_Applied_Rank_1")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int RecipesAppliedRank1 { get; init; }
 
-    [JsonPropertyName("Recipes_Applied_Rank_2"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Recipes_Applied_Rank_2")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int RecipesAppliedRank2 { get; init; }
 
-    [JsonPropertyName("Recipes_Applied_Rank_3"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Recipes_Applied_Rank_3")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int RecipesAppliedRank3 { get; init; }
 
-    [JsonPropertyName("Recipes_Applied_Rank_4"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Recipes_Applied_Rank_4")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int RecipesAppliedRank4 { get; init; }
 
-    [JsonPropertyName("Recipes_Applied_Rank_5"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Recipes_Applied_Rank_5")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int RecipesAppliedRank5 { get; init; }
 
-    [JsonPropertyName("Recipes_Applied_On_Previously_Modified_Modules"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Recipes_Applied_On_Previously_Modified_Modules")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int RecipesAppliedOnPreviouslyModifiedModules { get; init; }
 }

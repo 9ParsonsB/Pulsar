@@ -1,17 +1,16 @@
-﻿using System.Collections.Immutable;
-using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Converters;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Travel;
 
-namespace Observatory.Framework.Files.Journal.Travel;
+using Converters;
+using ParameterTypes;
+using System.Text.Json.Serialization;
 
 public class Docked : JournalBase
 {
-    public override string Event => "Docked";
     /// <summary>
-    /// Name of the station at which this event occurred.
+    ///     Name of the station at which this event occurred.
     /// </summary>
     public string StationName { get; init; }
+
     public string StationType { get; init; }
     public string StarSystem { get; init; }
     public ulong SystemAddress { get; init; }
@@ -20,8 +19,9 @@ public class Docked : JournalBase
     [JsonConverter(typeof(LegacyFactionConverter<Faction>))]
     public Faction StationFaction { get; init; }
 
-    [Obsolete(JournalUtilities.ObsoleteMessage), JsonConverter(typeof(LegacyFactionConverter<Faction>))]
-    public Faction Faction 
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonConverter(typeof(LegacyFactionConverter<Faction>))]
+    public Faction Faction
     {
         private get => StationFaction;
         init => StationFaction = value;
@@ -46,6 +46,7 @@ public class Docked : JournalBase
         private get => StationGovernment;
         init => StationGovernment = value;
     }
+
     public string StationGovernment_Localised { get; init; }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
@@ -54,7 +55,8 @@ public class Docked : JournalBase
         private get => StationGovernment_Localised;
         init => StationGovernment_Localised = value;
     }
-    public string StationAllegiance { get; init; }
+
+    public string? StationAllegiance { get; init; }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
     public string Allegiance
@@ -65,6 +67,7 @@ public class Docked : JournalBase
 
     [JsonConverter(typeof(StationServiceConverter))]
     public StationService StationServices { get; init; }
+
     public string StationEconomy { get; init; }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
@@ -73,6 +76,7 @@ public class Docked : JournalBase
         private get => StationEconomy;
         init => StationEconomy = value;
     }
+
     public string StationEconomy_Localised { get; init; }
 
     [Obsolete(JournalUtilities.ObsoleteMessage)]
@@ -81,10 +85,12 @@ public class Docked : JournalBase
         private get => StationEconomy_Localised;
         init => StationEconomy_Localised = value;
     }
+
     public List<StationEconomy> StationEconomies { get; init; }
 
     [Obsolete("StationState is a rundundant property. Use StationEconomy to potentially reduce unnecessary checks.")]
-    public string StationState { get; init; }
+    public string? StationState { get; init; }
+
     public float DistFromStarLS { get; init; }
     public bool Wanted { get; init; }
     public bool ActiveFine { get; init; }

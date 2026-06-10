@@ -1,10 +1,10 @@
-﻿using System.Text.Json;
+﻿namespace Observatory.Framework.Files.Converters;
+
+using ParameterTypes;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Converters;
-
-class VoucherTypeConverter : JsonConverter<VoucherType>
+internal class VoucherTypeConverter : JsonConverter<VoucherType>
 {
     public override VoucherType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

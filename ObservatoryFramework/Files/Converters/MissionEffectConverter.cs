@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Converters;
 
-namespace Observatory.Framework.Files.Converters;
+using ParameterTypes;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class MissionEffectConverter : JsonConverter<MissionEffect>
 {

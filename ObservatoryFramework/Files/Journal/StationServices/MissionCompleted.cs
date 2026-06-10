@@ -1,13 +1,14 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.StationServices;
+
+using Converters;
+using ParameterTypes;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Converters;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal.StationServices;
-
+/// <summary>
+///     Written when a mission is completed.
+/// </summary>
 public class MissionCompleted : JournalBase
 {
-    public override string Event => "MissionCompleted";
     public string Name { get; init; }
     public string LocalisedName { get; init; }
     public string Faction { get; init; }
@@ -20,8 +21,10 @@ public class MissionCompleted : JournalBase
     public string TargetType { get; init; }
     public string TargetType_Localised { get; init; }
     public long Reward { get; init; }
+
     [JsonConverter(typeof(StringIntConverter))]
     public int Donation { get; init; }
+
     public long Donated { get; init; }
     public IList<string> PermitsAwarded { get; init; }
     public List<CommodityReward> CommodityReward { get; init; }

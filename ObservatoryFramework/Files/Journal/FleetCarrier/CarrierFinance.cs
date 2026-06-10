@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.FleetCarrier;
 
+/// <summary>
+///     Written when fleet carrier finance settings are changed.
+/// </summary>
 public class CarrierFinance : JournalBase
 {
-    public override string Event => "CarrierFinance";
     public ulong CarrierID { get; init; }
     public int TaxRate { get; init; }
     public long CarrierBalance { get; init; }

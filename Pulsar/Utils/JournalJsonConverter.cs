@@ -1,3 +1,6 @@
+namespace Pulsar.Utils;
+
+using Observatory.Framework.Files.Journal;
 using Observatory.Framework.Files.Journal.Combat;
 using Observatory.Framework.Files.Journal.Exploration;
 using Observatory.Framework.Files.Journal.Odyssey;
@@ -8,39 +11,36 @@ using Observatory.Framework.Files.Journal.StationServices;
 using Observatory.Framework.Files.Journal.Trade;
 using Observatory.Framework.Files.Journal.Travel;
 
-namespace Pulsar.Utils;
-
-using Observatory.Framework.Files.Journal;
-
 [Flags]
 public enum JournalReaderState
 {
     /// <summary>
-    /// Have read the first character of the object
+    ///     Have read the first character of the object
     /// </summary>
     Start,
 
     /// <summary>
-    /// Have read the timestamp. Generally the first property in a journal entry.
+    ///     Have read the timestamp. Generally the first property in a journal entry.
     /// </summary>
     Timestamp,
 
     /// <summary>
-    /// have read the event name. Generally the second property in a journal entry.
+    ///     have read the event name. Generally the second property in a journal entry.
     /// </summary>
     Event,
 
     /// <summary>
-    /// Have read the last character of the object, the next character should be a newline, whitespace, EOF, or another object.
+    ///     Have read the last character of the object, the next character should be a newline, whitespace, EOF, or another
+    ///     object.
     /// </summary>
-    End,
+    End
 }
 
 /// <summary>
-/// A JournalFile contains a collection of journal entries.
-/// Each journal entry is a JSON object, delimited by a newline character.
-/// all Journals can be deserialized into a JournalBase object for identification
-/// and then deserialized into their respective types.
+///     A JournalFile contains a collection of journal entries.
+///     Each journal entry is a JSON object, delimited by a newline character.
+///     all Journals can be deserialized into a JournalBase object for identification
+///     and then deserialized into their respective types.
 /// </summary>
 public class JournalJsonConverter(ILogger<JournalJsonConverter> logger) : JsonConverter<JournalBase>
 {
@@ -48,11 +48,11 @@ public class JournalJsonConverter(ILogger<JournalJsonConverter> logger) : JsonCo
 
     public override JournalBase? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        Utf8JsonReader clone = reader;
+        var clone = reader;
         DateTimeOffset? timestamp = null;
         string? eventName = null;
         // for debug
-        int depth = 0;
+        var depth = 0;
         do
         {
             depth++;
@@ -68,7 +68,6 @@ public class JournalJsonConverter(ILogger<JournalJsonConverter> logger) : JsonCo
                     var propertyName = clone.GetString();
                     // if we have not started reading the body, and we have not read the (timestamp or event name) 
                     if ((state & JournalReaderState.Timestamp) == 0 || (state & JournalReaderState.Event) == 0)
-                    {
                         switch (propertyName)
                         {
                             case "timestamp":
@@ -82,13 +81,10 @@ public class JournalJsonConverter(ILogger<JournalJsonConverter> logger) : JsonCo
                                 state = JournalReaderState.Event;
                                 break;
                         }
-                    }
 
                     if ((state & JournalReaderState.Event) != 0)
-                    {
                         // create destination type
                         return GetDestinationType(ref reader, eventName!);
-                    }
 
                     break;
                 case JsonTokenType.Comment:
@@ -108,7 +104,9 @@ public class JournalJsonConverter(ILogger<JournalJsonConverter> logger) : JsonCo
             }
         } while (clone.Read());
 
-        logger.LogWarning("Failed to deserialize journal entry at depth: {Depth}. Event?: {EventName}, Timestamp?: {Timestamp}", depth, eventName, timestamp);
+        logger.LogWarning(
+            "Failed to deserialize journal entry at depth: {Depth}. Event?: {EventName}, Timestamp?: {Timestamp}",
+            depth, eventName, timestamp);
         return null;
         // TODO: handle inf (invalid data) in the journal files
         // else if (typeof(TJournal) == typeof(Scan) && json.Contains("\"RotationPeriod\":inf"))
@@ -308,7 +306,7 @@ public class JournalJsonConverter(ILogger<JournalJsonConverter> logger) : JsonCo
             case "DockingDenied":
                 return JsonSerializer.Deserialize<DockingDenied>(ref reader)!;
             case "FetchRemoteModule":
-                return JsonSerializer.Deserialize<FetchRemoteModule>(ref reader)!; 
+                return JsonSerializer.Deserialize<FetchRemoteModule>(ref reader)!;
             case "EngineerContribution":
                 return JsonSerializer.Deserialize<EngineerContribution>(ref reader)!;
             case "CollectCargo":

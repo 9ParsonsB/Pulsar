@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when requesting a ship at another station be transported to this station.
+/// </summary>
 public class ShipyardTransfer : JournalBase
 {
-    public override string Event => "ShipyardTransfer";
     public ulong MarketID { get; init; }
     public string ShipType { get; init; }
     public string ShipType_Localised { get; init; }

@@ -2,33 +2,33 @@
 
     <PropertyGroup>
         <OutputType>exe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>Pulsar</RootNamespace>
         <LangVersion>latest</LangVersion>
         <UserSecretsId>73ec530f-725a-43be-ae2e-b43eeb61cb04</UserSecretsId>
     </PropertyGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\ObservatoryFramework\ObservatoryFramework.csproj" />
+        <ProjectReference Include="..\ObservatoryFramework\ObservatoryFramework.csproj"/>
     </ItemGroup>
-   
+
     <ItemGroup>
-      <PackageReference Include="Lamar" Version="13.0.4" />
-      <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="13.0.4" />
-      <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
-      <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0-preview.4.24267.1">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-preview.4.24267.1" />
-      <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.22.0" />
-      <PackageReference Include="morelinq" Version="4.2.0" />
-      <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
-      <PackageReference Include="NSwag.SwaggerGeneration" Version="12.3.0" />
-      <PackageReference Include="System.Text.Json" Version="9.0.0-preview.4.24266.19" />
-      <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0-preview.1.24266.1" />
+        <PackageReference Include="Lamar" Version="16.0.0"/>
+        <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="16.0.0"/>
+        <PackageReference Include="Microsoft.ApplicationInsights" Version="3.1.2"/>
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.1.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.23.0"/>
+        <PackageReference Include="morelinq" Version="4.4.0"/>
+        <PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
+        <PackageReference Include="NSwag.SwaggerGeneration" Version="12.3.0"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.8"/>
+        <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0"/>
     </ItemGroup>
 </Project>

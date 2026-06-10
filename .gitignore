@@ -369,3 +369,19 @@ InnoSetup/ObservatorySetup.exe
 ObservatoryFramework/ObservatoryFramework.xml
 InnoSetup/ObservatoryCore.zip
 /ObservatoryHerald/ObservatoryAPI - Build.resx
+
+# Local workspace artifacts
+.directory
+.idea/
+**/.idea/
+
+# Pulsar runtime data
+/Pulsar/Journals.sqlite
+/Pulsar/Journals.sqlite-shm
+/Pulsar/Journals.sqlite-wal
+
+# WebApp build artifacts
+/Pulsar/WebApp/node_modules/
+/Pulsar/WebApp/.svelte-kit/
+/Pulsar/WebApp/build/
+/Pulsar/WebApp/vite.config.ts.timestamp-*.mjs

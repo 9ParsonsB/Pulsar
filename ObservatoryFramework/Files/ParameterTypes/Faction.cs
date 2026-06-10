@@ -3,7 +3,7 @@
 public class Faction
 {
     public string Name { get; init; }
-    public string FactionState { get; init; }
+    public string? FactionState { get; init; }
     public string? Government { get; init; }
     public float? Influence { get; init; }
     public string? Allegiance { get; init; }

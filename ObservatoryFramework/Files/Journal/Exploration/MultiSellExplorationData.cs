@@ -1,29 +1,29 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Exploration;
 
-namespace Observatory.Framework.Files.Journal.Exploration;
+using ParameterTypes;
 
 /// <summary>
-/// Event generated when discovery data for multiple systems are sold at once.
+///     Event generated when discovery data for multiple systems are sold at once.
 /// </summary>
 public class MultiSellExplorationData : JournalBase
 {
-    public override string Event => "MultiSellExplorationData";
     /// <summary>
-    /// List of all sold first discoveries.
+    ///     List of all sold first discoveries.
     /// </summary>
     public List<Discovered> Discovered { get; init; }
+
     /// <summary>
-    /// Base value of total sold data.
+    ///     Base value of total sold data.
     /// </summary>
     public long BaseValue { get; init; }
+
     /// <summary>
-    /// Bonus value added to base amount.
+    ///     Bonus value added to base amount.
     /// </summary>
     public long Bonus { get; init; }
+
     /// <summary>
-    /// Total amount earned by CMDR for data sale.
+    ///     Total amount earned by CMDR for data sale.
     /// </summary>
     public long TotalEarnings { get; init; }
-
 }

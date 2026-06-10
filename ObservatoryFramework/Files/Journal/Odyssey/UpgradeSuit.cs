@@ -1,10 +1,12 @@
-﻿using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Odyssey;
 
-namespace Observatory.Framework.Files.Journal.Odyssey;
+using ParameterTypes;
 
+/// <summary>
+///     Written when the player upgrades their flight suit.
+/// </summary>
 public class UpgradeSuit : JournalBase
 {
-    public override string Event => "UpgradeSuit";
     public string Name { get; init; }
     public string Name_Localised { get; init; }
     public ulong SuitID { get; init; }

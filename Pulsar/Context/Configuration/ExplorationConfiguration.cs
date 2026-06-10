@@ -1,8 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+namespace Pulsar.Context.Configuration;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Observatory.Framework.Files.Journal.Exploration;
-
-namespace Pulsar.Context.Configuration;
 
 public class ScanConfiguration : IEntityTypeConfiguration<Scan>
 {
@@ -13,6 +12,15 @@ public class ScanConfiguration : IEntityTypeConfiguration<Scan>
         builder.OwnsOne(s => s.Composition, b => b.ToJson());
         builder.OwnsMany(s => s.Rings, b => b.ToJson());
         builder.OwnsMany(s => s.Parents, b => b.ToJson());
+        builder.Ignore(s => s.Parent);
+    }
+}
+
+public class ScanBaryCentreConfiguration : IEntityTypeConfiguration<ScanBaryCentre>
+{
+    public void Configure(EntityTypeBuilder<ScanBaryCentre> builder)
+    {
+        builder.HasKey(s => new { s.Timestamp, s.SystemAddress, s.BodyID });
     }
 }
 

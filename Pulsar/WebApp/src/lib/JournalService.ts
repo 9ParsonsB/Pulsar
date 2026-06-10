@@ -1,1 +1,2 @@
-export default class JournalService {}
+export default class JournalService {
+}

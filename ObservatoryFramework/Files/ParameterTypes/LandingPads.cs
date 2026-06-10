@@ -2,7 +2,7 @@
 
 public class LandingPads
 {
-    int Small { get; init; }
-    int Medium { get; init; }
-    int Large { get; init; }
+    private int Small { get; init; }
+    private int Medium { get; init; }
+    private int Large { get; init; }
 }

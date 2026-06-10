@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when selling a module in storage at another station.
+/// </summary>
 public class ModuleSellRemote : JournalBase
 {
-    public override string Event => "ModuleSellRemote";
     public int StorageSlot { get; init; }
     public string SellItem { get; init; }
     public string SellItem_Localised { get; init; }

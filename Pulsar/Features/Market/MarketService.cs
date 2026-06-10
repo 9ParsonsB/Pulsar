@@ -4,16 +4,14 @@ using Observatory.Framework.Files;
 
 public interface IMarketService : IJournalHandler<MarketFile>;
 
-public class MarketService(IOptions<PulsarConfiguration> options, IEventHubContext hub, ILogger<MarketService> logger) : IMarketService
+public class MarketService(IOptions<PulsarConfiguration> options, IEventHubContext hub, ILogger<MarketService> logger)
+    : IMarketService
 {
     public async Task<MarketFile> Get()
     {
         var filePath = Path.Combine(options.Value.JournalDirectory, FileName);
 
-        if (!FileHelper.ValidateFile(filePath))
-        {
-            return new MarketFile();
-        }
+        if (!FileHelper.ValidateFile(filePath)) return new MarketFile();
 
         await using var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var market = await JsonSerializer.DeserializeAsync<MarketFile>(file);
@@ -23,14 +21,11 @@ public class MarketService(IOptions<PulsarConfiguration> options, IEventHubConte
         return new MarketFile();
     }
 
-    public async Task HandleFile(string path, CancellationToken token = new ())
+    public async Task HandleFile(string path, CancellationToken token = new())
     {
-        if (!FileHelper.ValidateFile(path))
-        {
-            return;
-        }
+        if (!FileHelper.ValidateFile(path)) return;
 
-        var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        await using var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var market = await JsonSerializer.DeserializeAsync<MarketFile>(file, cancellationToken: token);
 
         if (market == null)

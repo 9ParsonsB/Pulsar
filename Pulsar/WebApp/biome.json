@@ -1,0 +1,288 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": [
+      "src/**/*.svelte",
+      "src/**/*.ts",
+      "tests/**/*.ts",
+      "*.json",
+      "*.js",
+      "*.ts"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "complexity": {
+        "noBannedTypes": "error",
+        "noExtraBooleanCast": "error",
+        "noAdjacentSpacesInRegex": "error",
+        "noUselessCatch": "error",
+        "noUselessTypeConstraint": "error"
+      },
+      "correctness": {
+        "noConstAssign": "error",
+        "noConstantCondition": "error",
+        "noEmptyCharacterClassInRegex": "error",
+        "noEmptyPattern": "error",
+        "noGlobalObjectCalls": "error",
+        "noInnerDeclarations": "error",
+        "noInvalidConstructorSuper": "error",
+        "noInvalidBuiltinInstantiation": "error",
+        "noNonoctalDecimalEscape": "error",
+        "noPrecisionLoss": "error",
+        "noSelfAssign": "error",
+        "noSetterReturn": "error",
+        "noSwitchDeclarations": "error",
+        "noUndeclaredVariables": "error",
+        "noUnreachable": "error",
+        "noUnreachableSuper": "error",
+        "noUnsafeFinally": "error",
+        "noUnsafeOptionalChaining": "error",
+        "noUnusedLabels": "error",
+        "noUnusedVariables": "error",
+        "useIsNan": "error",
+        "useValidForDirection": "error",
+        "useValidTypeof": "error",
+        "useYield": "error"
+      },
+      "style": {
+        "noNamespace": "error",
+        "useAsConstAssertion": "error"
+      },
+      "suspicious": {
+        "noAsyncPromiseExecutor": "error",
+        "noCatchAssign": "error",
+        "noClassAssign": "error",
+        "noCompareNegZero": "error",
+        "noControlCharactersInRegex": "error",
+        "noDebugger": "error",
+        "noDuplicateCase": "error",
+        "noDuplicateClassMembers": "error",
+        "noDuplicateObjectKeys": "error",
+        "noDuplicateParameters": "error",
+        "noEmptyBlockStatements": "error",
+        "noExplicitAny": "error",
+        "noExtraNonNullAssertion": "error",
+        "noFallthroughSwitchClause": "error",
+        "noFunctionAssign": "error",
+        "noGlobalAssign": "error",
+        "noImportAssign": "error",
+        "noMisleadingCharacterClass": "error",
+        "noMisleadingInstantiator": "error",
+        "noPrototypeBuiltins": "error",
+        "noRedeclare": "error",
+        "noShadowRestrictedNames": "error",
+        "noUnsafeDeclarationMerging": "error",
+        "noUnsafeNegation": "error",
+        "noWith": "error",
+        "useGetterReturn": "error"
+      }
+    }
+  },
+  "javascript": {
+    "globals": [
+      "onscrollend",
+      "onpointerleave",
+      "oncontextrestored",
+      "onemptied",
+      "ongamepaddisconnected",
+      "onkeypress",
+      "onloadeddata",
+      "onmouseup",
+      "onvolumechange",
+      "onpaste",
+      "onstorage",
+      "onkeyup",
+      "onabort",
+      "oncut",
+      "ontransitionrun",
+      "onafterprint",
+      "onblur",
+      "ondurationchange",
+      "ontransitionstart",
+      "oncanplaythrough",
+      "onanimationend",
+      "onmouseleave",
+      "ondragleave",
+      "onplay",
+      "onunhandledrejection",
+      "onbeforeprint",
+      "onpointercancel",
+      "onsubmit",
+      "ondragstart",
+      "onmessage",
+      "location",
+      "onoffline",
+      "onappinstalled",
+      "onwheel",
+      "onended",
+      "onkeydown",
+      "onclick",
+      "onfocus",
+      "onscroll",
+      "ongamepadconnected",
+      "oncanplay",
+      "onpointerdown",
+      "ondeviceorientationabsolute",
+      "onauxclick",
+      "ondevicemotion",
+      "onratechange",
+      "ontransitionend",
+      "onchange",
+      "onselect",
+      "onbeforeinstallprompt",
+      "onbeforetoggle",
+      "onmouseout",
+      "ontimeupdate",
+      "ondragover",
+      "oncuechange",
+      "ontransitioncancel",
+      "onprogress",
+      "onbeforeinput",
+      "onpointerenter",
+      "onmouseenter",
+      "oninvalid",
+      "onpointerout",
+      "onpagereveal",
+      "onpause",
+      "onanimationstart",
+      "onwaiting",
+      "ondeviceorientation",
+      "onclose",
+      "onbeforeunload",
+      "oncancel",
+      "onseeked",
+      "onpointerover",
+      "ongotpointercapture",
+      "onloadedmetadata",
+      "onpageshow",
+      "onstalled",
+      "oncontextmenu",
+      "onreset",
+      "ondrag",
+      "onbeforematch",
+      "onload",
+      "onlostpointercapture",
+      "onsuspend",
+      "onselectionchange",
+      "onpagehide",
+      "onrejectionhandled",
+      "onunload",
+      "onanimationcancel",
+      "onmousedown",
+      "onpointerup",
+      "onmouseover",
+      "onformdata",
+      "oncontentvisibilityautostatechange",
+      "onresize",
+      "onsearch",
+      "ontoggle",
+      "exports",
+      "onpageswap",
+      "onbeforexrselect",
+      "onlanguagechange",
+      "ondragenter",
+      "onerror",
+      "onpointermove",
+      "onmousemove",
+      "ondrop",
+      "onhashchange",
+      "onsecuritypolicyviolation",
+      "onslotchange",
+      "oncopy",
+      "onanimationiteration",
+      "ondblclick",
+      "ondragend",
+      "onpointerrawupdate",
+      "onpopstate",
+      "onplaying",
+      "oncontextlost",
+      "onloadstart",
+      "onseeking",
+      "oninput",
+      "onmessageerror",
+      "onselectstart",
+      "onmousewheel",
+      "ononline"
+    ]
+  },
+  "overrides": [
+    {
+      "includes": [
+        "src/**/*.svelte"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/app.d.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNamespace": "off"
+          }
+        }
+      }
+    },
+    {
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noConstAssign": "off",
+            "noGlobalObjectCalls": "off",
+            "noInvalidConstructorSuper": "off",
+            "noInvalidBuiltinInstantiation": "off",
+            "noSetterReturn": "off",
+            "noUndeclaredVariables": "off",
+            "noUnreachable": "off",
+            "noUnreachableSuper": "off"
+          },
+          "style": {
+            "useConst": "error"
+          },
+          "suspicious": {
+            "noDuplicateClassMembers": "off",
+            "noDuplicateObjectKeys": "off",
+            "noDuplicateParameters": "off",
+            "noFunctionAssign": "off",
+            "noImportAssign": "off",
+            "noRedeclare": "off",
+            "noUnsafeNegation": "off",
+            "useGetterReturn": "off"
+          }
+        }
+      }
+    },
+    {
+      "javascript": {
+        "globals": []
+      },
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noInnerDeclarations": "off",
+            "noSelfAssign": "off",
+            "noUndeclaredVariables": "off"
+          },
+          "style": {
+            "useConst": "off"
+          }
+        }
+      }
+    },
+    {
+      "javascript": {
+        "globals": []
+      }
+    }
+  ]
+}

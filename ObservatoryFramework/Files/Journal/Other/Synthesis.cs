@@ -1,13 +1,14 @@
-﻿using System.Collections.Immutable;
+﻿namespace Observatory.Framework.Files.Journal.Other;
+
+using Converters;
+using ParameterTypes;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.Converters;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Journal.Other;
-
+/// <summary>
+///     Written when synthesis is used to repair or rearm.
+/// </summary>
 public class Synthesis : JournalBase
 {
-    public override string Event => "Synthesis";
     public string Name { get; init; }
 
     [JsonConverter(typeof(MaterialConverter))]

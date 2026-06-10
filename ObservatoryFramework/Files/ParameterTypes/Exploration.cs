@@ -1,8 +1,8 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
-using Observatory.Framework.Files.Journal;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using Journal;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 [Owned]
 public class Exploration
@@ -10,10 +10,12 @@ public class Exploration
     [JsonPropertyName("Systems_Visited")]
     public long SystemsVisited { get; init; }
 
-    [JsonPropertyName("Fuel_Scooped"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Fuel_Scooped")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int FuelScooped { get; init; }
 
-    [JsonPropertyName("Fuel_Purchased"), Obsolete(JournalUtilities.ObsoleteMessage)]
+    [JsonPropertyName("Fuel_Purchased")]
+    [Obsolete(JournalUtilities.ObsoleteMessage)]
     public int FuelPurchased { get; init; }
 
     [JsonPropertyName("Exploration_Profits")]

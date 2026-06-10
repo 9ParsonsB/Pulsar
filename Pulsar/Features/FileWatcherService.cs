@@ -1,19 +1,28 @@
 namespace Pulsar.Features;
 
-using System.Collections.Concurrent;
 using Microsoft.Extensions.FileProviders;
+using System.Collections.Concurrent;
 
-public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHandlerService fileHandlerService, ILogger<FileWatcherService> logger)
+public class FileWatcherService(
+    IOptions<PulsarConfiguration> options,
+    IFileHandlerService fileHandlerService,
+    ILogger<FileWatcherService> logger)
     : IHostedService, IDisposable
 {
+    private readonly ConcurrentDictionary<string, DateTimeOffset> FileDates = new();
     private PhysicalFileProvider watcher = null!;
+    private IDisposable? watchRegistration;
+
+    public void Dispose()
+    {
+        watchRegistration?.Dispose();
+        watcher?.Dispose();
+    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         if (!Directory.Exists(options.Value.JournalDirectory))
-        {
             throw new Exception($"Directory {options.Value.JournalDirectory} does not exist.");
-        }
 
         watcher = new PhysicalFileProvider(options.Value.JournalDirectory);
         Watch(cancellationToken);
@@ -25,7 +34,12 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
         return Task.CompletedTask;
     }
 
-    ConcurrentDictionary<string, DateTimeOffset> FileDates = new();
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        watchRegistration?.Dispose();
+        watcher?.Dispose();
+        return Task.CompletedTask;
+    }
 
     private void HandleFileChanged(CancellationToken token = new())
     {
@@ -33,22 +47,45 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
         var tasks = new List<Task>();
         try
         {
-            foreach (var file in watcher.GetDirectoryContents(""))
+            var files = watcher.GetDirectoryContents("")
+                .Where(file => !file.IsDirectory && (file.Name.EndsWith(".json") ||
+                                                     (file.Name.StartsWith(FileHandlerService
+                                                          .JournalLogFileNameStart) &&
+                                                      file.Name.EndsWith(FileHandlerService.JournalLogFileNameEnd))))
+                .OrderBy(file => file.Name)
+                .ToList();
+
+            if (!options.Value.ProcessHistoricalJournals)
             {
-                logger.LogDebug("Checking File: {File}", file.PhysicalPath);
-                if (file.IsDirectory || (!file.Name.EndsWith(".json") &&
-                                         !(file.Name.StartsWith(FileHandlerService.JournalLogFileNameStart) &&
-                                           file.Name.EndsWith(FileHandlerService.JournalLogFileNameEnd))))
+                var journals = files.Where(f => f.Name.StartsWith(FileHandlerService.JournalLogFileNameStart)).ToList();
+                if (journals.Count > 0)
                 {
-                    continue;
+                    var latestJournals = journals.TakeLast(2).ToList();
+                    var journalsToSkip = journals
+                        .Where(j => j.PhysicalPath != null && !latestJournals.Contains(j) &&
+                                    !FileDates.ContainsKey(j.PhysicalPath)).ToList();
+
+                    foreach (var journal in journalsToSkip)
+                        if (journal.PhysicalPath != null)
+                            FileDates.TryAdd(journal.PhysicalPath, journal.LastModified);
+                    files.RemoveAll(f => journalsToSkip.Contains(f));
                 }
+            }
+
+            foreach (var file in files)
+            {
+                if (file.PhysicalPath == null)
+                    continue;
+
+                logger.LogDebug("Checking File: {File}", file.PhysicalPath);
 
                 logger.LogDebug("Has File Updated?: {File}, {LastModified}", file.PhysicalPath, file.LastModified);
 
+                var shouldHandle = false;
                 FileDates.AddOrUpdate(file.PhysicalPath, _ =>
                 {
                     logger.LogDebug("New File: {File}", file.PhysicalPath);
-                    tasks.Add(Task.Run(() => fileHandlerService.HandleFile(file.PhysicalPath, token), token));
+                    shouldHandle = true;
                     return file.LastModified;
                 }, (_, existing) =>
                 {
@@ -56,11 +93,13 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
                     if (existing != file.LastModified)
                     {
                         logger.LogDebug("File Updated: {File}", file.PhysicalPath);
-                        tasks.Add(Task.Run(() => fileHandlerService.HandleFile(file.PhysicalPath, token), token));
+                        shouldHandle = true;
                     }
 
                     return file.LastModified;
                 });
+
+                if (shouldHandle) tasks.Add(fileHandlerService.HandleFile(file.PhysicalPath, token));
             }
 
             Task.WaitAll(tasks.ToArray(), token);
@@ -80,22 +119,12 @@ public class FileWatcherService(IOptions<PulsarConfiguration> options, IFileHand
 
         try
         {
-            watcher.Watch("*.*").RegisterChangeCallback(Handle, null);
+            watchRegistration?.Dispose();
+            watchRegistration = watcher.Watch("*.*").RegisterChangeCallback(Handle, null);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error watching directory {Directory}", watcher.Root);
         }
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        watcher.Dispose();
-        return Task.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        watcher.Dispose();
     }
 }

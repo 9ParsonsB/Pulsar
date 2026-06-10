@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Trade;
 
+/// <summary>
+///     Written when selling goods in the market.
+/// </summary>
 public class MarketSell : JournalBase
 {
-    public override string Event => "MarketSell";
     public ulong MarketID { get; init; }
     public string Type { get; init; }
     public string Type_Localised { get; init; }

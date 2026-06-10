@@ -1,9 +1,9 @@
-﻿using System.Text.Json;
+﻿namespace Observatory.Framework.Files.Converters;
+
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Observatory.Framework.Files.Converters;
-
-class FleetCarrierTravelConverter : JsonConverter<float>
+internal class FleetCarrierTravelConverter : JsonConverter<float>
 {
     public override float Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

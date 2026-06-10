@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.StationServices;
 
+/// <summary>
+///     Written when a mission has failed.
+/// </summary>
 public class MissionFailed : JournalBase
 {
-    public override string Event => "MissionFailed";
     public string Name { get; init; }
     public string Name_Localised { get; init; }
     public ulong MissionID { get; init; }

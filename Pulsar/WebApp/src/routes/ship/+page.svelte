@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Ship from "$lib/Ship.svelte";
+    import Ship from "$lib/Ship.svelte";
 </script>
 
 <div class="page">
-    <Ship />
+    <Ship/>
 </div>
 
 <style>

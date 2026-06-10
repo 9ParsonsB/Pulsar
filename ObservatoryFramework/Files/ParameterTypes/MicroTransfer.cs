@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.ParameterTypes;
+using System.Text.Json.Serialization;
 
 public class MicroTransfer : MicroResource
 {

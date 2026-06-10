@@ -1,11 +1,12 @@
-﻿using System.Collections.Immutable;
-using Observatory.Framework.Files.ParameterTypes;
+﻿namespace Observatory.Framework.Files.Journal.Other;
 
-namespace Observatory.Framework.Files.Journal.Other;
+using ParameterTypes;
 
+/// <summary>
+///     Written when an asteroid is prospected.
+/// </summary>
 public class ProspectedAsteroid : JournalBase
 {
-    public override string Event => "ProspectedAsteroid";
     public List<ProspectMaterial> Materials { get; init; }
     public string Content { get; init; }
     public string Content_Localised { get; init; }

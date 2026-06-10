@@ -1,8 +1,10 @@
 ﻿namespace Observatory.Framework.Files.Journal.Odyssey;
 
+/// <summary>
+///     Written when a player adds a weapon to a suit loadout.
+/// </summary>
 public class LoadoutEquipModule : JournalBase
 {
-    public override string Event => "LoadoutEquipModule";
     public ulong SuitID { get; init; }
     public string SuitName { get; init; }
     public string SuitName_Localised { get; init; }

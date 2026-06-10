@@ -61,7 +61,7 @@ public class FileHandlerService(
         { OutfittingFileName, typeof(IJournalHandler<OutfittingFile>) },
         { JournalLogFileNameStart, typeof(IJournalHandler<List<JournalBase>>) }
     };
-    
+
 
     public async Task HandleFile(string path, CancellationToken token = new())
     {
@@ -69,8 +69,8 @@ public class FileHandlerService(
         var fileName = fileInfo.Name;
 
         // only scan the file if we recognize it
-        var match = AllFileNames.FirstOrDefault(
-            f => fileName.StartsWith(f, StringComparison.InvariantCultureIgnoreCase));
+        var match =
+            AllFileNames.FirstOrDefault(f => fileName.StartsWith(f, StringComparison.InvariantCultureIgnoreCase));
 
         if (string.IsNullOrWhiteSpace(match))
         {
@@ -83,13 +83,13 @@ public class FileHandlerService(
             logger.LogWarning("File {FileName} was not handled", fileName);
             return;
         }
-        
+
         if (serviceProvider.GetRequiredService(type) is not IJournalHandler handler)
         {
             logger.LogWarning("Handler for {FileName} is not available", fileName);
             return;
         }
-            
+
         logger.LogInformation("Handling file {FileName} with Type {Type}", fileName, handler.GetType().ToString());
         await handler.HandleFile(path, token);
     }

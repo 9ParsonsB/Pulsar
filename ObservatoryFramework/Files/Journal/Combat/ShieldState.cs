@@ -1,7 +1,9 @@
 ﻿namespace Observatory.Framework.Files.Journal.Combat;
 
+/// <summary>
+///     Written when shields are disabled in combat, or recharged.
+/// </summary>
 public class ShieldState : JournalBase
 {
-    public override string Event => "ShieldState";
     public bool ShieldsUp { get; init; }
 }

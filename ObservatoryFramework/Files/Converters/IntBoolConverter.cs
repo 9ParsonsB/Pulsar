@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿namespace Observatory.Framework.Files.Converters;
 
-namespace Observatory.Framework.Files.Converters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class IntBoolConverter : JsonConverter<bool>
 {

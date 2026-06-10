@@ -13,12 +13,9 @@ public class ModulesInfoService(
 
     public async Task HandleFile(string filePath, CancellationToken token = new())
     {
-        if (!FileHelper.ValidateFile(filePath))
-        {
-            return;
-        }
+        if (!FileHelper.ValidateFile(filePath)) return;
 
-        var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        await using var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var moduleInfo = await JsonSerializer.DeserializeAsync<ModuleInfoFile>(file, cancellationToken: token);
 
         if (moduleInfo == null)
@@ -34,10 +31,7 @@ public class ModulesInfoService(
     {
         var moduleInfoFile = Path.Combine(options.Value.JournalDirectory, FileName);
 
-        if (!FileHelper.ValidateFile(moduleInfoFile))
-        {
-            return new ModuleInfoFile();
-        }
+        if (!FileHelper.ValidateFile(moduleInfoFile)) return new ModuleInfoFile();
 
         await using var file = File.Open(moduleInfoFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var moduleInfo = await JsonSerializer.DeserializeAsync<ModuleInfoFile>(file);

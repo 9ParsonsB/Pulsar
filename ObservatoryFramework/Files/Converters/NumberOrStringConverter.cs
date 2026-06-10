@@ -1,14 +1,16 @@
-﻿using System.Text.Json;
+﻿namespace Observatory.Framework.Files.Converters;
+
+using ParameterTypes;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Observatory.Framework.Files.ParameterTypes;
 
-namespace Observatory.Framework.Files.Converters;
-
-class NumberOrStringConverter : JsonConverter<NumberOrString>
+internal class NumberOrStringConverter : JsonConverter<NumberOrString>
 {
     public override NumberOrString Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        return reader.TokenType == JsonTokenType.String ? new NumberOrString(reader.GetString()) : new NumberOrString(reader.GetDouble());
+        return reader.TokenType == JsonTokenType.String
+            ? new NumberOrString(reader.GetString())
+            : new NumberOrString(reader.GetDouble());
     }
 
     public override void Write(Utf8JsonWriter writer, NumberOrString value, JsonSerializerOptions options)

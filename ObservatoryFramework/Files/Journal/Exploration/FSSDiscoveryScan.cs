@@ -1,29 +1,32 @@
 ﻿namespace Observatory.Framework.Files.Journal.Exploration;
 
 /// <summary>
-/// Event generated when using the discovery scanner (honk) to initially scan system.
+///     Event generated when using the discovery scanner (honk) to initially scan system.
 /// </summary>
 public class FSSDiscoveryScan : JournalBase
 {
-    public override string Event => "FSSDiscoveryScan";
     /// <summary>
-    /// Name of the current system.
+    ///     Name of the current system.
     /// </summary>
     public string SystemName { get; init; }
+
     /// <summary>
-    /// Unique ID of the current system.
+    ///     Unique ID of the current system.
     /// </summary>
     public ulong SystemAddress { get; init; }
+
     /// <summary>
-    /// Percentage of current system already scanned.
+    ///     Percentage of current system already scanned.
     /// </summary>
     public float Progress { get; init; }
+
     /// <summary>
-    /// Number of scannable bodies in system.
+    ///     Number of scannable bodies in system.
     /// </summary>
     public int BodyCount { get; init; }
+
     /// <summary>
-    /// Number of scannable non-body locations in system.
+    ///     Number of scannable non-body locations in system.
     /// </summary>
     public int NonBodyCount { get; init; }
 }
