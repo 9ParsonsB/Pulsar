@@ -22,6 +22,22 @@
     let loadGame: Partial<LoadGame> = $state({});
     let location: Record<string, unknown> = $state({});
 
+    function getJournalString(message: Record<string, unknown>, camelCase: string, pascalCase: string): string | undefined {
+        const value = message[camelCase] ?? message[pascalCase];
+        return typeof value === "string" && value.length > 0 ? value : undefined;
+    }
+
+    function applyLocation(message: Record<string, unknown>) {
+        location = {
+            ...location,
+            ...message,
+            starSystem: getJournalString(message, "starSystem", "StarSystem") ?? getJournalString(location, "starSystem", "StarSystem"),
+            body: getJournalString(message, "body", "Body") ?? getJournalString(location, "body", "Body"),
+            stationName: getJournalString(message, "stationName", "StationName") ?? getJournalString(location, "stationName", "StationName"),
+            stationType: getJournalString(message, "stationType", "StationType") ?? getJournalString(location, "stationType", "StationType")
+        };
+    }
+
     function activePips(value: number | undefined): number {
         return Math.max(0, Math.min(8, Math.floor(value ?? 0)));
     }
@@ -73,10 +89,10 @@
                     loadGame = j;
                 }
                 if (j.event === "Location" || j.event === "FSDJump") {
-                    location = j as unknown as Record<string, unknown>;
+                    applyLocation(j as unknown as Record<string, unknown>);
                 }
                 if (j.event === "Docked" || j.event === "Undocked") {
-                    location = {...location, ...(j as unknown as Record<string, unknown>)};
+                    applyLocation(j as unknown as Record<string, unknown>);
                 }
             });
         };
@@ -128,20 +144,20 @@
         </div>
         <div class="info-item">
             <span class="label">System:</span>
-            <span class="value">{(location.StarSystem as string | undefined) ?? "---"}</span>
+            <span class="value">{getJournalString(location, "starSystem", "StarSystem") ?? "---"}</span>
         </div>
         <div class="info-item">
             <span class="label">Body:</span>
-            <span class="value">{(location.Body as string | undefined) ?? "---"}</span>
+            <span class="value">{getJournalString(location, "body", "Body") ?? "---"}</span>
         </div>
-        {#if location.StationName}
+        {#if getJournalString(location, "stationName", "StationName")}
             <div class="info-item">
                 <span class="label">Station:</span>
-                <span class="value">{location.StationName as string}</span>
+                <span class="value">{getJournalString(location, "stationName", "StationName")}</span>
             </div>
             <div class="info-item">
                 <span class="label">Type:</span>
-                <span class="value">{(location.StationType as string | undefined) ?? "---"}</span>
+                <span class="value">{getJournalString(location, "stationType", "StationType") ?? "---"}</span>
             </div>
         {/if}
     </div>

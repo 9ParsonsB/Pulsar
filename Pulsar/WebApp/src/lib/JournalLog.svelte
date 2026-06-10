@@ -2,6 +2,7 @@
     import type {FSSDiscoveryScan} from "../types/api/FSSDiscoveryScan";
     import type JournalBase from "../types/api/JournalBase";
     import type {Scan} from "../types/api/Scan";
+    import type {FSSBodySignals, SAASignalsFound, Signal} from "../types/api/Signals";
     import connection from "./stores/Connection.store";
     import {onMount} from "svelte";
 
@@ -13,6 +14,23 @@
 
     function isScan(value: JournalBase): value is Scan {
         return value.event === "Scan";
+    }
+
+    function isFSSAllBodiesFound(value: JournalBase): value is JournalBase & {
+        SystemName?: string;
+        systemName?: string;
+        Count?: number;
+        count?: number;
+    } {
+        return value.event === "FSSAllBodiesFound";
+    }
+
+    function isFSSSignalDiscovered(value: JournalBase): value is JournalBase & Record<string, unknown> {
+        return value.event === "FSSSignalDiscovered";
+    }
+
+    function isBodySignals(value: JournalBase): value is FSSBodySignals | SAASignalsFound {
+        return value.event === "FSSBodySignals" || value.event === "SAASignalsFound";
     }
 
     function isFSDJump(value: JournalBase): value is JournalBase & { StarSystem: string } {
@@ -47,6 +65,48 @@
             index;
 
         return `${value.timestamp}|${value.event}|${identity}`;
+    }
+
+    function formatSignal(signal: Signal): string {
+        const label = signal.type_Localised || signal.type.replaceAll("$", "").replaceAll(";", "");
+        return `${signal.count} ${label}`;
+    }
+
+    function formatBodySignals(value: FSSBodySignals | SAASignalsFound): string {
+        const totalSignals = value.Signals.reduce((total, signal) => total + signal.count, 0);
+        const signals = value.Signals.length ? value.Signals.map(formatSignal).join(", ") : "No signals";
+        const genuses = value.Genuses.length
+            ? ` | Biology: ${value.Genuses.map((genus) => genus.Genus_Localised || genus.Genus).join(", ")}`
+            : "";
+        return `${value.BodyName}: ${totalSignals} signal${totalSignals === 1 ? "" : "s"} | ${signals}${genuses}`;
+    }
+
+    function formatScan(value: Scan): string {
+        const bodyType = value.planetClass ?? value.starType ?? "Unknown body";
+        const scanMode = value.scanType ? ` via ${value.scanType}` : "";
+        const distance = value.distanceFromArrivalLS != null ? ` | ${value.distanceFromArrivalLS.toFixed(0)} Ls` : "";
+        const terraformable = value.terraformState ? ` | ${value.terraformState}` : "";
+        return `${value.bodyName}: ${bodyType}${scanMode}${distance}${terraformable}`;
+    }
+
+    function formatFSSSignalDiscovered(value: Record<string, unknown>): string {
+        const signalName = (value.SignalName_Localised as string) || (value.signalName_Localised as string) ||
+            (value.SignalName as string) || (value.signalName as string) || "Signal";
+        const signalType = (value.USSType_Localised as string) || (value.uSSType_Localised as string) ||
+            (value.SignalType as string) || (value.signalType as string);
+        const threat = (value.ThreatLevel as number | undefined) ?? (value.threatLevel as number | undefined);
+        const faction = (value.SpawningFaction_Localised as string) || (value.spawningFaction_Localised as string);
+        const remaining = (value.TimeRemaining as number | undefined) ?? (value.timeRemaining as number | undefined);
+        const isStation = Boolean(value.IsStation ?? value.isStation);
+
+        const parts = [signalName];
+        if (signalType) parts.push(signalType);
+        if (threat != null && threat > 0) parts.push(`Threat ${threat}`);
+        if (faction) parts.push(faction);
+        if (remaining != null && remaining > 0) parts.push(`${Math.round(remaining / 60)}m remaining`);
+        if (isStation) parts.push("Station");
+
+        return parts.join(" | ");
     }
 
     onMount(() => {
@@ -94,9 +154,15 @@
                 </div>
                 <div class="details">
                     {#if value.event === "FSSDiscoveryScan"}
-                        {#if isFSSDiscoveryScan(value)}Bodies: {value.bodyCount}{/if}
+                        {#if isFSSDiscoveryScan(value)}{value.systemName}: {value.bodyCount} bodies, {value.nonBodyCount} signals, {(value.progress * 100).toFixed(0)}%{/if}
+                    {:else if value.event === "FSSAllBodiesFound"}
+                        {#if isFSSAllBodiesFound(value)}{getKeyField(value, "SystemName")}: all {getKeyField(value, "Count")} bodies identified{/if}
+                    {:else if value.event === "FSSBodySignals" || value.event === "SAASignalsFound"}
+                        {#if isBodySignals(value)}{formatBodySignals(value)}{/if}
+                    {:else if value.event === "FSSSignalDiscovered"}
+                        {#if isFSSSignalDiscovered(value)}{formatFSSSignalDiscovered(value)}{/if}
                     {:else if value.event === "Scan"}
-                        {#if isScan(value)}{value.bodyName} ({value.planetClass ?? value.starType}){/if}
+                        {#if isScan(value)}{formatScan(value)}{/if}
                     {:else if value.event === "FSDJump"}
                         {#if isFSDJump(value)}Jumped to {value.StarSystem}{/if}
                     {:else}

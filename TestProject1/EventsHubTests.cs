@@ -43,8 +43,18 @@ public class EventsHubTests
         var cargo = new CargoFile();
         var backpack = new BackpackFile();
         var shipLocker = new ShipLockerMaterials();
-        var startupEvents = new List<JournalBase> { new LoadGame { Commander = "MiniJack_" } };
-        var latestState = new List<JournalBase> { new LoadGame { Commander = "MiniJack_" } };
+        var startupLoadGame = new LoadGame
+        {
+            Commander = "MiniJack_",
+            Timestamp = new DateTimeOffset(2024, 5, 15, 13, 10, 51, TimeSpan.Zero)
+        };
+        var latestLoadGame = new LoadGame
+        {
+            Commander = "MiniJack_",
+            Timestamp = new DateTimeOffset(2024, 5, 15, 13, 15, 51, TimeSpan.Zero)
+        };
+        var startupEvents = new List<JournalBase> { startupLoadGame };
+        var latestState = new List<JournalBase> { latestLoadGame };
 
         statusService.Get().Returns(status);
         outfittingService.Get().Returns(outfitting);
@@ -89,7 +99,9 @@ public class EventsHubTests
         await caller.Received(1).CargoUpdated(cargo);
         await caller.Received(1).BackpackUpdated(backpack);
         await caller.Received(1).ShipLockerUpdated(shipLocker);
-        await caller.Received(1).JournalUpdated(startupEvents);
-        await caller.Received(1).JournalUpdated(latestState);
+        await caller.Received(1).JournalUpdated(Arg.Is<List<JournalBase>>(journals =>
+            journals.Count == 1 &&
+            journals[0].GetType() == typeof(LoadGame) &&
+            ((LoadGame)journals[0]).Timestamp == latestLoadGame.Timestamp));
     }
 }

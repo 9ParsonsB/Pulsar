@@ -182,6 +182,8 @@ public class JournalProcessor(
             else if (type == typeof(ReservoirReplenished))
                 await FilterAndAdd(items, context.ReservoirReplenished,
                     r => r.Timestamp, entitiesToAdd, token);
+            else if (type == typeof(ReceiveText))
+                await FilterAndAdd(items, context.ReceiveText, r => r.Timestamp, entitiesToAdd, token);
         }
 
         if (entitiesToAdd.Count > 0)
@@ -199,7 +201,8 @@ public class JournalProcessor(
                 throw;
             }
 
-        return newJournals;
+        var handledSet = entitiesToAdd.OfType<JournalBase>().ToHashSet(ReferenceEqualityComparer.Instance);
+        return newJournals.Where(handledSet.Contains).ToList();
     }
 
     private async Task FilterAndAdd<T, TKey>(
@@ -245,11 +248,7 @@ public class JournalProcessor(
                 }
                 else if (handled.Count > 0)
                 {
-                    using var scope = scopeFactory.CreateScope();
-                    var context = scope.ServiceProvider.GetRequiredService<PulsarContext>();
-                    var lastLoadGame = context.LoadGames.OrderByDescending(l => l.Timestamp).FirstOrDefault();
-                    if (lastLoadGame != null)
-                        handled = handled.Where(j => j.Timestamp > lastLoadGame.Timestamp).ToList();
+                    handled = NormalizeForClient(handled);
 
                     overlayStateService.ApplyJournals(handled);
                     await hub.Clients.All.JournalUpdated(handled);
@@ -298,5 +297,19 @@ public class JournalProcessor(
         }
 
         return journals;
+    }
+
+    public static List<JournalBase> NormalizeForClient(IEnumerable<JournalBase> journals)
+    {
+        var normalized = journals.ToList();
+        var latestLoadGame = normalized.OfType<LoadGame>()
+            .OrderByDescending(loadGame => loadGame.Timestamp)
+            .FirstOrDefault();
+
+        if (latestLoadGame == null) return normalized;
+
+        return normalized
+            .Where(journal => journal is not LoadGame || ReferenceEquals(journal, latestLoadGame))
+            .ToList();
     }
 }

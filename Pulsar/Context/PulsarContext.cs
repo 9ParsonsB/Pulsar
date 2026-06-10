@@ -52,6 +52,7 @@ public class PulsarContext : DbContext
     public DbSet<FSSBodySignals> FSSBodySignals { get; set; }
     public DbSet<SAASignalsFound> SAASignalsFound { get; set; }
     public DbSet<ReservoirReplenished> ReservoirReplenished { get; set; }
+    public DbSet<ReceiveText> ReceiveText { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

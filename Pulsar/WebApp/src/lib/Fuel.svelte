@@ -7,7 +7,7 @@
     import type Status from "../types/api/Status";
     import {IsLoadGameEvent} from "../types/api/LoadGame";
 
-    let maxFuel: number = $state(32);
+    let maxFuel: number | undefined = $state();
     const last: number[] = $state([]);
     let timeToMax = $state(0);
     let fuelDown = $state(false);
@@ -28,10 +28,11 @@
                 ? change.reduce((a, b) => a + b, 0) / change.length
                 : 0;
 
-            const currentEmpty = maxFuel - (message.fuel?.fuelMain ?? 0);
-            if (message.fuel?.fuelMain && !Number.isNaN(avg) && avg) {
+            const fuelMain = message.fuel?.fuelMain ?? 0;
+            const currentEmpty = (maxFuel ?? fuelMain) - fuelMain;
+            if (maxFuel && fuelMain && !Number.isNaN(avg) && avg) {
                 fuelDown = avg < 0;
-                timeToMax = fuelDown ? message.fuel?.fuelMain / -avg : currentEmpty / avg;
+                timeToMax = fuelDown ? fuelMain / -avg : currentEmpty / avg;
             }
         };
 
@@ -53,7 +54,13 @@
         };
     });
 
-    const fuelPercent = $derived((($statusStore.fuel?.fuelMain ?? 0) / maxFuel) * 100);
+    const fuelPercent = $derived.by(() => {
+        if (!maxFuel || maxFuel <= 0) {
+            return undefined;
+        }
+
+        return (($statusStore.fuel?.fuelMain ?? 0) / maxFuel) * 100;
+    });
     const isLowFuel = $derived($statusStore.flags !== undefined && ($statusStore.flags & StatusFlags.LowFuel) !== 0);
 </script>
 
@@ -63,12 +70,12 @@
         <div
                 class="fuel-bar"
                 class:warning={isLowFuel}
-                style="width: {fuelPercent}%"
+                style="width: {fuelPercent ?? 0}%"
         ></div>
     </div>
     <div class="fuel-info">
-        <span class:warning={isLowFuel}>{fuelPercent.toFixed(1)}%</span>
-        {#if $statusStore.flags! & StatusFlags.FuelScooping}
+        <span class:warning={isLowFuel}>{fuelPercent !== undefined ? `${fuelPercent.toFixed(1)}%` : "--"}</span>
+        {#if maxFuel && ($statusStore.flags! & StatusFlags.FuelScooping)}
             <span class="scooping">Scooping: {timeToMax.toFixed(0)}s {fuelDown ? 'rem' : 'to fill'}</span>
         {/if}
         {#if isLowFuel}

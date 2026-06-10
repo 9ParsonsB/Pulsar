@@ -1,6 +1,7 @@
 namespace Pulsar.Features.Journal;
 
 using Observatory.Framework.Files.Journal;
+using Observatory.Framework.Files.Journal.Other;
 
 public interface IJournalService : IJournalHandler<List<JournalBase>>
 {
@@ -169,11 +170,14 @@ public class JournalService(
         var liftoff = await context.Liftoff
             .Where(x => x.Timestamp > commander.Timestamp)
             .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
+        var receiveText = await context.ReceiveText
+            .Where(x => x.Timestamp > commander.Timestamp)
+            .OrderByDescending(x => x.Timestamp).FirstOrDefaultAsync();
 
         return new List<JournalBase?>
             {
                 location, powerplay, shiplocker, missions, loadout, cargo, fsdJump, docked, undocked, supercruiseEntry,
-                supercruiseExit, touchdown, liftoff
+                supercruiseExit, touchdown, liftoff, receiveText
             }
             .Where(x => x != null).Cast<JournalBase>().ToList();
     }

@@ -184,6 +184,11 @@ public class OverlayStateService : IOverlayStateService
                         snapshot.StationType = null;
                         ResetSystemScan(fsdJump.StarSystem);
                         break;
+                    case ReceiveText receiveText:
+                        var commsSystem = TryGetEnteredNpcChannelSystem(receiveText);
+                        if (!string.IsNullOrWhiteSpace(commsSystem))
+                            snapshot.System = commsSystem;
+                        break;
                     case Docked docked:
                         snapshot.Station = docked.StationName;
                         snapshot.StationType = docked.StationType;
@@ -280,6 +285,32 @@ public class OverlayStateService : IOverlayStateService
         snapshot.EstimatedSystemValue = 0;
         snapshot.HighValueBodies = [];
         scannedBodies.Clear();
+    }
+
+    internal static string? TryGetEnteredNpcChannelSystem(ReceiveText receiveText)
+    {
+        if (receiveText.Channel != TextChannel.Npc)
+            return null;
+
+        if (!string.IsNullOrEmpty(receiveText.From))
+            return null;
+
+        if (string.IsNullOrWhiteSpace(receiveText.Message) ||
+            !receiveText.Message.StartsWith("$COMMS_entered:", StringComparison.Ordinal))
+            return null;
+
+        const string namePrefix = "#name=";
+        var nameStart = receiveText.Message.IndexOf(namePrefix, StringComparison.Ordinal);
+        if (nameStart < 0)
+            return null;
+
+        nameStart += namePrefix.Length;
+        var nameEnd = receiveText.Message.IndexOf(';', nameStart);
+        if (nameEnd < 0)
+            nameEnd = receiveText.Message.Length;
+
+        var systemName = receiveText.Message[nameStart..nameEnd].Trim();
+        return string.IsNullOrWhiteSpace(systemName) ? null : systemName;
     }
 
     private void PushAlert(string message)

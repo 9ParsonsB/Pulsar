@@ -38,9 +38,10 @@ public class EventsHub(
         await Clients.Caller.BackpackUpdated(await backpackService.Get());
         await Clients.Caller.ShipLockerUpdated(await shipLockerService.Get());
 
-        await Clients.Caller.JournalUpdated(await journalService.GetLastStartupEvents());
+        var startupEvents = await journalService.GetLastStartupEvents();
         var state = await journalService.GetLatestState();
-        if (state.Any()) await Clients.Caller.JournalUpdated(state);
+        var journals = Journal.JournalProcessor.NormalizeForClient(startupEvents.Concat(state));
+        if (journals.Any()) await Clients.Caller.JournalUpdated(journals);
     }
 
     public async Task Status()
